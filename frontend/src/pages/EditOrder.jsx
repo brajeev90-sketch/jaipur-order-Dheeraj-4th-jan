@@ -599,15 +599,23 @@ export default function EditOrder() {
             {/* Materials */}
             <div>
               <h4 className="font-medium mb-3">Materials & Finish</h4>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Leather Code</Label>
+              <div className="grid grid-cols-2 gap-6">
+                {/* Leather Section */}
+                <div className="space-y-3 border rounded-sm p-4 bg-muted/30">
+                  <Label className="text-sm font-semibold">Leather / Fabric</Label>
                   <Select 
                     value={currentItem.leather_code || "none"} 
-                    onValueChange={(value) => handleItemChange('leather_code', value === "none" ? "" : value)}
+                    onValueChange={(value) => {
+                      handleItemChange('leather_code', value === "none" ? "" : value);
+                      // Auto-fill image from library
+                      const selectedLeather = leatherLibrary.find(l => l.code === value);
+                      if (selectedLeather?.image) {
+                        handleItemChange('leather_image', selectedLeather.image);
+                      }
+                    }}
                   >
                     <SelectTrigger data-testid="item-leather">
-                      <SelectValue placeholder="Select leather" />
+                      <SelectValue placeholder="Select from library" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">None</SelectItem>
@@ -618,15 +626,62 @@ export default function EditOrder() {
                       ))}
                     </SelectContent>
                   </Select>
+                  
+                  {/* Leather Image Preview/Upload */}
+                  <div className="space-y-2">
+                    {currentItem.leather_image ? (
+                      <div className="relative group">
+                        <img 
+                          src={currentItem.leather_image} 
+                          alt="Leather swatch"
+                          className="w-full h-24 object-cover rounded-sm border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleItemChange('leather_image', '')}
+                          className="absolute top-1 right-1 bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="block cursor-pointer border-2 border-dashed rounded-sm p-3 text-center hover:border-accent transition-colors">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (ev) => handleItemChange('leather_image', ev.target.result);
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <Upload className="mx-auto mb-1 text-muted-foreground" size={20} />
+                        <p className="text-xs text-muted-foreground">Upload swatch image</p>
+                      </label>
+                    )}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Finish Code</Label>
+
+                {/* Finish Section */}
+                <div className="space-y-3 border rounded-sm p-4 bg-muted/30">
+                  <Label className="text-sm font-semibold">Finish / Coating</Label>
                   <Select 
                     value={currentItem.finish_code || "none"} 
-                    onValueChange={(value) => handleItemChange('finish_code', value === "none" ? "" : value)}
+                    onValueChange={(value) => {
+                      handleItemChange('finish_code', value === "none" ? "" : value);
+                      // Auto-fill image from library
+                      const selectedFinish = finishLibrary.find(f => f.code === value);
+                      if (selectedFinish?.image) {
+                        handleItemChange('finish_image', selectedFinish.image);
+                      }
+                    }}
                   >
                     <SelectTrigger data-testid="item-finish">
-                      <SelectValue placeholder="Select finish" />
+                      <SelectValue placeholder="Select from library" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">None</SelectItem>
@@ -637,7 +692,49 @@ export default function EditOrder() {
                       ))}
                     </SelectContent>
                   </Select>
+                  
+                  {/* Finish Image Preview/Upload */}
+                  <div className="space-y-2">
+                    {currentItem.finish_image ? (
+                      <div className="relative group">
+                        <img 
+                          src={currentItem.finish_image} 
+                          alt="Finish swatch"
+                          className="w-full h-24 object-cover rounded-sm border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleItemChange('finish_image', '')}
+                          className="absolute top-1 right-1 bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="block cursor-pointer border-2 border-dashed rounded-sm p-3 text-center hover:border-accent transition-colors">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (ev) => handleItemChange('finish_image', ev.target.result);
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <Upload className="mx-auto mb-1 text-muted-foreground" size={20} />
+                        <p className="text-xs text-muted-foreground">Upload swatch image</p>
+                      </label>
+                    )}
+                  </div>
                 </div>
+              </div>
+
+              {/* Color & Wood Notes */}
+              <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="space-y-2">
                   <Label>Color Notes</Label>
                   <Input
