@@ -57,8 +57,10 @@ export default function CreateOrder() {
   };
 
   const handleDateChange = (selectedDate) => {
-    setDate(selectedDate);
-    handleInputChange('entry_date', format(selectedDate, 'yyyy-MM-dd'));
+    if (selectedDate) {
+      setDate(selectedDate);
+      handleInputChange('entry_date', format(selectedDate, 'yyyy-MM-dd'));
+    }
   };
 
   const handleSubmit = async (e) => {
