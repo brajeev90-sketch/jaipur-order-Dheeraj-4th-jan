@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ordersApi } from '../lib/api';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
@@ -39,6 +39,7 @@ import {
   AlertDialogTitle,
 } from '../components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const statusColors = {
   'Draft': 'bg-yellow-100 text-yellow-800',
@@ -48,6 +49,7 @@ const statusColors = {
 };
 
 export default function OrdersList() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -65,7 +67,7 @@ export default function OrdersList() {
       setOrders(response.data);
     } catch (error) {
       console.error('Error loading orders:', error);
-      toast.error('Failed to load orders');
+      toast.error(t('failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -77,10 +79,10 @@ export default function OrdersList() {
     try {
       await ordersApi.delete(orderToDelete.id);
       setOrders(orders.filter(o => o.id !== orderToDelete.id));
-      toast.success('Order deleted successfully');
+      toast.success(t('orderDeleted'));
     } catch (error) {
       console.error('Error deleting order:', error);
-      toast.error('Failed to delete order');
+      toast.error(t('failedToDelete'));
     } finally {
       setDeleteDialogOpen(false);
       setOrderToDelete(null);
@@ -109,15 +111,15 @@ export default function OrdersList() {
   return (
     <div className="animate-fade-in" data-testid="orders-list-page">
       {/* Header */}
-      <div className="page-header flex justify-between items-start">
+      <div className="page-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
         <div>
-          <h1 className="page-title" data-testid="orders-title">Orders</h1>
-          <p className="page-description">Manage your production orders</p>
+          <h1 className="page-title" data-testid="orders-title">{t('ordersTitle')}</h1>
+          <p className="page-description">{t('ordersDesc')}</p>
         </div>
         <Link to="/orders/new">
-          <Button className="gap-2" data-testid="new-order-btn">
+          <Button className="gap-2 w-full sm:w-auto" data-testid="new-order-btn">
             <PlusCircle size={18} />
-            New Order
+            {t('newOrder')}
           </Button>
         </Link>
       </div>
@@ -125,11 +127,11 @@ export default function OrdersList() {
       {/* Filters */}
       <Card className="mb-6" data-testid="filters-card">
         <CardContent className="p-4">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
               <Input
-                placeholder="Search by reference, buyer..."
+                placeholder={t('searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -137,15 +139,15 @@ export default function OrdersList() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter} data-testid="status-filter">
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by status" />
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue placeholder={t('filter')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="Draft">Draft</SelectItem>
-                <SelectItem value="Submitted">Submitted</SelectItem>
-                <SelectItem value="In Production">In Production</SelectItem>
-                <SelectItem value="Done">Done</SelectItem>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                <SelectItem value="Draft">{t('statusDraft')}</SelectItem>
+                <SelectItem value="Submitted">{t('statusSubmitted')}</SelectItem>
+                <SelectItem value="In Production">{t('statusInProduction')}</SelectItem>
+                <SelectItem value="Done">{t('statusDone')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -158,71 +160,73 @@ export default function OrdersList() {
           {filteredOrders.length === 0 ? (
             <div className="empty-state" data-testid="empty-orders">
               <FileText className="empty-state-icon mx-auto" />
-              <p className="mb-4">No orders found</p>
+              <p className="mb-4">{t('noOrdersFound')}</p>
               <Link to="/orders/new">
-                <Button variant="outline">Create New Order</Button>
+                <Button variant="outline">{t('createNewOrder')}</Button>
               </Link>
             </div>
           ) : (
-            <Table data-testid="orders-table">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Sales Order Ref</TableHead>
-                  <TableHead>Buyer</TableHead>
-                  <TableHead>Buyer PO</TableHead>
-                  <TableHead>Entry Date</TableHead>
-                  <TableHead>Items</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrders.map((order) => (
-                  <TableRow key={order.id} data-testid={`order-row-${order.id}`}>
-                    <TableCell className="font-mono font-medium">
-                      {order.sales_order_ref || '-'}
-                    </TableCell>
-                    <TableCell>{order.buyer_name || '-'}</TableCell>
-                    <TableCell className="font-mono text-sm">
-                      {order.buyer_po_ref || '-'}
-                    </TableCell>
-                    <TableCell>{order.entry_date || '-'}</TableCell>
-                    <TableCell>{order.items?.length || 0} items</TableCell>
-                    <TableCell>
-                      <Badge className={statusColors[order.status] || 'bg-gray-100'}>
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link to={`/orders/${order.id}`}>
-                          <Button variant="ghost" size="icon" data-testid={`view-order-${order.id}`}>
-                            <Eye size={16} />
-                          </Button>
-                        </Link>
-                        <Link to={`/orders/${order.id}/edit`}>
-                          <Button variant="ghost" size="icon" data-testid={`edit-order-${order.id}`}>
-                            <Edit size={16} />
-                          </Button>
-                        </Link>
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => {
-                            setOrderToDelete(order);
-                            setDeleteDialogOpen(true);
-                          }}
-                          data-testid={`delete-order-${order.id}`}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table data-testid="orders-table">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('salesOrderRef')}</TableHead>
+                    <TableHead>{t('buyer')}</TableHead>
+                    <TableHead className="hidden sm:table-cell">{t('buyerPO')}</TableHead>
+                    <TableHead className="hidden md:table-cell">{t('entryDate')}</TableHead>
+                    <TableHead>{t('items')}</TableHead>
+                    <TableHead>{t('status')}</TableHead>
+                    <TableHead className="text-right">{t('actions')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredOrders.map((order) => (
+                    <TableRow key={order.id} data-testid={`order-row-${order.id}`}>
+                      <TableCell className="font-mono font-medium">
+                        {order.sales_order_ref || '-'}
+                      </TableCell>
+                      <TableCell>{order.buyer_name || '-'}</TableCell>
+                      <TableCell className="font-mono text-sm hidden sm:table-cell">
+                        {order.buyer_po_ref || '-'}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">{order.entry_date || '-'}</TableCell>
+                      <TableCell>{order.items?.length || 0}</TableCell>
+                      <TableCell>
+                        <Badge className={statusColors[order.status] || 'bg-gray-100'}>
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Link to={`/orders/${order.id}`}>
+                            <Button variant="ghost" size="icon" data-testid={`view-order-${order.id}`}>
+                              <Eye size={16} />
+                            </Button>
+                          </Link>
+                          <Link to={`/orders/${order.id}/edit`}>
+                            <Button variant="ghost" size="icon" data-testid={`edit-order-${order.id}`}>
+                              <Edit size={16} />
+                            </Button>
+                          </Link>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => {
+                              setOrderToDelete(order);
+                              setDeleteDialogOpen(true);
+                            }}
+                            data-testid={`delete-order-${order.id}`}
+                          >
+                            <Trash2 size={16} />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -231,20 +235,19 @@ export default function OrdersList() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Order</AlertDialogTitle>
+            <AlertDialogTitle>{t('deleteOrder')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete order "{orderToDelete?.sales_order_ref}"? 
-              This action cannot be undone.
+              {t('deleteOrderConfirm')} "{orderToDelete?.sales_order_ref}"? {t('cannotUndo')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel data-testid="cancel-delete">Cancel</AlertDialogCancel>
+            <AlertDialogCancel data-testid="cancel-delete">{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               data-testid="confirm-delete"
             >
-              Delete
+              {t('delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
