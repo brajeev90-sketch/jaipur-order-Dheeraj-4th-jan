@@ -4,6 +4,7 @@ import { dashboardApi } from '../lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
+import { useLanguage } from '../contexts/LanguageContext';
 import { 
   FileText, 
   Clock, 
@@ -21,6 +22,7 @@ const statusColors = {
 };
 
 export default function Dashboard() {
+  const { t } = useLanguage();
   const [stats, setStats] = useState({
     total_orders: 0,
     draft_orders: 0,
@@ -56,15 +58,15 @@ export default function Dashboard() {
   return (
     <div className="animate-fade-in" data-testid="dashboard-page">
       {/* Header */}
-      <div className="page-header flex justify-between items-start">
+      <div className="page-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
         <div>
-          <h1 className="page-title" data-testid="dashboard-title">Dashboard</h1>
-          <p className="page-description">Overview of your production sheets</p>
+          <h1 className="page-title" data-testid="dashboard-title">{t('dashboardTitle')}</h1>
+          <p className="page-description">{t('dashboardDesc')}</p>
         </div>
         <Link to="/orders/new">
-          <Button className="gap-2" data-testid="create-order-btn">
+          <Button className="gap-2 w-full sm:w-auto" data-testid="create-order-btn">
             <PlusCircle size={18} />
-            New Order
+            {t('newOrder')}
           </Button>
         </Link>
       </div>
@@ -78,7 +80,7 @@ export default function Dashboard() {
                 <FileText className="text-primary" size={24} />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Orders</p>
+                <p className="text-sm text-muted-foreground">{t('totalOrders')}</p>
                 <p className="text-2xl font-semibold">{stats.total_orders}</p>
               </div>
             </div>
@@ -92,7 +94,7 @@ export default function Dashboard() {
                 <Clock className="text-yellow-700" size={24} />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Drafts</p>
+                <p className="text-sm text-muted-foreground">{t('drafts')}</p>
                 <p className="text-2xl font-semibold">{stats.draft_orders}</p>
               </div>
             </div>
@@ -106,7 +108,7 @@ export default function Dashboard() {
                 <Factory className="text-purple-700" size={24} />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">In Production</p>
+                <p className="text-sm text-muted-foreground">{t('inProduction')}</p>
                 <p className="text-2xl font-semibold">{stats.in_production}</p>
               </div>
             </div>
@@ -120,7 +122,7 @@ export default function Dashboard() {
                 <CheckCircle className="text-green-700" size={24} />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Completed</p>
+                <p className="text-sm text-muted-foreground">{t('completed')}</p>
                 <p className="text-2xl font-semibold">{stats.completed}</p>
               </div>
             </div>
@@ -131,10 +133,10 @@ export default function Dashboard() {
       {/* Recent Orders */}
       <Card data-testid="recent-orders-card">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="font-serif text-xl">Recent Orders</CardTitle>
+          <CardTitle className="font-serif text-xl">{t('recentOrders')}</CardTitle>
           <Link to="/orders">
             <Button variant="ghost" size="sm" className="gap-1">
-              View All <ArrowRight size={16} />
+              {t('viewAll')} <ArrowRight size={16} />
             </Button>
           </Link>
         </CardHeader>
@@ -142,10 +144,10 @@ export default function Dashboard() {
           {stats.recent_orders.length === 0 ? (
             <div className="empty-state" data-testid="empty-orders">
               <FileText className="empty-state-icon mx-auto" />
-              <p>No orders yet</p>
+              <p>{t('noOrdersYet')}</p>
               <Link to="/orders/new">
                 <Button variant="outline" className="mt-4">
-                  Create Your First Order
+                  {t('createFirstOrder')}
                 </Button>
               </Link>
             </div>
@@ -173,7 +175,7 @@ export default function Dashboard() {
                       {order.status}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
-                      {order.items?.length || 0} items
+                      {order.items?.length || 0} {t('items')}
                     </span>
                   </div>
                 </Link>
