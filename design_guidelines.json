@@ -1,0 +1,160 @@
+{
+  "identity": {
+    "name": "JAIPUR - Digital Workbench",
+    "persona": "E1: The Anti-AI Designer",
+    "vibe": "Organic, Tactile, Precision, Industrial Warmth",
+    "archetype": "Organic & Earthy (Archetype 1) + Swiss Utility"
+  },
+  "typography": {
+    "font_family": {
+      "heading": "Playfair Display, serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl font-semibold tracking-tight leading-tight",
+      "h2": "text-3xl font-medium tracking-tight",
+      "h3": "text-2xl font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm font-medium tracking-wide uppercase text-muted-foreground"
+    },
+    "imports": [
+      "@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "light": {
+        "background": "36 33% 97%", 
+        "foreground": "210 20% 25%",
+        "card": "0 0% 100%",
+        "card_foreground": "210 20% 25%",
+        "popover": "0 0% 100%",
+        "popover_foreground": "210 20% 25%",
+        "primary": "27 30% 22%",
+        "primary_foreground": "36 33% 97%",
+        "secondary": "30 15% 92%",
+        "secondary_foreground": "27 30% 22%",
+        "muted": "30 15% 92%",
+        "muted_foreground": "215 10% 45%",
+        "accent": "20 70% 55%",
+        "accent_foreground": "0 0% 100%",
+        "destructive": "0 84.2% 60.2%",
+        "destructive_foreground": "0 0% 98%",
+        "border": "30 10% 85%",
+        "input": "30 10% 85%",
+        "ring": "27 30% 22%"
+      },
+      "dark": {
+        "background": "27 30% 12%",
+        "foreground": "36 33% 97%",
+        "card": "27 30% 15%",
+        "card_foreground": "36 33% 97%",
+        "popover": "27 30% 15%",
+        "popover_foreground": "36 33% 97%",
+        "primary": "36 33% 97%",
+        "primary_foreground": "27 30% 22%",
+        "secondary": "27 20% 20%",
+        "secondary_foreground": "36 33% 97%",
+        "muted": "27 20% 20%",
+        "muted_foreground": "30 10% 65%",
+        "accent": "20 70% 55%",
+        "accent_foreground": "0 0% 100%",
+        "destructive": "0 62.8% 30.6%",
+        "destructive_foreground": "0 0% 98%",
+        "border": "27 20% 25%",
+        "input": "27 20% 25%",
+        "ring": "36 33% 97%"
+      }
+    },
+    "usage": {
+      "background": "hsl(36, 33%, 97%) - Warm Paper",
+      "primary": "hsl(27, 30%, 22%) - Deep Teak",
+      "accent": "hsl(20, 70%, 55%) - Burnt Sienna (Use for CTAs)",
+      "text_primary": "hsl(210, 20%, 25%) - Charcoal Ink"
+    }
+  },
+  "visual_enhancers": {
+    "radius": "0.25rem",
+    "shadows": {
+      "card": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "hover": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+    },
+    "borders": "1px solid hsl(var(--border))",
+    "textures": "Use subtle grain on backgrounds if possible to mimic paper."
+  },
+  "layout_strategies": {
+    "dashboard": {
+      "grid": "grid-cols-1 md:grid-cols-12 gap-6",
+      "spacing": "p-6 md:p-8",
+      "container": "max-w-[1600px] mx-auto"
+    },
+    "pdf_preview": {
+      "aspect_ratio": "aspect-[1/1.414]",
+      "bg": "bg-white shadow-lg border border-stone-200"
+    }
+  },
+  "components": {
+    "buttons": {
+      "default": "rounded-sm font-medium tracking-wide transition-all active:scale-95",
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      "ghost": "hover:bg-accent/10 hover:text-accent"
+    },
+    "cards": {
+      "style": "bg-card text-card-foreground rounded-sm border shadow-sm",
+      "header": "p-6 pb-2",
+      "content": "p-6 pt-0"
+    },
+    "inputs": {
+      "style": "rounded-sm border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+    }
+  },
+  "image_urls": {
+    "dashboard_hero": {
+      "url": "https://images.unsplash.com/photo-1762803841091-c5327f7aed37?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBmdXJuaXR1cmUlMjB3b3Jrc2hvcCUyMGludGVyaW9yfGVufDB8fHx8MTc2NjMzMzE3OHww&ixlib=rb-4.1.0&q=85",
+      "desc": "Armchair in workshop - Use for dashboard welcome or empty state"
+    },
+    "login_bg": {
+      "url": "https://images.unsplash.com/photo-1567389544422-cdbc04a2bb86?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwd29vZGVuJTIwZnVybml0dXJlJTIwc3R1ZGlvfGVufDB8fHxibGFja19hbmRfd2hpdGV8MTc2NjMzMzE3NXww&ixlib=rb-4.1.0&q=85",
+      "desc": "Abstract blocks - Use for login page side panel"
+    },
+    "leather_placeholder": {
+      "url": "https://images.unsplash.com/photo-1716295177956-420a647c83ac?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxsZWF0aGVyJTIwdGV4dHVyZSUyMG1hY3JvfGVufDB8fHx8MTc2NjMzMzE3Nnww&ixlib=rb-4.1.0&q=85",
+      "desc": "Brown leather texture - Use for Leather Library cards"
+    },
+    "wood_placeholder": {
+      "url": "https://images.unsplash.com/photo-1580315362297-5be36f0de025?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwzfHxtaW5pbWFsaXN0JTIwd29vZGVuJTIwZnVybml0dXJlJTIwc3R1ZGlvfGVufDB8fHxibGFja19hbmRfd2hpdGV8MTc2NjMzMzE3NXww&ixlib=rb-4.1.0&q=85",
+      "desc": "White wood desk - Use for Finish Library cards"
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. UPDATE TAILWIND CONFIG: Add the font families (Playfair Display, Manrope, JetBrains Mono) and extend the theme with the colors provided.",
+    "2. UPDATE INDEX.CSS: Replace the root variables with the HSL values provided in 'colors.palette.light' and 'colors.palette.dark'.",
+    "3. LAYOUT: Use the 'Control Room' grid (dense, gap-4) for the Dashboard and Order Lists. Use the 'Tetris' grid (asymmetric) for the Landing/Login page.",
+    "4. PDF PREVIEW: The PDF preview component must be visually distinct. Use a white container with a shadow to simulate a real A4 paper on a desk.",
+    "5. TYPOGRAPHY: Use 'Playfair Display' for all Page Titles (h1, h2). Use 'Manrope' for all UI text, tables, and inputs. Use 'JetBrains Mono' for Item Codes and IDs.",
+    "6. COMPONENTS: Customize Shadcn components to match the 'Visual Enhancers' (rounded-sm, specific shadows). Do not use default rounded-md.",
+    "7. DATA-TESTID: Ensure every interactive element has a data-testid attribute."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Create new components that match the style and conventions of existing components when needed",
+    "Examine existing components to understand the project's component patterns before creating new ones",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use sonner for toasts. Sonner component are located in /app/src/components/ui/sonner.tsx"
+  ]
+}
