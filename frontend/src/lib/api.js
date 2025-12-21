@@ -1,0 +1,68 @@
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const api = axios.create({
+  baseURL: API,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Orders API
+export const ordersApi = {
+  getAll: () => api.get('/orders'),
+  getById: (id) => api.get(`/orders/${id}`),
+  create: (data) => api.post('/orders', data),
+  update: (id, data) => api.put(`/orders/${id}`, data),
+  delete: (id) => api.delete(`/orders/${id}`),
+  exportPdf: (id) => `${API}/orders/${id}/export/pdf`,
+  exportPpt: (id) => `${API}/orders/${id}/export/ppt`,
+  previewHtml: (id) => api.get(`/orders/${id}/preview-html`),
+};
+
+// Leather Library API
+export const leatherApi = {
+  getAll: () => api.get('/leather-library'),
+  create: (data) => api.post('/leather-library', data),
+  update: (id, data) => api.put(`/leather-library/${id}`, data),
+  delete: (id) => api.delete(`/leather-library/${id}`),
+};
+
+// Finish Library API
+export const finishApi = {
+  getAll: () => api.get('/finish-library'),
+  create: (data) => api.post('/finish-library', data),
+  update: (id, data) => api.put(`/finish-library/${id}`, data),
+  delete: (id) => api.delete(`/finish-library/${id}`),
+};
+
+// Template Settings API
+export const templateApi = {
+  get: () => api.get('/template-settings'),
+  update: (data) => api.put('/template-settings', data),
+};
+
+// Dashboard API
+export const dashboardApi = {
+  getStats: () => api.get('/dashboard/stats'),
+};
+
+// Factories API
+export const factoriesApi = {
+  getAll: () => api.get('/factories'),
+};
+
+// Categories API
+export const categoriesApi = {
+  getAll: () => api.get('/categories'),
+};
+
+// Exports API
+export const exportsApi = {
+  getAll: () => api.get('/exports'),
+  getByOrderId: (orderId) => api.get(`/exports/${orderId}`),
+};
+
+export default api;
