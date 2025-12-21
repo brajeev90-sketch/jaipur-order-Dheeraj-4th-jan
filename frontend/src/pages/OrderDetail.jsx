@@ -19,7 +19,8 @@ import {
   FileDown, 
   FileText, 
   Eye,
-  Download
+  Download,
+  Share2
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -55,12 +56,20 @@ export default function OrderDetail() {
 
   const handleExportPdf = () => {
     window.open(ordersApi.exportPdf(id), '_blank');
-    toast.success('PDF export started');
+    toast.success('PDF download started');
   };
 
   const handleExportPpt = () => {
     window.open(ordersApi.exportPpt(id), '_blank');
-    toast.success('PPT export started');
+    toast.success('PPT download started');
+  };
+
+  const handleWhatsAppShare = () => {
+    const pdfUrl = ordersApi.exportPdf(id);
+    const message = `JAIPUR Production Sheet\nOrder: ${order?.sales_order_ref || 'N/A'}\nBuyer: ${order?.buyer_name || 'N/A'}\nItems: ${order?.items?.length || 0}\n\nDownload PDF: ${pdfUrl}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    toast.success('Opening WhatsApp...');
   };
 
   if (loading) {
@@ -121,6 +130,14 @@ export default function OrderDetail() {
             </Link>
             <Button 
               variant="outline" 
+              className="gap-2 bg-green-50 border-green-200 text-green-700 hover:bg-green-100 hover:text-green-800"
+              onClick={handleWhatsAppShare}
+              data-testid="whatsapp-btn"
+            >
+              <Share2 size={18} />
+              WhatsApp
+            </Button>
+            <Button 
               className="gap-2"
               onClick={handleExportPdf}
               data-testid="export-pdf-btn"
@@ -138,9 +155,9 @@ export default function OrderDetail() {
               PPT
             </Button>
             <Link to={`/orders/${id}/edit`}>
-              <Button className="gap-2" data-testid="edit-btn">
+              <Button variant="secondary" className="gap-2" data-testid="edit-btn">
                 <Edit size={18} />
-                Edit Order
+                Edit
               </Button>
             </Link>
           </div>
