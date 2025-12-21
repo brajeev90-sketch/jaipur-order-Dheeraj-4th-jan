@@ -487,13 +487,14 @@ export default function EditOrder() {
               <div className="space-y-2">
                 <Label>Category</Label>
                 <Select 
-                  value={currentItem.category} 
-                  onValueChange={(value) => handleItemChange('category', value)}
+                  value={currentItem.category || "none"} 
+                  onValueChange={(value) => handleItemChange('category', value === "none" ? "" : value)}
                 >
                   <SelectTrigger data-testid="item-category">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="none">Select category</SelectItem>
                     {categories.map((cat) => (
                       <SelectItem key={cat.id} value={cat.name}>
                         {cat.name}
