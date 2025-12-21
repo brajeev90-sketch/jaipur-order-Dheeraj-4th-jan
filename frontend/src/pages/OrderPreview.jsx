@@ -7,7 +7,8 @@ import {
   FileDown, 
   Download,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Share2
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -42,12 +43,20 @@ export default function OrderPreview() {
 
   const handleExportPdf = () => {
     window.open(ordersApi.exportPdf(id), '_blank');
-    toast.success('PDF export started');
+    toast.success('PDF download started');
   };
 
   const handleExportPpt = () => {
     window.open(ordersApi.exportPpt(id), '_blank');
-    toast.success('PPT export started');
+    toast.success('PPT download started');
+  };
+
+  const handleWhatsAppShare = () => {
+    const pdfUrl = ordersApi.exportPdf(id);
+    const message = `JAIPUR Production Sheet\nOrder: ${order?.sales_order_ref || 'N/A'}\nBuyer: ${order?.buyer_name || 'N/A'}\nItems: ${order?.items?.length || 0}\n\nDownload PDF: ${pdfUrl}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    toast.success('Opening WhatsApp...');
   };
 
   if (loading) {
@@ -76,13 +85,21 @@ export default function OrderPreview() {
         
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="page-title" data-testid="preview-title">PDF Preview</h1>
-            <p className="page-description font-mono">{order?.sales_order_ref || 'Order'}</p>
+            <h1 className="page-title" data-testid="preview-title">Production Sheet Preview</h1>
+            <p className="page-description font-mono">{order?.sales_order_ref || 'Order'} • {order?.buyer_name || 'No Buyer'}</p>
           </div>
           
           <div className="flex gap-2">
             <Button 
               variant="outline" 
+              className="gap-2 bg-green-50 border-green-200 text-green-700 hover:bg-green-100 hover:text-green-800"
+              onClick={handleWhatsAppShare}
+              data-testid="whatsapp-share-btn"
+            >
+              <Share2 size={18} />
+              WhatsApp
+            </Button>
+            <Button 
               className="gap-2"
               onClick={handleExportPdf}
               data-testid="export-pdf-btn"
@@ -159,106 +176,163 @@ export default function OrderPreview() {
 
 function PreviewPage({ order, item, pageNum, totalPages }) {
   const cbm = item.cbm_auto 
-    ? ((item.height_cm || 0) * (item.depth_cm || 0) * (item.width_cm || 0) / 1000000).toFixed(4)
+    ? ((item.height_cm || 0) * (item.depth_cm || 0) * (item.width_cm || 0) / 1000000).toFixed(2)
     : item.cbm;
 
   return (
-    <div className="h-full flex flex-col text-sm" style={{ fontFamily: 'Manrope, sans-serif' }}>
-      {/* Header */}
-      <div className="flex justify-between items-start pb-4 border-b-2 border-primary mb-4">
-        <div>
-          <h1 className="font-serif text-3xl font-semibold text-primary">JAIPUR</h1>
-          <p className="text-xs text-muted-foreground">A fine wood furniture company</p>
+    <div className="h-full flex flex-col" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '12px' }}>
+      {/* Header with logo and date table */}
+      <div className="flex justify-between items-start pb-4 border-b-2 border-[#3d2c1e]">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div className="text-[#3d2c1e]">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L8 6H5C3.89 6 3 6.89 3 8V20C3 21.11 3.89 22 5 22H19C20.11 22 21 21.11 21 20V8C21 6.89 20.11 6 19 6H16L12 2ZM12 4.83L14.17 7H9.83L12 4.83ZM12 10C14.21 10 16 11.79 16 14C16 16.21 14.21 18 12 18C9.79 18 8 16.21 8 14C8 11.79 9.79 10 12 10Z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 className="font-serif text-3xl font-bold text-[#3d2c1e] tracking-wide">JAIPUR</h1>
+            <p className="text-xs text-[#666] italic">A fine wood furniture company</p>
+          </div>
         </div>
-        <div className="text-right">
-          <table className="text-xs border-collapse">
+        
+        {/* Date Table */}
+        <div className="border border-[#3d2c1e]">
+          <table className="text-xs">
             <tbody>
-              <tr>
-                <td className="px-2 py-1 border bg-muted font-medium">Entry Date</td>
-                <td className="px-2 py-1 border">{order.entry_date || '-'}</td>
+              <tr className="border-b border-[#3d2c1e]">
+                <td className="px-3 py-1.5 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">ENTRY DATE</td>
+                <td className="px-3 py-1.5 min-w-[100px]">{order.entry_date || '-'}</td>
+              </tr>
+              <tr className="border-b border-[#3d2c1e]">
+                <td className="px-3 py-1.5 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">INFORMED TO FACTORY</td>
+                <td className="px-3 py-1.5">{order.factory || '-'}</td>
+              </tr>
+              <tr className="border-b border-[#3d2c1e]">
+                <td className="px-3 py-1.5 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">TD RECEIVED</td>
+                <td className="px-3 py-1.5">-</td>
               </tr>
               <tr>
-                <td className="px-2 py-1 border bg-muted font-medium">Factory</td>
-                <td className="px-2 py-1 border">{order.factory || '-'}</td>
-              </tr>
-              <tr>
-                <td className="px-2 py-1 border bg-muted font-medium">Sales Ref</td>
-                <td className="px-2 py-1 border font-mono">{order.sales_order_ref || '-'}</td>
-              </tr>
-              <tr>
-                <td className="px-2 py-1 border bg-muted font-medium">Buyer PO</td>
-                <td className="px-2 py-1 border font-mono">{order.buyer_po_ref || '-'}</td>
+                <td className="px-3 py-1.5 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">SAMPLE READY DATE</td>
+                <td className="px-3 py-1.5 font-bold">ASAP</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 flex gap-4">
-        {/* Image Section */}
-        <div className="flex-1">
+      {/* Content Area: Image + Materials + Notes */}
+      <div className="flex gap-4 py-4 flex-1">
+        {/* Product Image */}
+        <div className="w-1/3">
           {item.images?.length > 0 ? (
             <img 
               src={item.images[0]} 
               alt={item.product_code}
-              className="max-w-full max-h-64 object-contain border rounded-sm"
+              className="w-full h-auto max-h-[280px] object-contain border border-[#ddd] rounded"
             />
           ) : (
-            <div className="w-full h-48 bg-muted rounded-sm flex items-center justify-center text-muted-foreground">
-              No Image
+            <div className="w-full h-[200px] bg-[#f0f0f0] rounded flex items-center justify-center text-[#888] border border-[#ddd]">
+              No Image Available
+            </div>
+          )}
+          
+          {/* Additional images if any */}
+          {item.images?.length > 1 && (
+            <div className="flex gap-2 mt-2">
+              {item.images.slice(1, 4).map((img, idx) => (
+                <img 
+                  key={idx}
+                  src={img} 
+                  alt={`${item.product_code}-${idx + 2}`}
+                  className="w-16 h-16 object-cover border border-[#ddd] rounded"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Material Swatches */}
+        <div className="w-1/3 space-y-3">
+          {item.leather_code && (
+            <div className="border border-[#ddd] rounded p-2 bg-[#fafafa]">
+              <div className="w-full h-20 bg-gradient-to-br from-[#8B4513] to-[#A0522D] rounded mb-2"></div>
+              <div className="text-center">
+                <p className="text-xs font-semibold">{item.leather_code}</p>
+              </div>
+            </div>
+          )}
+          
+          {item.finish_code && (
+            <div className="border border-[#ddd] rounded p-2 bg-[#fafafa]">
+              <div className="w-full h-20 bg-gradient-to-br from-[#D4A574] to-[#C4956A] rounded mb-2"></div>
+              <div className="text-center">
+                <p className="text-xs font-semibold">{item.finish_code}</p>
+              </div>
             </div>
           )}
         </div>
 
         {/* Notes Section */}
-        <div className="flex-1 border rounded-sm p-3 bg-muted/30">
-          <h4 className="font-semibold text-primary text-xs mb-2 uppercase tracking-wide">Notes</h4>
-          <div 
-            className="text-xs leading-relaxed prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: item.notes || '<p class="text-muted-foreground">No notes</p>' }}
-          />
-          
-          <div className="mt-4 pt-3 border-t space-y-1 text-xs">
-            <p><strong>Leather:</strong> {item.leather_code || 'N/A'}</p>
-            <p><strong>Finish:</strong> {item.finish_code || 'N/A'}</p>
-            <p><strong>Color Notes:</strong> {item.color_notes || 'N/A'}</p>
-            <p><strong>Wood Finish:</strong> {item.wood_finish || 'N/A'}</p>
+        <div className="w-1/3 border border-[#3d2c1e] rounded">
+          <div className="bg-[#3d2c1e] text-white px-3 py-1.5 font-semibold text-xs">
+            Notes:
+          </div>
+          <div className="p-3 text-xs space-y-1">
+            {item.notes ? (
+              <div dangerouslySetInnerHTML={{ __html: item.notes.replace(/\n/g, '<br/>') }} />
+            ) : (
+              <ul className="list-disc pl-4 space-y-1">
+                {item.category && <li>{item.category}</li>}
+                {item.leather_code && <li>Leather: {item.leather_code}</li>}
+                {item.finish_code && <li>Finish: {item.finish_code}</li>}
+                {item.color_notes && <li>Color: {item.color_notes}</li>}
+                {item.wood_finish && <li>Wood: {item.wood_finish}</li>}
+                {item.machine_hall && <li>Workshop: {item.machine_hall}</li>}
+              </ul>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Details Table */}
-      <div className="mt-4">
-        <table className="w-full text-xs border-collapse">
+      {/* Product Details Table */}
+      <div className="border-2 border-[#3d2c1e] mt-auto">
+        <table className="w-full text-xs">
           <thead>
-            <tr className="bg-primary text-primary-foreground">
-              <th className="px-2 py-2 text-left border">Item Code</th>
-              <th className="px-2 py-2 text-left border">Description</th>
-              <th className="px-2 py-2 text-center border">H (cm)</th>
-              <th className="px-2 py-2 text-center border">D (cm)</th>
-              <th className="px-2 py-2 text-center border">W (cm)</th>
-              <th className="px-2 py-2 text-center border">CBM</th>
-              <th className="px-2 py-2 text-center border">Qty</th>
+            <tr className="bg-[#3d2c1e] text-white">
+              <th className="px-3 py-2 text-left border-r border-[#5a4a3a]" rowSpan={2}>ITEM CODE</th>
+              <th className="px-3 py-2 text-left border-r border-[#5a4a3a]" rowSpan={2}>DESCRIPTION</th>
+              <th className="px-3 py-2 text-center border-r border-[#5a4a3a]" colSpan={3}>SIZE (cm)</th>
+              <th className="px-3 py-2 text-center border-r border-[#5a4a3a]" rowSpan={2}>CBM</th>
+              <th className="px-3 py-2 text-center" rowSpan={2}>Qty</th>
+            </tr>
+            <tr className="bg-[#5a4a3a] text-white">
+              <th className="px-2 py-1 text-center border-r border-[#6a5a4a]">H</th>
+              <th className="px-2 py-1 text-center border-r border-[#6a5a4a]">D</th>
+              <th className="px-2 py-1 text-center border-r border-[#6a5a4a]">W</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="px-2 py-2 border font-mono">{item.product_code || '-'}</td>
-              <td className="px-2 py-2 border">{item.description || '-'}</td>
-              <td className="px-2 py-2 border text-center">{item.height_cm || 0}</td>
-              <td className="px-2 py-2 border text-center">{item.depth_cm || 0}</td>
-              <td className="px-2 py-2 border text-center">{item.width_cm || 0}</td>
-              <td className="px-2 py-2 border text-center font-mono">{cbm}</td>
-              <td className="px-2 py-2 border text-center">{item.quantity || 1}</td>
+            <tr className="border-t border-[#3d2c1e]">
+              <td className="px-3 py-2 font-mono font-semibold border-r border-[#ddd]">{item.product_code || '-'}</td>
+              <td className="px-3 py-2 border-r border-[#ddd]">
+                {item.description || '-'}
+                {item.color_notes && <span className="text-[#666]"> ({item.color_notes})</span>}
+              </td>
+              <td className="px-3 py-2 text-center border-r border-[#ddd]">{item.height_cm || 0}</td>
+              <td className="px-3 py-2 text-center border-r border-[#ddd]">{item.depth_cm || 0}</td>
+              <td className="px-3 py-2 text-center border-r border-[#ddd]">{item.width_cm || 0}</td>
+              <td className="px-3 py-2 text-center font-mono border-r border-[#ddd]">{cbm}</td>
+              <td className="px-3 py-2 text-center font-bold">{item.quantity || 1}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Footer */}
-      <div className="mt-4 pt-2 border-t text-xs text-muted-foreground text-center">
-        Buyer: {order.buyer_name || 'N/A'} | Page {pageNum} of {totalPages}
+      <div className="mt-3 pt-2 border-t border-[#ddd] flex justify-between items-center text-xs text-[#888]">
+        <span>Buyer: {order.buyer_name || 'N/A'} • PO: {order.buyer_po_ref || 'N/A'}</span>
+        <span>Page {pageNum} of {totalPages}</span>
       </div>
     </div>
   );
