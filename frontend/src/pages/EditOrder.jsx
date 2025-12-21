@@ -685,20 +685,18 @@ export default function EditOrder() {
 
             {/* Notes */}
             <div className="space-y-2">
-              <Label>Notes (Rich Text)</Label>
-              <ReactQuill
+              <Label>Notes</Label>
+              <Textarea
                 value={currentItem.notes}
-                onChange={(value) => handleItemChange('notes', value)}
-                theme="snow"
-                modules={{
-                  toolbar: [
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'bullet' }],
-                    ['clean']
-                  ]
-                }}
+                onChange={(e) => handleItemChange('notes', e.target.value)}
+                placeholder="Enter notes (use • for bullet points)"
+                rows={4}
+                className="min-h-[120px]"
                 data-testid="item-notes"
               />
+              <p className="text-xs text-muted-foreground">
+                Tip: Use • for bullet points, **text** for bold
+              </p>
             </div>
 
             <Separator />
