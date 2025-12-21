@@ -598,14 +598,14 @@ export default function EditOrder() {
                 <div className="space-y-2">
                   <Label>Leather Code</Label>
                   <Select 
-                    value={currentItem.leather_code} 
-                    onValueChange={(value) => handleItemChange('leather_code', value)}
+                    value={currentItem.leather_code || "none"} 
+                    onValueChange={(value) => handleItemChange('leather_code', value === "none" ? "" : value)}
                   >
                     <SelectTrigger data-testid="item-leather">
                       <SelectValue placeholder="Select leather" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="none">None</SelectItem>
                       {leatherLibrary.map((item) => (
                         <SelectItem key={item.id} value={item.code}>
                           {item.code} - {item.name}
@@ -617,14 +617,14 @@ export default function EditOrder() {
                 <div className="space-y-2">
                   <Label>Finish Code</Label>
                   <Select 
-                    value={currentItem.finish_code} 
-                    onValueChange={(value) => handleItemChange('finish_code', value)}
+                    value={currentItem.finish_code || "none"} 
+                    onValueChange={(value) => handleItemChange('finish_code', value === "none" ? "" : value)}
                   >
                     <SelectTrigger data-testid="item-finish">
                       <SelectValue placeholder="Select finish" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="none">None</SelectItem>
                       {finishLibrary.map((item) => (
                         <SelectItem key={item.id} value={item.code}>
                           {item.code} - {item.name}
