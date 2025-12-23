@@ -9,7 +9,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Share2,
-  Loader2
+  Loader2,
+  Printer,
+  Mail
 } from 'lucide-react';
 import { toast } from 'sonner';
 
