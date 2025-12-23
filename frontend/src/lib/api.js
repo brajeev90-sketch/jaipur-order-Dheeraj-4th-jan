@@ -110,6 +110,16 @@ export const categoriesApi = {
   getAll: () => api.get('/categories'),
 };
 
+// Quotations API
+export const quotationsApi = {
+  getAll: () => api.get('/quotations'),
+  getById: (id) => api.get(`/quotations/${id}`),
+  create: (data) => api.post('/quotations', data),
+  update: (id, data) => api.put(`/quotations/${id}`, data),
+  delete: (id) => api.delete(`/quotations/${id}`),
+  duplicate: (id) => api.post(`/quotations/${id}/duplicate`),
+};
+
 // Exports API
 export const exportsApi = {
   getAll: () => api.get('/exports'),
