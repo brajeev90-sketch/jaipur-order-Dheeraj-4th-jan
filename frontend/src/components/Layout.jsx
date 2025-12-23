@@ -31,6 +31,9 @@ export const Layout = () => {
     { path: '/template-settings', icon: Settings, label: t('templateSettings') },
   ];
 
+  // Company logo URL
+  const logoUrl = "https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg";
+
   return (
     <div className="flex min-h-screen" data-testid="app-layout">
       {/* Mobile Header */}
@@ -44,9 +47,11 @@ export const Layout = () => {
           >
             <Menu size={24} />
           </Button>
-          <h1 className="font-serif text-xl font-semibold text-primary">
-            {language === 'hi' ? 'जयपुर' : 'JAIPUR'}
-          </h1>
+          <img 
+            src={logoUrl} 
+            alt="JAIPUR" 
+            className="h-10 w-auto object-contain"
+          />
         </div>
         <Button
           variant="outline"
