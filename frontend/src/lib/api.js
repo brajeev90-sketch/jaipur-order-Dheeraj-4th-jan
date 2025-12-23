@@ -52,6 +52,8 @@ export const dashboardApi = {
 // Factories API
 export const factoriesApi = {
   getAll: () => api.get('/factories'),
+  create: (data) => api.post('/factories', data),
+  delete: (id) => api.delete(`/factories/${id}`),
 };
 
 // Categories API
