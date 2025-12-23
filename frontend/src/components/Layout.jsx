@@ -11,7 +11,8 @@ import {
   X,
   Globe,
   Building2,
-  Package
+  Package,
+  FileSpreadsheet
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useLanguage } from '../contexts/LanguageContext';
