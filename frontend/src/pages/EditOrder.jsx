@@ -990,24 +990,6 @@ export default function EditOrder() {
                 </div>
               </div>
             </div>
-                        <img 
-                          src={img} 
-                          alt={`Product ${idx + 1}`}
-                          className="w-24 h-24 object-cover rounded-sm border"
-                        />
-                        <button
-                          onClick={() => removeImage(idx)}
-                          className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                          data-testid={`remove-image-${idx}`}
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* Actions */}
             <div className="flex justify-end gap-3 pt-4 border-t">
