@@ -405,7 +405,7 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
               <td className="px-2 sm:px-3 py-2 text-center border-r border-[#ddd]">{item.depth_cm || 0}</td>
               <td className="px-2 sm:px-3 py-2 text-center border-r border-[#ddd]">{item.width_cm || 0}</td>
               <td className="px-2 sm:px-3 py-2 text-center font-mono border-r border-[#ddd]">{cbm}</td>
-              <td className="px-2 sm:px-3 py-2 text-center font-bold">{item.quantity || 1}</td>
+              <td className="px-2 sm:px-3 py-2 text-center font-bold">{item.quantity || 1} Pcs</td>
             </tr>
           </tbody>
         </table>
