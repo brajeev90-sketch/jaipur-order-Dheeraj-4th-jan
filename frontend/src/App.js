@@ -12,6 +12,7 @@ import OrderPreview from "./pages/OrderPreview";
 import LeatherLibrary from "./pages/LeatherLibrary";
 import FinishLibrary from "./pages/FinishLibrary";
 import TemplateSettings from "./pages/TemplateSettings";
+import FactoryManagement from "./pages/FactoryManagement";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="orders/:id" element={<OrderDetail />} />
               <Route path="orders/:id/edit" element={<EditOrder />} />
               <Route path="orders/:id/preview" element={<OrderPreview />} />
+              <Route path="factories" element={<FactoryManagement />} />
               <Route path="leather-library" element={<LeatherLibrary />} />
               <Route path="finish-library" element={<FinishLibrary />} />
               <Route path="template-settings" element={<TemplateSettings />} />
