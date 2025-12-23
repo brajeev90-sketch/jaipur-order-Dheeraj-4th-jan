@@ -26,6 +26,7 @@ export const Layout = () => {
     { path: '/orders', icon: FileText, label: t('orders') },
     { path: '/orders/new', icon: PlusCircle, label: t('newOrder') },
     { path: '/products', icon: Package, label: t('products') },
+    { path: '/quotation', icon: FileSpreadsheet, label: t('quotation'), highlighted: true },
     { path: '/factories', icon: Building2, label: t('factoryUnit') },
     { path: '/leather-library', icon: Palette, label: t('leatherLibrary') },
     { path: '/finish-library', icon: Layers, label: t('finishLibrary') },
