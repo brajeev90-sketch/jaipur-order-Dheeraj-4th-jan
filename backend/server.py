@@ -141,6 +141,58 @@ class ExportRecord(BaseModel):
     filename: str
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
+class Product(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    product_code: str
+    description: str = ""
+    category: str = ""
+    size: str = ""
+    height_cm: float = 0
+    depth_cm: float = 0
+    width_cm: float = 0
+    cbm: float = 0
+    fob_price_usd: float = 0
+    fob_price_gbp: float = 0
+    warehouse_price_1: float = 0
+    warehouse_price_2: float = 0
+    image: str = ""
+    images: List[str] = []
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class ProductCreate(BaseModel):
+    product_code: str
+    description: str = ""
+    category: str = ""
+    size: str = ""
+    height_cm: float = 0
+    depth_cm: float = 0
+    width_cm: float = 0
+    cbm: float = 0
+    fob_price_usd: float = 0
+    fob_price_gbp: float = 0
+    warehouse_price_1: float = 0
+    warehouse_price_2: float = 0
+    image: str = ""
+    images: List[str] = []
+
+class ProductUpdate(BaseModel):
+    product_code: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    size: Optional[str] = None
+    height_cm: Optional[float] = None
+    depth_cm: Optional[float] = None
+    width_cm: Optional[float] = None
+    cbm: Optional[float] = None
+    fob_price_usd: Optional[float] = None
+    fob_price_gbp: Optional[float] = None
+    warehouse_price_1: Optional[float] = None
+    warehouse_price_2: Optional[float] = None
+    image: Optional[str] = None
+    images: Optional[List[str]] = None
+
 # ============ ROUTES ============
 
 @api_router.get("/")
