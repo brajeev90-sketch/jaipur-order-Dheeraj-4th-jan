@@ -9,7 +9,8 @@ import {
   Layers,
   Menu,
   X,
-  Globe
+  Globe,
+  Building2
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -22,6 +23,7 @@ export const Layout = () => {
     { path: '/', icon: LayoutDashboard, label: t('dashboard') },
     { path: '/orders', icon: FileText, label: t('orders') },
     { path: '/orders/new', icon: PlusCircle, label: t('newOrder') },
+    { path: '/factories', icon: Building2, label: 'Factory / Unit' },
     { path: '/leather-library', icon: Palette, label: t('leatherLibrary') },
     { path: '/finish-library', icon: Layers, label: t('finishLibrary') },
     { path: '/template-settings', icon: Settings, label: t('templateSettings') },
