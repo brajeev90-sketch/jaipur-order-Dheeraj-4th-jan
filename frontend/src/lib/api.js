@@ -94,6 +94,15 @@ export const productsApi = {
       },
     });
   },
+  downloadSample: () => `${BACKEND_URL}/api/templates/products-sample`,
+};
+
+// Templates API (for sample downloads)
+export const templatesApi = {
+  productsSample: () => `${BACKEND_URL}/api/templates/products-sample`,
+  leatherSample: () => `${BACKEND_URL}/api/templates/leather-sample`,
+  finishSample: () => `${BACKEND_URL}/api/templates/finish-sample`,
+  factoriesSample: () => `${BACKEND_URL}/api/templates/factories-sample`,
 };
 
 // Categories API
