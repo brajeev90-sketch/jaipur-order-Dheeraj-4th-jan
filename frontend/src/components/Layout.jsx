@@ -128,12 +128,15 @@ export const Layout = () => {
               end={item.path === '/'}
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
-                `sidebar-link ${isActive ? 'active' : ''}`
+                `sidebar-link ${isActive ? 'active' : ''} ${item.highlighted ? 'bg-amber-100 border-l-4 border-amber-500 text-amber-800 font-semibold hover:bg-amber-200' : ''}`
               }
               data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
             >
               <item.icon size={20} />
               <span>{item.label}</span>
+              {item.highlighted && (
+                <span className="ml-auto text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full">NEW</span>
+              )}
             </NavLink>
           ))}
         </nav>
