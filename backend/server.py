@@ -459,6 +459,42 @@ async def delete_factory(factory_id: str):
         raise HTTPException(status_code=404, detail="Factory not found")
     return {"message": "Factory deleted"}
 
+@api_router.post("/factories/upload-excel")
+async def upload_factories_excel(file: UploadFile = File(...)):
+    """Upload factories from Excel file"""
+    if not file.filename.endswith(('.xlsx', '.xls')):
+        raise HTTPException(status_code=400, detail="File must be an Excel file")
+    
+    try:
+        contents = await file.read()
+        df = pd.read_excel(io.BytesIO(contents))
+        df.columns = df.columns.str.lower().str.strip()
+        
+        column_mapping = {
+            'code': 'code', 'factory code': 'code',
+            'name': 'name', 'factory name': 'name',
+        }
+        df = df.rename(columns=column_mapping)
+        
+        created = []
+        for idx, row in df.iterrows():
+            code = str(row.get('code', '')).strip()
+            if not code or code == 'nan':
+                continue
+                
+            factory_doc = {
+                'id': str(uuid.uuid4()),
+                'code': code.upper(),
+                'name': str(row.get('name', '')).strip() if pd.notna(row.get('name')) else '',
+            }
+            
+            await db.factories.insert_one(factory_doc)
+            created.append({'code': factory_doc['code'], 'name': factory_doc['name']})
+        
+        return {"message": f"{len(created)} factories imported", "created": len(created), "items": created[:20]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # --- CATEGORIES ---
 
 @api_router.get("/categories")
