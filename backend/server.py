@@ -730,6 +730,139 @@ async def bulk_create_products(products: List[ProductCreate]):
         created.append(product)
     return {"message": f"{len(created)} products created", "products": created}
 
+@api_router.post("/products/upload-excel")
+async def upload_products_excel(file: UploadFile = File(...)):
+    """Upload products from Excel file with optional image URLs"""
+    if not file.filename.endswith(('.xlsx', '.xls')):
+        raise HTTPException(status_code=400, detail="File must be an Excel file (.xlsx or .xls)")
+    
+    try:
+        # Read Excel file
+        contents = await file.read()
+        df = pd.read_excel(io.BytesIO(contents))
+        
+        # Normalize column names (handle various formats)
+        column_mapping = {
+            'product code': 'product_code',
+            'productcode': 'product_code',
+            'item code': 'product_code',
+            'itemcode': 'product_code',
+            'code': 'product_code',
+            'description': 'description',
+            'desc': 'description',
+            'size': 'size',
+            'size ( in cm )': 'size',
+            'size (cm)': 'size',
+            'h': 'height_cm',
+            'height': 'height_cm',
+            'height_cm': 'height_cm',
+            'd': 'depth_cm',
+            'depth': 'depth_cm',
+            'depth_cm': 'depth_cm',
+            'w': 'width_cm',
+            'width': 'width_cm',
+            'width_cm': 'width_cm',
+            'cbm': 'cbm',
+            'fob india price $': 'fob_price_usd',
+            'fob $': 'fob_price_usd',
+            'fob_price_usd': 'fob_price_usd',
+            'fob india price £': 'fob_price_gbp',
+            'fob £': 'fob_price_gbp',
+            'fob_price_gbp': 'fob_price_gbp',
+            'warehouse price £700': 'warehouse_price_1',
+            'warehouse_price_1': 'warehouse_price_1',
+            'warehouse price £2000': 'warehouse_price_2',
+            'warehouse_price_2': 'warehouse_price_2',
+            'photo link': 'image_url',
+            'photolink': 'image_url',
+            'image': 'image_url',
+            'image_url': 'image_url',
+            'photo': 'image_url',
+            'picture': 'image_url',
+            'category': 'category',
+        }
+        
+        # Rename columns
+        df.columns = df.columns.str.lower().str.strip()
+        df = df.rename(columns=column_mapping)
+        
+        created_products = []
+        skipped = 0
+        errors = []
+        
+        for idx, row in df.iterrows():
+            try:
+                # Skip rows without product code
+                product_code = str(row.get('product_code', '')).strip()
+                if not product_code or product_code == 'nan' or product_code == '':
+                    skipped += 1
+                    continue
+                
+                # Parse numeric fields safely
+                def safe_float(val, default=0):
+                    try:
+                        if pd.isna(val) or val == '' or val == 'nan':
+                            return default
+                        return float(val)
+                    except:
+                        return default
+                
+                # Build product data
+                product_data = {
+                    'product_code': product_code.upper(),
+                    'description': str(row.get('description', '')).strip() if pd.notna(row.get('description')) else '',
+                    'size': str(row.get('size', '')).strip() if pd.notna(row.get('size')) else '',
+                    'category': str(row.get('category', '')).strip() if pd.notna(row.get('category')) else '',
+                    'height_cm': safe_float(row.get('height_cm')),
+                    'depth_cm': safe_float(row.get('depth_cm')),
+                    'width_cm': safe_float(row.get('width_cm')),
+                    'cbm': safe_float(row.get('cbm')),
+                    'fob_price_usd': safe_float(row.get('fob_price_usd')),
+                    'fob_price_gbp': safe_float(row.get('fob_price_gbp')),
+                    'warehouse_price_1': safe_float(row.get('warehouse_price_1')),
+                    'warehouse_price_2': safe_float(row.get('warehouse_price_2')),
+                    'image': '',
+                    'images': []
+                }
+                
+                # Handle image URL - try to fetch and convert to base64
+                image_url = str(row.get('image_url', '')).strip() if pd.notna(row.get('image_url')) else ''
+                if image_url and image_url != 'nan' and image_url != '#REF!' and image_url.startswith('http'):
+                    try:
+                        async with httpx.AsyncClient(timeout=10.0) as client:
+                            response = await client.get(image_url)
+                            if response.status_code == 200:
+                                content_type = response.headers.get('content-type', 'image/jpeg')
+                                if 'image' in content_type:
+                                    image_base64 = base64.b64encode(response.content).decode('utf-8')
+                                    product_data['image'] = f"data:{content_type};base64,{image_base64}"
+                    except Exception as img_error:
+                        # Log but continue without image
+                        pass
+                
+                # Create product
+                product = Product(**product_data)
+                doc = product.model_dump()
+                await db.products.insert_one(doc)
+                created_products.append({
+                    'product_code': product.product_code,
+                    'description': product.description
+                })
+                
+            except Exception as row_error:
+                errors.append(f"Row {idx + 2}: {str(row_error)}")
+        
+        return {
+            "message": f"Successfully imported {len(created_products)} products",
+            "created": len(created_products),
+            "skipped": skipped,
+            "errors": errors[:10] if errors else [],  # Return first 10 errors only
+            "products": created_products[:20]  # Return first 20 products
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing Excel file: {str(e)}")
+
 # --- DASHBOARD STATS ---
 
 @api_router.get("/dashboard/stats")
