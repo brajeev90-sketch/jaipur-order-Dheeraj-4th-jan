@@ -10,7 +10,8 @@ import {
   Menu,
   X,
   Globe,
-  Building2
+  Building2,
+  Package
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useLanguage } from '../contexts/LanguageContext';
