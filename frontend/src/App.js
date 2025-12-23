@@ -14,6 +14,7 @@ import FinishLibrary from "./pages/FinishLibrary";
 import TemplateSettings from "./pages/TemplateSettings";
 import FactoryManagement from "./pages/FactoryManagement";
 import Products from "./pages/Products";
+import Quotation from "./pages/Quotation";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="orders/:id/edit" element={<EditOrder />} />
               <Route path="orders/:id/preview" element={<OrderPreview />} />
               <Route path="products" element={<Products />} />
+              <Route path="quotation" element={<Quotation />} />
               <Route path="factories" element={<FactoryManagement />} />
               <Route path="leather-library" element={<LeatherLibrary />} />
               <Route path="finish-library" element={<FinishLibrary />} />
