@@ -125,6 +125,143 @@ export default function Quotation() {
     return { totalItems, totalCBM: totalCBM.toFixed(2), totalValue: totalValue.toFixed(2) };
   };
 
+  const handleGenerateQuote = async () => {
+    // Validate inputs
+    if (!quotationDetails.customer_name) {
+      toast.error('Please enter customer name');
+      return;
+    }
+    if (quotationItems.length === 0) {
+      toast.error('Please add products to the quotation');
+      return;
+    }
+
+    // Generate quotation PDF
+    const totals = calculateTotals();
+    const currencySymbol = quotationDetails.currency === 'USD' ? '$' : quotationDetails.currency === 'GBP' ? '£' : '₹';
+    
+    // Create printable quotation content
+    const quotationHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Quotation - ${quotationDetails.reference || 'QUOTE'}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+          .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #3d2c1e; padding-bottom: 20px; margin-bottom: 20px; }
+          .logo { font-size: 28px; font-weight: bold; color: #3d2c1e; }
+          .logo-subtitle { font-size: 12px; color: #666; font-style: italic; }
+          .quote-info { text-align: right; font-size: 12px; }
+          .quote-info p { margin: 4px 0; }
+          .customer-info { margin-bottom: 20px; }
+          .customer-info h3 { margin: 0 0 10px 0; color: #3d2c1e; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+          th { background: #3d2c1e; color: white; padding: 10px; text-align: left; font-size: 12px; }
+          td { padding: 10px; border-bottom: 1px solid #ddd; font-size: 12px; }
+          .totals { background: #f5f0eb; padding: 15px; margin-top: 20px; }
+          .totals h3 { margin: 0 0 10px 0; color: #3d2c1e; }
+          .totals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+          .total-item { text-align: center; }
+          .total-label { font-size: 12px; color: #666; }
+          .total-value { font-size: 18px; font-weight: bold; color: #3d2c1e; }
+          .notes { margin-top: 20px; padding: 15px; background: #fafafa; border: 1px solid #ddd; }
+          .notes h4 { margin: 0 0 10px 0; }
+          .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #888; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div>
+            <div class="logo">JAIPUR</div>
+            <div class="logo-subtitle">A fine wood furniture company</div>
+          </div>
+          <div class="quote-info">
+            <p><strong>Quotation</strong></p>
+            <p>Ref: ${quotationDetails.reference || 'N/A'}</p>
+            <p>Date: ${quotationDetails.date}</p>
+          </div>
+        </div>
+        
+        <div class="customer-info">
+          <h3>To: ${quotationDetails.customer_name}</h3>
+          ${quotationDetails.customer_email ? `<p>Email: ${quotationDetails.customer_email}</p>` : ''}
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Item Code</th>
+              <th>Description</th>
+              <th>Size (H×D×W)</th>
+              <th>CBM</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${quotationItems.map(item => `
+              <tr>
+                <td>${item.product_code}</td>
+                <td>${item.description || '-'}</td>
+                <td>${item.height_cm || 0}×${item.depth_cm || 0}×${item.width_cm || 0}</td>
+                <td>${item.cbm || 0}</td>
+                <td>${item.quantity}</td>
+                <td>${currencySymbol}${item.fob_price.toFixed(2)}</td>
+                <td>${currencySymbol}${item.total.toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        
+        <div class="totals">
+          <h3>Summary</h3>
+          <div class="totals-grid">
+            <div class="total-item">
+              <div class="total-label">Total Items</div>
+              <div class="total-value">${totals.totalItems} Pcs</div>
+            </div>
+            <div class="total-item">
+              <div class="total-label">Total CBM</div>
+              <div class="total-value">${totals.totalCBM} m³</div>
+            </div>
+            <div class="total-item">
+              <div class="total-label">Total Value</div>
+              <div class="total-value">${currencySymbol}${totals.totalValue}</div>
+            </div>
+          </div>
+        </div>
+        
+        ${quotationDetails.notes ? `
+          <div class="notes">
+            <h4>Notes:</h4>
+            <p>${quotationDetails.notes}</p>
+          </div>
+        ` : ''}
+        
+        <div class="footer">
+          <p>This quotation is valid for 30 days from the date of issue.</p>
+          <p>JAIPUR - A fine wood furniture company</p>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    // Open in new window for printing/saving as PDF
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(quotationHTML);
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Trigger print dialog
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+    
+    toast.success('Quotation generated! Use Print dialog to save as PDF.');
+  };
+
   const filteredProducts = products.filter(product => 
     !searchTerm || 
     product.product_code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
