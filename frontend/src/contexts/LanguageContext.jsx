@@ -458,6 +458,9 @@ const translations = {
     uploadFailed: 'फाइल अपलोड करने में विफल',
     invalidFileType: 'कृपया एक्सेल फाइल (.xlsx या .xls) अपलोड करें',
     close: 'बंद करें',
+    downloadSample: 'सैंपल डाउनलोड करें',
+    downloadSampleFirst: 'पहले सैंपल डाउनलोड करें',
+    downloadSampleDesc: 'अपना डेटा सही तरीके से फॉर्मेट करने के लिए इस टेम्पलेट का उपयोग करें',
     
     // Quotation
     quotationTitle: 'कोटेशन',
