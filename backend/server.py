@@ -195,6 +195,64 @@ class ProductUpdate(BaseModel):
     image: Optional[str] = None
     images: Optional[List[str]] = None
 
+# Quotation Models
+class QuotationItem(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    product_id: str = ""
+    product_code: str = ""
+    description: str = ""
+    height_cm: float = 0
+    depth_cm: float = 0
+    width_cm: float = 0
+    cbm: float = 0
+    quantity: int = 1
+    fob_price: float = 0
+    total: float = 0
+
+class Quotation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    reference: str = ""
+    customer_name: str = ""
+    customer_email: str = ""
+    date: str = ""
+    currency: str = "USD"
+    notes: str = ""
+    items: List[QuotationItem] = []
+    total_items: int = 0
+    total_cbm: float = 0
+    total_value: float = 0
+    status: str = "draft"  # draft, sent, accepted, rejected
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class QuotationCreate(BaseModel):
+    reference: str = ""
+    customer_name: str = ""
+    customer_email: str = ""
+    date: str = ""
+    currency: str = "USD"
+    notes: str = ""
+    items: List[dict] = []
+    total_items: int = 0
+    total_cbm: float = 0
+    total_value: float = 0
+    status: str = "draft"
+
+class QuotationUpdate(BaseModel):
+    reference: Optional[str] = None
+    customer_name: Optional[str] = None
+    customer_email: Optional[str] = None
+    date: Optional[str] = None
+    currency: Optional[str] = None
+    notes: Optional[str] = None
+    items: Optional[List[dict]] = None
+    total_items: Optional[int] = None
+    total_cbm: Optional[float] = None
+    total_value: Optional[float] = None
+    status: Optional[str] = None
+
 # ============ ROUTES ============
 
 @api_router.get("/")
