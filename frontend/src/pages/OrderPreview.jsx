@@ -217,6 +217,9 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
 
   // Get the product image (from product_image field or images array)
   const productImage = item.product_image || (item.images?.length > 0 ? item.images[0] : null);
+  
+  // Company logo URL (same as dashboard)
+  const logoUrl = "https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg";
 
   return (
     <div className="h-full flex flex-col" style={{ fontFamily: 'Manrope, sans-serif', fontSize: '12px' }}>
@@ -224,15 +227,11 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
       <div className="flex justify-between items-start pb-4 border-b-2 border-[#3d2c1e]">
         {/* Logo - Left Side */}
         <div className="flex items-center gap-3">
-          <div className="text-[#3d2c1e]">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L8 6H5C3.89 6 3 6.89 3 8V20C3 21.11 3.89 22 5 22H19C20.11 22 21 21.11 21 20V8C21 6.89 20.11 6 19 6H16L12 2ZM12 4.83L14.17 7H9.83L12 4.83ZM12 10C14.21 10 16 11.79 16 14C16 16.21 14.21 18 12 18C9.79 18 8 16.21 8 14C8 11.79 9.79 10 12 10Z"/>
-            </svg>
-          </div>
-          <div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#3d2c1e] tracking-wide">JAIPUR</h1>
-            <p className="text-xs text-[#666] italic">A fine wood furniture company</p>
-          </div>
+          <img 
+            src={logoUrl} 
+            alt="JAIPUR" 
+            className="h-14 w-auto object-contain"
+          />
         </div>
         
         {/* Info Table - Right Side (with Factory Inform Date) */}
