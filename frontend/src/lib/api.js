@@ -28,6 +28,13 @@ export const leatherApi = {
   create: (data) => api.post('/leather-library', data),
   update: (id, data) => api.put(`/leather-library/${id}`, data),
   delete: (id) => api.delete(`/leather-library/${id}`),
+  uploadExcel: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/leather-library/upload-excel', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // Finish Library API
@@ -36,6 +43,13 @@ export const finishApi = {
   create: (data) => api.post('/finish-library', data),
   update: (id, data) => api.put(`/finish-library/${id}`, data),
   delete: (id) => api.delete(`/finish-library/${id}`),
+  uploadExcel: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/finish-library/upload-excel', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // Template Settings API
