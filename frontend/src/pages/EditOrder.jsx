@@ -509,15 +509,59 @@ export default function EditOrder() {
           <div className="space-y-6 py-4">
             {/* Basic Info */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label>Product Code *</Label>
-                <Input
-                  value={currentItem.product_code}
-                  onChange={(e) => handleItemChange('product_code', e.target.value)}
-                  placeholder="PRD-001"
-                  className="font-mono"
-                  data-testid="item-product-code"
-                />
+              <div className="space-y-2 relative">
+                <Label>Product Code * <span className="text-xs text-muted-foreground">(Search existing)</span></Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                  <Input
+                    value={productSearch || currentItem.product_code}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setProductSearch(value);
+                      handleItemChange('product_code', value);
+                      setShowProductSuggestions(value.length > 0);
+                    }}
+                    onFocus={() => setShowProductSuggestions(productSearch.length > 0 || products.length > 0)}
+                    placeholder="Type to search products..."
+                    className="font-mono pl-9"
+                    data-testid="item-product-code"
+                  />
+                </div>
+                
+                {/* Product Suggestions Dropdown */}
+                {showProductSuggestions && (
+                  <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {filteredProducts.length === 0 ? (
+                      <div className="p-3 text-sm text-muted-foreground text-center">
+                        No products found. You can still add manually.
+                      </div>
+                    ) : (
+                      filteredProducts.slice(0, 10).map((product) => (
+                        <div
+                          key={product.id}
+                          className="p-3 hover:bg-muted cursor-pointer border-b border-border last:border-b-0"
+                          onClick={() => handleProductSelect(product)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono font-medium text-sm">{product.product_code}</span>
+                            {product.cbm > 0 && (
+                              <span className="text-xs text-muted-foreground">CBM: {product.cbm}</span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{product.description}</p>
+                          {product.size && (
+                            <p className="text-xs text-muted-foreground">Size: {product.size}</p>
+                          )}
+                        </div>
+                      ))
+                    )}
+                    {filteredProducts.length > 10 && (
+                      <div className="p-2 text-xs text-center text-muted-foreground bg-muted">
+                        +{filteredProducts.length - 10} more products...
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <Label>Category</Label>
