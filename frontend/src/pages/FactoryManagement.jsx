@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { factoriesApi } from '../lib/api';
+import { factoriesApi, templatesApi } from '../lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../components/ui/alert-dialog';
-import { Building2, Plus, Trash2, Edit, FileSpreadsheet, Upload } from 'lucide-react';
+import { Building2, Plus, Trash2, Edit, FileSpreadsheet, Upload, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
 
