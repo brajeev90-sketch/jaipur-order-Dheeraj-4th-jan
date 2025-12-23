@@ -263,12 +263,36 @@ async def update_template_settings(settings: TemplateSettings):
 
 @api_router.get("/factories")
 async def get_factories():
-    return [
-        {"id": "factory-1", "name": "Main Factory"},
-        {"id": "factory-2", "name": "Unit 2 - Wood Workshop"},
-        {"id": "factory-3", "name": "Unit 3 - Finishing Hall"},
-        {"id": "factory-4", "name": "Unit 4 - Assembly"}
-    ]
+    factories = await db.factories.find({}, {"_id": 0}).to_list(100)
+    if not factories:
+        # Initialize with default factories
+        default_factories = [
+            {"id": "sae", "code": "SAE", "name": "Shekhawati Art Exports"},
+            {"id": "cac", "code": "CAC", "name": "Country Art & Crafts"},
+            {"id": "gae", "code": "GAE", "name": "Global Art Exports"},
+        ]
+        for factory in default_factories:
+            await db.factories.insert_one(factory)
+        return default_factories
+    return factories
+
+@api_router.post("/factories")
+async def create_factory(factory: dict):
+    factory_id = str(uuid.uuid4())
+    factory_doc = {
+        "id": factory_id,
+        "code": factory.get("code", ""),
+        "name": factory.get("name", ""),
+    }
+    await db.factories.insert_one(factory_doc)
+    return factory_doc
+
+@api_router.delete("/factories/{factory_id}")
+async def delete_factory(factory_id: str):
+    result = await db.factories.delete_one({"id": factory_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Factory not found")
+    return {"message": "Factory deleted"}
 
 # --- CATEGORIES ---
 
