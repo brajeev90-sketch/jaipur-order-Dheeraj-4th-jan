@@ -540,26 +540,37 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
     primary_color = HexColor(settings.get('primary_color', '#3d2c1e'))
     
     for idx, item in enumerate(order.get("items", [])):
-        # === HEADER SECTION ===
-        # Logo on LEFT
+        # === HEADER SECTION (Two-column layout) ===
+        header_top = height - margin
+        header_height = 60
+        
+        # Logo on LEFT - proper size and positioning
+        logo_width = 100
+        logo_height = 55
         if logo_bytes:
             try:
                 from reportlab.lib.utils import ImageReader
                 logo_img = ImageReader(io.BytesIO(logo_bytes))
-                c.drawImage(logo_img, margin, height - margin - 50, width=80, height=50, preserveAspectRatio=True)
+                c.drawImage(logo_img, margin, header_top - logo_height, width=logo_width, height=logo_height, preserveAspectRatio=True)
             except:
                 c.setFillColor(primary_color)
-                c.setFont("Helvetica-Bold", 24)
-                c.drawString(margin, height - margin - 25, "JAIPUR")
+                c.setFont("Helvetica-Bold", 28)
+                c.drawString(margin, header_top - 30, "JAIPUR")
+                c.setFont("Helvetica-Oblique", 8)
+                c.setFillColor(HexColor('#666666'))
+                c.drawString(margin, header_top - 42, "A fine wood furniture company")
         else:
             c.setFillColor(primary_color)
-            c.setFont("Helvetica-Bold", 24)
-            c.drawString(margin, height - margin - 25, "JAIPUR")
+            c.setFont("Helvetica-Bold", 28)
+            c.drawString(margin, header_top - 30, "JAIPUR")
+            c.setFont("Helvetica-Oblique", 8)
+            c.setFillColor(HexColor('#666666'))
+            c.drawString(margin, header_top - 42, "A fine wood furniture company")
         
-        # Date table on RIGHT (with Factory Inform Date)
-        c.setFillColor(HexColor('#333333'))
-        right_x = width - margin - 140
-        y = height - margin - 10
+        # Info table on RIGHT - aligned with header
+        table_width = 145
+        right_x = width - margin - table_width
+        y = header_top - 8
         
         dates = [
             ("ENTRY DATE", order.get('entry_date', 'N/A')),
@@ -569,30 +580,47 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             ("BUYER PO", order.get('buyer_po_ref', 'N/A')),
         ]
         
+        row_height = 11
+        table_height = len(dates) * row_height
+        
         # Draw table border
-        table_height = len(dates) * 14
         c.setStrokeColor(primary_color)
         c.setLineWidth(1)
-        c.rect(right_x - 5, y - table_height + 5, 145, table_height)
+        c.rect(right_x, y - table_height, table_width, table_height)
         
-        for label, value in dates:
-            c.setFont("Helvetica-Bold", 7)
+        # Draw table rows
+        label_width = 58
+        for i, (label, value) in enumerate(dates):
+            row_y = y - (i + 1) * row_height
+            
+            # Label cell with background
             c.setFillColor(HexColor('#f5f0eb'))
-            c.rect(right_x - 5, y - 9, 65, 14, fill=True)
+            c.rect(right_x, row_y, label_width, row_height, fill=True, stroke=False)
+            
+            # Cell borders
+            c.setStrokeColor(primary_color)
+            c.rect(right_x, row_y, label_width, row_height, fill=False, stroke=True)
+            c.rect(right_x + label_width, row_y, table_width - label_width, row_height, fill=False, stroke=True)
+            
+            # Label text
             c.setFillColor(primary_color)
-            c.drawString(right_x, y, label)
-            c.setFont("Helvetica", 7)
+            c.setFont("Helvetica-Bold", 6)
+            c.drawString(right_x + 3, row_y + 3, label)
+            
+            # Value text
             c.setFillColor(HexColor('#333333'))
-            c.drawString(right_x + 65, y, str(value)[:20])
-            y -= 14
+            c.setFont("Helvetica", 6)
+            value_str = str(value)[:18] if value else '-'
+            c.drawString(right_x + label_width + 3, row_y + 3, value_str)
         
-        # Separator line
+        # Separator line under header
+        separator_y = header_top - header_height - 5
         c.setStrokeColor(primary_color)
         c.setLineWidth(2)
-        c.line(margin, height - margin - 65, width - margin, height - margin - 65)
+        c.line(margin, separator_y, width - margin, separator_y)
         
         # === CONTENT AREA (75% Image + 25% Materials) ===
-        content_y = height - margin - 85
+        content_y = separator_y - 15
         img_width = (width - 2*margin) * 0.72
         material_width = (width - 2*margin) * 0.25
         material_x = margin + img_width + 10
