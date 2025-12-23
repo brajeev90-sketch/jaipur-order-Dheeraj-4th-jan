@@ -500,6 +500,45 @@ const translations = {
     failedToAddFactory: 'फैक्ट्री जोड़ने में विफल',
     failedToUpdateFactory: 'फैक्ट्री अपडेट करने में विफल',
     failedToDeleteFactory: 'फैक्ट्री हटाने में विफल',
+    bulkUploadFactories: 'बल्क फैक्ट्री अपलोड',
+    excelFormatDescFactory: 'फैक्ट्री डेटा के साथ एक्सेल फाइल (.xlsx/.xls) अपलोड करें।',
+    factoriesImported: 'फैक्ट्रियां सफलतापूर्वक इम्पोर्ट की गईं',
+    factoriesCreated: 'फैक्ट्रियां बनाई गईं',
+    
+    // Leather Library
+    leatherLibraryDesc: 'अपने लेदर कोड और सामग्री प्रबंधित करें',
+    addLeather: 'लेदर जोड़ें',
+    editLeather: 'लेदर संपादित करें',
+    addNewLeather: 'नया लेदर जोड़ें',
+    noLeatherYet: 'अभी कोई लेदर आइटम नहीं',
+    addFirstLeather: 'पहला लेदर जोड़ें',
+    bulkUploadLeather: 'बल्क लेदर अपलोड',
+    
+    // Finish Library
+    finishLibraryDesc: 'अपने फिनिश कोड और सामग्री प्रबंधित करें',
+    addFinish: 'फिनिश जोड़ें',
+    editFinish: 'फिनिश संपादित करें',
+    addNewFinish: 'नया फिनिश जोड़ें',
+    noFinishYet: 'अभी कोई फिनिश आइटम नहीं',
+    addFirstFinish: 'पहला फिनिश जोड़ें',
+    bulkUploadFinish: 'बल्क फिनिश अपलोड',
+    
+    // Common Library
+    excelFormatDescLibrary: 'आइटम डेटा के साथ एक्सेल फाइल (.xlsx/.xls) अपलोड करें। इमेज URL लिंक से फेच की जाएंगी।',
+    itemsImported: 'आइटम सफलतापूर्वक इम्पोर्ट किए गए',
+    itemsCreated: 'आइटम बनाए गए',
+    uploadingItems: 'आइटम अपलोड हो रहे हैं...',
+    codeNameRequired: 'कोड और नाम आवश्यक हैं',
+    itemCreated: 'आइटम सफलतापूर्वक बनाया गया',
+    itemUpdated: 'आइटम सफलतापूर्वक अपडेट किया गया',
+    itemDeleted: 'आइटम सफलतापूर्वक हटाया गया',
+    deleteItem: 'आइटम हटाएं',
+    deleteItemConfirm: 'क्या आप वाकई हटाना चाहते हैं',
+    code: 'कोड',
+    name: 'नाम',
+    color: 'रंग',
+    image: 'इमेज',
+    create: 'बनाएं',
     
     // Dashboard
     dashboardTitle: 'डैशबोर्ड',
