@@ -72,6 +72,7 @@ class Order(BaseModel):
     buyer_po_ref: str = ""
     buyer_name: str = ""
     entry_date: str = ""
+    factory_inform_date: str = ""
     status: str = "Draft"
     factory: str = ""
     items: List[OrderItem] = []
@@ -83,6 +84,7 @@ class OrderCreate(BaseModel):
     buyer_po_ref: str = ""
     buyer_name: str = ""
     entry_date: str = ""
+    factory_inform_date: str = ""
     status: str = "Draft"
     factory: str = ""
     items: List[OrderItem] = []
@@ -92,6 +94,7 @@ class OrderUpdate(BaseModel):
     buyer_po_ref: Optional[str] = None
     buyer_name: Optional[str] = None
     entry_date: Optional[str] = None
+    factory_inform_date: Optional[str] = None
     status: Optional[str] = None
     factory: Optional[str] = None
     items: Optional[List[OrderItem]] = None
