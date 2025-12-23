@@ -56,6 +56,16 @@ export const factoriesApi = {
   delete: (id) => api.delete(`/factories/${id}`),
 };
 
+// Products API
+export const productsApi = {
+  getAll: () => api.get('/products'),
+  getById: (id) => api.get(`/products/${id}`),
+  create: (data) => api.post('/products', data),
+  update: (id, data) => api.put(`/products/${id}`, data),
+  delete: (id) => api.delete(`/products/${id}`),
+  bulkCreate: (products) => api.post('/products/bulk', products),
+};
+
 // Categories API
 export const categoriesApi = {
   getAll: () => api.get('/categories'),
