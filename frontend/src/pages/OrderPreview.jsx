@@ -379,7 +379,7 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
       </div>
 
       {/* Product Details Table - Bottom */}
-      <div className="border-2 border-[#3d2c1e] mt-auto overflow-x-auto">
+      <div className="border-2 border-[#3d2c1e] overflow-x-auto">
         <table className="w-full text-[10px] sm:text-xs min-w-[500px]">
           <thead>
             <tr className="bg-[#3d2c1e] text-white">
