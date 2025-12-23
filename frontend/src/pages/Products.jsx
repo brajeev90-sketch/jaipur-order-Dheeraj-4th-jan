@@ -73,6 +73,7 @@ export default function Products() {
     images: []
   });
   const fileInputRef = useRef(null);
+  const excelInputRef = useRef(null);
 
   useEffect(() => {
     loadData();
@@ -80,17 +81,51 @@ export default function Products() {
 
   const loadData = async () => {
     try {
-      const [productsRes, categoriesRes] = await Promise.all([
-        productsApi.getAll(),
-        categoriesApi.getAll()
-      ]);
+      const productsRes = await productsApi.getAll();
       setProducts(productsRes.data);
-      setCategories(categoriesRes.data);
+      // Categories API might not exist, handle gracefully
+      try {
+        const categoriesRes = await categoriesApi.getAll();
+        setCategories(categoriesRes.data || []);
+      } catch {
+        setCategories([]);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
       toast.error(t('failedToLoad'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleExcelUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+      toast.error(t('invalidFileType'));
+      return;
+    }
+
+    setUploading(true);
+    setUploadResult(null);
+
+    try {
+      const response = await productsApi.uploadExcel(file);
+      setUploadResult(response.data);
+      toast.success(`${response.data.created} ${t('productsImported')}`);
+      loadData(); // Reload products
+    } catch (error) {
+      console.error('Error uploading Excel:', error);
+      toast.error(t('uploadFailed'));
+      setUploadResult({ error: error.message });
+    } finally {
+      setUploading(false);
+      // Reset file input
+      if (excelInputRef.current) {
+        excelInputRef.current.value = '';
+      }
     }
   };
 
