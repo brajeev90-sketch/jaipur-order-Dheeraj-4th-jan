@@ -882,16 +882,15 @@ export default function EditOrder() {
             {/* Notes */}
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Textarea
+              <RichTextEditor
                 value={currentItem.notes}
-                onChange={(e) => handleItemChange('notes', e.target.value)}
-                placeholder="Enter notes (use • for bullet points)"
-                rows={4}
-                className="min-h-[120px]"
+                onChange={(value) => handleItemChange('notes', value)}
+                placeholder="Enter notes with formatting..."
+                minHeight="120px"
                 data-testid="item-notes"
               />
               <p className="text-xs text-muted-foreground">
-                Tip: Use • for bullet points, **text** for bold
+                Use toolbar to format: Bold, Italic, Underline, Highlight, Lists
               </p>
             </div>
 
