@@ -431,17 +431,12 @@ export default function Quotation() {
         <div class="summary-section">
           <div class="summary-box"><div class="summary-label">Total Items</div><div class="summary-value">${totals.totalItems} Pcs</div></div>
           <div class="summary-box"><div class="summary-label">Total CBM</div><div class="summary-value">${totals.totalCBM} m³</div></div>
-          <div class="summary-box"><div class="summary-label">40' HQ Container</div><div class="summary-value">${(parseFloat(totals.totalCBM) / containerCapacity * 100).toFixed(0)}%</div></div>
           <div class="summary-box highlight"><div class="summary-label">Grand Total</div><div class="summary-value">${currencySymbol}${totals.totalValue}</div></div>
-        </div>
-        <div class="container-info">
-          <div><div class="container-label">Container Load Estimate</div><div class="container-value">${totals.totalCBM} CBM / 76 CBM (40' HQ)</div></div>
-          <div style="text-align: right;"><div class="container-label">Containers Required</div><div class="container-value">${Math.ceil(parseFloat(totals.totalCBM) / containerCapacity)} × 40' HQ</div></div>
         </div>
         ${quotationDetails.notes ? `<div class="notes-section"><div class="notes-title">📝 Special Notes:</div><div class="notes-content">${quotationDetails.notes}</div></div>` : ''}
         <div class="footer">
           <div class="footer-text">This quotation is valid for 30 days from the date of issue.</div>
-          <div class="footer-text">Prices are FOB India. Shipping and import duties not included.</div>
+          <div class="footer-text">Prices are FOB India. Shipping and import duties charges not included.</div>
           <div class="footer-brand">JAIPUR - A fine wood furniture company</div>
         </div>
       </body>
