@@ -115,6 +115,9 @@ export default function RichTextEditor({
 
   return (
     <div className={cn('border rounded-md bg-white overflow-hidden', className)}>
+      {/* Inject custom styles for lists */}
+      <style>{editorStyles}</style>
+      
       {/* Toolbar */}
       <div className="flex items-center gap-1 p-1.5 border-b bg-gray-50">
         <MenuButton
@@ -175,12 +178,10 @@ export default function RichTextEditor({
         style={{ minHeight }}
       />
 
-      {/* Placeholder hint */}
-      {!value && !editor.isFocused && (
-        <div className="absolute top-[50px] left-3 text-gray-400 pointer-events-none text-sm">
-          {placeholder}
-        </div>
-      )}
+      {/* Helper text */}
+      <div className="text-xs text-gray-400 px-2 py-1 border-t bg-gray-50">
+        Use toolbar to format: Bold, Italic, Underline, Highlight, Lists
+      </div>
     </div>
   );
 }
