@@ -720,7 +720,14 @@ export default function Quotation() {
                     <TableCell>{product.height_cm}×{product.depth_cm}×{product.width_cm}</TableCell>
                     <TableCell>{product.cbm}</TableCell>
                     <TableCell className="text-right">
-                      {quotationDetails.currency === 'USD' ? `$${product.fob_price_usd || 0}` : `£${product.fob_price_gbp || 0}`}
+                      {(() => {
+                        const c = quotationDetails.currency;
+                        if (c === 'FOB_USD') return `$${product.fob_price_usd || 0}`;
+                        if (c === 'FOB_GBP') return `£${product.fob_price_gbp || 0}`;
+                        if (c === 'WH_700') return `£${product.warehouse_price_1 || product.warehouse_price_700 || 0}`;
+                        if (c === 'WH_2000') return `£${product.warehouse_price_2 || product.warehouse_price_2000 || 0}`;
+                        return `$${product.fob_price_usd || 0}`;
+                      })()}
                     </TableCell>
                   </TableRow>
                 ))}
