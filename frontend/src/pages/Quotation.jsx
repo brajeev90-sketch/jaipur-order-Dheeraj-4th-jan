@@ -278,166 +278,251 @@ export default function Quotation() {
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
-            padding: 30px; 
-            max-width: 1100px; 
+            padding: 25px; 
+            max-width: 900px; 
             margin: 0 auto; 
             background: white;
             color: #333;
           }
+          .page { page-break-after: always; }
+          .page:last-child { page-break-after: auto; }
+          
+          /* Header */
           .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start; 
-            margin-bottom: 25px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 3px solid #3d2c1e;
           }
-          .logo-section { display: flex; align-items: center; gap: 15px; }
+          .logo-section img { height: 60px; width: auto; }
           .quote-info {
-            text-align: right; background: #f8f5f2; padding: 15px 20px;
-            border-radius: 8px; min-width: 200px;
+            text-align: right; background: #f8f5f2; padding: 12px 18px;
+            border-radius: 8px;
           }
-          .quote-title { font-size: 22px; font-weight: bold; color: #3d2c1e; margin-bottom: 8px; }
-          .quote-detail { font-size: 12px; color: #555; margin: 4px 0; }
+          .quote-title { font-size: 20px; font-weight: bold; color: #3d2c1e; margin-bottom: 5px; }
+          .quote-detail { font-size: 11px; color: #555; margin: 3px 0; }
           .quote-detail strong { color: #3d2c1e; }
-          .customer-date-section {
+          
+          /* Customer & Date Banner */
+          .customer-banner {
             display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(135deg, #3d2c1e 0%, #5a4a3a 100%);
-            color: white; padding: 20px 25px; border-radius: 8px;
-            margin-bottom: 25px;
+            color: white; padding: 15px 20px; border-radius: 8px;
+            margin-bottom: 20px;
           }
-          .customer-info h2 { font-size: 24px; margin-bottom: 5px; }
-          .customer-info p { font-size: 14px; opacity: 0.9; }
-          .date-info { text-align: right; }
-          .date-info .date-label { font-size: 12px; opacity: 0.8; }
-          .date-info .date-value { font-size: 20px; font-weight: bold; }
-          .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
-          .items-table thead tr:first-child th {
-            background: #3d2c1e; color: white; padding: 12px 10px;
-            text-align: left; font-weight: 600; font-size: 11px;
-            text-transform: uppercase; letter-spacing: 0.5px;
+          .customer-banner h2 { font-size: 20px; margin-bottom: 3px; }
+          .customer-banner .email { font-size: 12px; opacity: 0.9; }
+          .date-box { text-align: right; }
+          .date-box .label { font-size: 10px; opacity: 0.8; }
+          .date-box .value { font-size: 18px; font-weight: bold; }
+          
+          /* Product Image Section */
+          .product-image-section {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
           }
-          .items-table thead tr:nth-child(2) th {
-            background: #5a4a3a; color: white; padding: 8px 10px;
-            text-align: center; font-weight: 500; font-size: 10px;
+          .product-image {
+            max-width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 8px;
           }
-          .items-table tbody td {
-            padding: 12px 10px; border-bottom: 1px solid #e0e0e0; vertical-align: middle;
+          .no-product-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 16px;
           }
-          .items-table tbody tr:nth-child(even) { background: #fafafa; }
-          .item-code { font-family: 'Courier New', monospace; font-weight: bold; color: #3d2c1e; font-size: 11px; }
-          .item-image { width: 80px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
-          .size-cell { text-align: center; font-size: 11px; }
-          .cbm-cell { text-align: center; font-weight: 500; }
-          .load-cell { text-align: center; background: #fff8e6 !important; font-weight: 500; }
-          .price-header { background: #ffd700 !important; color: #333 !important; font-weight: bold !important; }
-          .price-cell { text-align: right; font-weight: bold; color: #2e7d32; font-size: 13px; }
-          .qty-cell { text-align: center; font-weight: bold; }
-          .total-cell { text-align: right; font-weight: bold; color: #1565c0; font-size: 13px; }
-          .summary-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-          .summary-box {
-            background: #f8f5f2; padding: 15px; border-radius: 8px;
-            text-align: center; border: 1px solid #e0d5c8;
+          
+          /* Product Details Table */
+          .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
           }
-          .summary-box.highlight {
+          .details-table th {
+            background: #3d2c1e;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+          }
+          .details-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .details-table tr:nth-child(even) { background: #fafafa; }
+          .item-code { font-family: 'Courier New', monospace; font-weight: bold; color: #3d2c1e; }
+          .price-highlight { background: #fff8e6 !important; font-weight: bold; color: #2e7d32; }
+          
+          /* Summary Section */
+          .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+          }
+          .summary-item {
+            background: #f8f5f2;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0d5c8;
+          }
+          .summary-item.total {
             background: linear-gradient(135deg, #3d2c1e 0%, #5a4a3a 100%);
-            color: white; border: none;
+            color: white;
+            border: none;
           }
-          .summary-label { font-size: 11px; color: #888; margin-bottom: 5px; }
-          .summary-box.highlight .summary-label { color: rgba(255,255,255,0.8); }
-          .summary-value { font-size: 22px; font-weight: bold; color: #3d2c1e; }
-          .summary-box.highlight .summary-value { color: white; }
-          .notes-section {
-            background: #fff8e6; border: 1px solid #ffe082; padding: 15px 20px;
-            border-radius: 8px; margin-bottom: 20px;
+          .summary-item .label { font-size: 10px; color: #888; margin-bottom: 4px; }
+          .summary-item.total .label { color: rgba(255,255,255,0.8); }
+          .summary-item .value { font-size: 20px; font-weight: bold; color: #3d2c1e; }
+          .summary-item.total .value { color: white; }
+          
+          /* Notes */
+          .notes-box {
+            background: #fff8e6;
+            border: 1px solid #ffe082;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
           }
-          .notes-title { font-size: 12px; font-weight: bold; color: #f57c00; margin-bottom: 8px; }
-          .notes-content { font-size: 12px; color: #555; line-height: 1.5; }
+          .notes-box .title { font-size: 11px; font-weight: bold; color: #f57c00; margin-bottom: 5px; }
+          .notes-box .content { font-size: 11px; color: #555; }
+          
+          /* Footer */
           .footer {
-            margin-top: 30px; padding-top: 20px; border-top: 2px solid #e0e0e0; text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
           }
-          .footer-text { font-size: 11px; color: #888; margin: 5px 0; }
-          .footer-brand { font-size: 14px; font-weight: bold; color: #3d2c1e; margin-top: 10px; }
-          .no-image { width: 80px; height: 60px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; }
+          .footer-text { font-size: 10px; color: #888; margin: 3px 0; }
+          .footer-brand { font-size: 12px; font-weight: bold; color: #3d2c1e; margin-top: 8px; }
+          
           @media print { 
             body { padding: 15px; }
-            .summary-box.highlight, .customer-date-section { background: #3d2c1e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .customer-banner, .summary-item.total { 
+              background: #3d2c1e !important; 
+              -webkit-print-color-adjust: exact; 
+              print-color-adjust: exact; 
+            }
+            .page { page-break-after: always; }
           }
         </style>
       </head>
       <body>
-        <div class="header">
-          <div class="logo-section">
-            <img src="https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg" 
-                 alt="JAIPUR" 
-                 style="height: 70px; width: auto; object-fit: contain;" />
-          </div>
-          <div class="quote-info">
-            <div class="quote-title">QUOTATION</div>
-            <div class="quote-detail"><strong>Ref:</strong> ${quotationDetails.reference || 'N/A'}</div>
-            <div class="quote-detail"><strong>Price Type:</strong> ${priceLabel}</div>
-          </div>
-        </div>
-        
-        <div class="customer-date-section">
-          <div class="customer-info">
-            <h2>${quotationDetails.customer_name || 'Customer'}</h2>
-            ${quotationDetails.customer_email ? `<p>${quotationDetails.customer_email}</p>` : ''}
-          </div>
-          <div class="date-info">
-            <div class="date-label">Quotation Date</div>
-            <div class="date-value">${quotationDetails.date}</div>
-          </div>
-        </div>
-        
-        <table class="items-table">
-          <thead>
-            <tr>
-              <th rowspan="2" style="width: 100px">Image</th>
-              <th rowspan="2">Item Code</th>
-              <th rowspan="2">Description</th>
-              <th colspan="3" style="text-align: center;">Size (cm)</th>
-              <th rowspan="2" style="text-align: center">CBM</th>
-              <th rowspan="2" style="text-align: center">Load 40' HQ</th>
-              <th rowspan="2" style="text-align: center">Qty</th>
-              <th rowspan="2" class="price-header" style="text-align: center">${priceLabel}</th>
-              <th rowspan="2" class="price-header" style="text-align: center">Total</th>
-            </tr>
-            <tr><th>H</th><th>D</th><th>W</th></tr>
-          </thead>
-          <tbody>
-            ${quotationItems.map(item => {
-              const itemCBM = item.cbm || 0;
-              const containerCapacity = 76;
-              const loadCapacity = itemCBM > 0 ? Math.floor(containerCapacity / itemCBM) : 0;
-              return `
+        ${quotationItems.map((item, index) => {
+          const itemCBM = item.cbm || 0;
+          const containerCapacity = 76;
+          const loadCapacity = itemCBM > 0 ? Math.floor(containerCapacity / itemCBM) : 0;
+          const isLastItem = index === quotationItems.length - 1;
+          
+          return `
+          <div class="${isLastItem ? '' : 'page'}">
+            <!-- Header -->
+            <div class="header">
+              <div class="logo-section">
+                <img src="https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg" alt="JAIPUR" />
+              </div>
+              <div class="quote-info">
+                <div class="quote-title">QUOTATION</div>
+                <div class="quote-detail"><strong>Ref:</strong> ${quotationDetails.reference || 'N/A'}</div>
+                <div class="quote-detail"><strong>Item ${index + 1} of ${quotationItems.length}</strong></div>
+              </div>
+            </div>
+            
+            <!-- Customer & Date -->
+            <div class="customer-banner">
+              <div>
+                <h2>${quotationDetails.customer_name || 'Customer'}</h2>
+                ${quotationDetails.customer_email ? `<div class="email">${quotationDetails.customer_email}</div>` : ''}
+              </div>
+              <div class="date-box">
+                <div class="label">Date</div>
+                <div class="value">${quotationDetails.date}</div>
+              </div>
+            </div>
+            
+            <!-- Large Product Image -->
+            <div class="product-image-section">
+              ${item.image ? 
+                `<img src="${item.image}" class="product-image" alt="${item.product_code}" />` : 
+                `<div class="no-product-image">No Image Available</div>`
+              }
+            </div>
+            
+            <!-- Product Details -->
+            <table class="details-table">
               <tr>
-                <td>${item.image ? `<img src="${item.image}" class="item-image" alt="${item.product_code}"/>` : '<div class="no-image">No Image</div>'}</td>
+                <th style="width: 20%">Item Code</th>
+                <th style="width: 35%">Description</th>
+                <th style="width: 20%">Size (H×D×W cm)</th>
+                <th style="width: 10%">CBM</th>
+                <th style="width: 15%">Load 40' HQ</th>
+              </tr>
+              <tr>
                 <td class="item-code">${item.product_code}</td>
                 <td>${item.description || '-'}</td>
-                <td class="size-cell">${item.height_cm || 0}</td>
-                <td class="size-cell">${item.depth_cm || 0}</td>
-                <td class="size-cell">${item.width_cm || 0}</td>
-                <td class="cbm-cell">${itemCBM}</td>
-                <td class="load-cell">${loadCapacity} Pcs</td>
-                <td class="qty-cell">${item.quantity} Pcs</td>
-                <td class="price-cell">${currencySymbol}${item.fob_price.toFixed(2)}</td>
-                <td class="total-cell">${currencySymbol}${item.total.toFixed(2)}</td>
-              </tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-        <div class="summary-section">
-          <div class="summary-box"><div class="summary-label">Total Items</div><div class="summary-value">${totals.totalItems} Pcs</div></div>
-          <div class="summary-box"><div class="summary-label">Total CBM</div><div class="summary-value">${totals.totalCBM} m³</div></div>
-          <div class="summary-box highlight"><div class="summary-label">Grand Total</div><div class="summary-value">${currencySymbol}${totals.totalValue}</div></div>
-        </div>
-        ${quotationDetails.notes ? `<div class="notes-section"><div class="notes-title">📝 Special Notes:</div><div class="notes-content">${quotationDetails.notes}</div></div>` : ''}
-        <div class="footer">
-          <div class="footer-text">This quotation is valid for 30 days from the date of issue.</div>
-          <div class="footer-text">Prices are FOB India. Shipping and import duties charges not included.</div>
-          <div class="footer-brand">JAIPUR - A fine wood furniture company</div>
-        </div>
+                <td style="text-align: center">${item.height_cm || 0} × ${item.depth_cm || 0} × ${item.width_cm || 0}</td>
+                <td style="text-align: center">${itemCBM}</td>
+                <td style="text-align: center">${loadCapacity} Pcs</td>
+              </tr>
+              <tr>
+                <th>Quantity</th>
+                <th>${priceLabel}</th>
+                <th colspan="3">Item Total</th>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold">${item.quantity} Pcs</td>
+                <td class="price-highlight">${currencySymbol}${item.fob_price.toFixed(2)}</td>
+                <td colspan="3" class="price-highlight" style="text-align: right; font-size: 16px">${currencySymbol}${item.total.toFixed(2)}</td>
+              </tr>
+            </table>
+            
+            ${isLastItem ? `
+              <!-- Summary (only on last page) -->
+              <div class="summary-grid">
+                <div class="summary-item">
+                  <div class="label">Total Items</div>
+                  <div class="value">${totals.totalItems} Pcs</div>
+                </div>
+                <div class="summary-item">
+                  <div class="label">Total CBM</div>
+                  <div class="value">${totals.totalCBM} m³</div>
+                </div>
+                <div class="summary-item total">
+                  <div class="label">Grand Total</div>
+                  <div class="value">${currencySymbol}${totals.totalValue}</div>
+                </div>
+              </div>
+              
+              ${quotationDetails.notes ? `
+                <div class="notes-box">
+                  <div class="title">📝 Special Notes:</div>
+                  <div class="content">${quotationDetails.notes}</div>
+                </div>
+              ` : ''}
+              
+              <div class="footer">
+                <div class="footer-text">This quotation is valid for 30 days from the date of issue.</div>
+                <div class="footer-text">Prices are FOB India. Shipping and import duties charges not included.</div>
+                <div class="footer-brand">JAIPUR - A fine wood furniture company</div>
+              </div>
+            ` : ''}
+          </div>
+        `}).join('')}
       </body>
       </html>
     `;
