@@ -93,6 +93,25 @@ export default function Quotation() {
       return;
     }
 
+    // Get price based on selected price type
+    let fobPrice = 0;
+    switch(quotationDetails.currency) {
+      case 'FOB_USD':
+        fobPrice = product.fob_price_usd || 0;
+        break;
+      case 'FOB_GBP':
+        fobPrice = product.fob_price_gbp || 0;
+        break;
+      case 'WH_700':
+        fobPrice = product.warehouse_price_1 || product.warehouse_price_700 || 0;
+        break;
+      case 'WH_2000':
+        fobPrice = product.warehouse_price_2 || product.warehouse_price_2000 || 0;
+        break;
+      default:
+        fobPrice = product.fob_price_usd || 0;
+    }
+
     const newItem = {
       id: product.id,
       product_code: product.product_code,
@@ -102,8 +121,9 @@ export default function Quotation() {
       width_cm: product.width_cm,
       cbm: product.cbm,
       quantity: 1,
-      fob_price: quotationDetails.currency === 'USD' ? (product.fob_price_usd || 0) : (product.fob_price_gbp || 0),
-      total: quotationDetails.currency === 'USD' ? (product.fob_price_usd || 0) : (product.fob_price_gbp || 0)
+      fob_price: fobPrice,
+      total: fobPrice,
+      image: product.image || ''
     };
 
     setQuotationItems([...quotationItems, newItem]);
