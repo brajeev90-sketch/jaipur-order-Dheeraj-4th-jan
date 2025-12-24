@@ -41,9 +41,21 @@ export default function RichTextEditor({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        bulletList: { keepMarks: true },
-        orderedList: { keepMarks: true },
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
       }),
+      BulletList.configure({
+        HTMLAttributes: {
+          class: 'list-disc ml-4 pl-2',
+        },
+      }),
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: 'list-decimal ml-4 pl-2',
+        },
+      }),
+      ListItem,
       Underline,
       Highlight.configure({ multicolor: true }),
     ],
