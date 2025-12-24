@@ -263,7 +263,7 @@ export default function Quotation() {
     // Save the quotation first
     await handleSaveQuotation();
 
-    // Generate quotation PDF
+    // Generate quotation PDF - matching the user's reference layout
     const totals = calculateTotals();
     const currencyInfo = getCurrencyInfo(quotationDetails.currency);
     const currencySymbol = currencyInfo.symbol;
@@ -276,183 +276,201 @@ export default function Quotation() {
         <title>Quotation - ${quotationDetails.reference || 'QUOTE'}</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
+          @page { 
+            size: A4; 
+            margin: 15mm; 
+          }
           body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            padding: 25px; 
-            max-width: 900px; 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 210mm; 
             margin: 0 auto; 
             background: white;
             color: #333;
+            font-size: 12px;
           }
-          .page { page-break-after: always; }
+          .page { 
+            page-break-after: always; 
+            min-height: calc(297mm - 40mm);
+            position: relative;
+          }
           .page:last-child { page-break-after: auto; }
           
-          /* Header */
+          /* Header - Logo on right like reference */
           .header { 
             display: flex; 
-            justify-content: space-between; 
+            justify-content: flex-end; 
             align-items: flex-start; 
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #3d2c1e;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
           }
-          .logo-section img { height: 60px; width: auto; }
-          .quote-info {
-            text-align: right; background: #f8f5f2; padding: 12px 18px;
-            border-radius: 8px;
+          .logo-section { 
+            text-align: right;
           }
-          .quote-title { font-size: 20px; font-weight: bold; color: #3d2c1e; margin-bottom: 5px; }
-          .quote-detail { font-size: 11px; color: #555; margin: 3px 0; }
-          .quote-detail strong { color: #3d2c1e; }
+          .logo-section img { 
+            height: 70px; 
+            width: auto; 
+          }
+          .company-name {
+            font-size: 11px;
+            color: #555;
+            margin-top: 3px;
+          }
           
-          /* Customer & Date Banner */
-          .customer-banner {
-            display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(135deg, #3d2c1e 0%, #5a4a3a 100%);
-            color: white; padding: 15px 20px; border-radius: 8px;
-            margin-bottom: 20px;
-          }
-          .customer-banner h2 { font-size: 20px; margin-bottom: 3px; }
-          .customer-banner .email { font-size: 12px; opacity: 0.9; }
-          .date-box { text-align: right; }
-          .date-box .label { font-size: 10px; opacity: 0.8; }
-          .date-box .value { font-size: 18px; font-weight: bold; }
-          
-          /* Product Image Section */
+          /* Large Product Image - takes most of page */
           .product-image-section {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #fafafa;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
+            margin: 20px 0;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
           .product-image {
             max-width: 100%;
-            max-height: 350px;
+            max-height: 400px;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            border-radius: 8px;
           }
           .no-product-image {
-            height: 200px;
+            height: 300px;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #888;
             font-size: 16px;
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
           }
           
-          /* Product Details Table */
+          /* Simple Details Table - matching reference style */
           .details-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 12px;
+            margin-top: 20px;
+            font-size: 11px;
           }
           .details-table th {
-            background: #3d2c1e;
-            color: white;
-            padding: 10px 12px;
+            background: #f0f0f0;
+            color: #333;
+            padding: 8px 10px;
             text-align: left;
-            font-weight: 600;
-            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            font-size: 10px;
             text-transform: uppercase;
           }
           .details-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
           }
-          .details-table tr:nth-child(even) { background: #fafafa; }
-          .item-code { font-family: 'Courier New', monospace; font-weight: bold; color: #3d2c1e; }
-          .price-highlight { background: #fff8e6 !important; font-weight: bold; color: #2e7d32; }
-          
-          /* Summary Section */
-          .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+          .details-table .code-cell {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
           }
-          .summary-item {
-            background: #f8f5f2;
-            padding: 12px;
-            border-radius: 8px;
+          .details-table .price-cell {
+            font-weight: bold;
+            text-align: right;
+          }
+          .details-table .dimension-cell {
             text-align: center;
-            border: 1px solid #e0d5c8;
           }
-          .summary-item.total {
-            background: linear-gradient(135deg, #3d2c1e 0%, #5a4a3a 100%);
-            color: white;
-            border: none;
+          
+          /* Summary Section - only on last page */
+          .summary-section {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #333;
           }
-          .summary-item .label { font-size: 10px; color: #888; margin-bottom: 4px; }
-          .summary-item.total .label { color: rgba(255,255,255,0.8); }
-          .summary-item .value { font-size: 20px; font-weight: bold; color: #3d2c1e; }
-          .summary-item.total .value { color: white; }
+          .summary-row {
+            display: flex;
+            justify-content: flex-end;
+            margin: 5px 0;
+            font-size: 12px;
+          }
+          .summary-label {
+            font-weight: bold;
+            margin-right: 20px;
+            min-width: 120px;
+            text-align: right;
+          }
+          .summary-value {
+            min-width: 100px;
+            text-align: right;
+            font-weight: bold;
+          }
+          .grand-total {
+            font-size: 16px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+          }
           
           /* Notes */
-          .notes-box {
-            background: #fff8e6;
-            border: 1px solid #ffe082;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+          .notes-section {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            font-size: 11px;
           }
-          .notes-box .title { font-size: 11px; font-weight: bold; color: #f57c00; margin-bottom: 5px; }
-          .notes-box .content { font-size: 11px; color: #555; }
+          .notes-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
           
           /* Footer */
           .footer {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid #e0e0e0;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
             text-align: center;
+            font-size: 10px;
+            color: #666;
           }
-          .footer-text { font-size: 10px; color: #888; margin: 3px 0; }
-          .footer-brand { font-size: 12px; font-weight: bold; color: #3d2c1e; margin-top: 8px; }
+          .footer-brand {
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+          }
+          
+          /* Entry Date field like reference */
+          .entry-date {
+            text-align: right;
+            font-size: 11px;
+            margin-bottom: 10px;
+            color: #555;
+          }
           
           @media print { 
-            body { padding: 15px; }
-            .customer-banner, .summary-item.total { 
-              background: #3d2c1e !important; 
-              -webkit-print-color-adjust: exact; 
-              print-color-adjust: exact; 
-            }
+            body { padding: 0; }
             .page { page-break-after: always; }
+            .page:last-child { page-break-after: auto; }
           }
         </style>
       </head>
       <body>
         ${quotationItems.map((item, index) => {
-          const itemCBM = item.cbm || 0;
-          const containerCapacity = 76;
-          const loadCapacity = itemCBM > 0 ? Math.floor(containerCapacity / itemCBM) : 0;
           const isLastItem = index === quotationItems.length - 1;
           
           return `
-          <div class="${isLastItem ? '' : 'page'}">
-            <!-- Header -->
+          <div class="page">
+            <!-- Header with logo on right -->
             <div class="header">
               <div class="logo-section">
                 <img src="https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg" alt="JAIPUR" />
-              </div>
-              <div class="quote-info">
-                <div class="quote-title">QUOTATION</div>
-                <div class="quote-detail"><strong>Ref:</strong> ${quotationDetails.reference || 'N/A'}</div>
-                <div class="quote-detail"><strong>Item ${index + 1} of ${quotationItems.length}</strong></div>
+                <div class="company-name">FINE WOOD FURNITURE COMPANY</div>
               </div>
             </div>
             
-            <!-- Customer & Date -->
-            <div class="customer-banner">
-              <div>
-                <h2>${quotationDetails.customer_name || 'Customer'}</h2>
-                ${quotationDetails.customer_email ? `<div class="email">${quotationDetails.customer_email}</div>` : ''}
-              </div>
-              <div class="date-box">
-                <div class="label">Date</div>
-                <div class="value">${quotationDetails.date}</div>
-              </div>
+            <!-- Entry Date -->
+            <div class="entry-date">
+              <strong>Entry Date:</strong> ${quotationDetails.date} | <strong>Ref:</strong> ${quotationDetails.reference || 'N/A'}
+              ${quotationDetails.customer_name ? ` | <strong>Customer:</strong> ${quotationDetails.customer_name}` : ''}
             </div>
             
             <!-- Large Product Image -->
@@ -463,61 +481,57 @@ export default function Quotation() {
               }
             </div>
             
-            <!-- Product Details -->
+            <!-- Simple Product Details Table - matching reference layout -->
             <table class="details-table">
-              <tr>
-                <th style="width: 20%">Item Code</th>
-                <th style="width: 35%">Description</th>
-                <th style="width: 20%">Size (H×D×W cm)</th>
-                <th style="width: 10%">CBM</th>
-                <th style="width: 15%">Load 40' HQ</th>
-              </tr>
-              <tr>
-                <td class="item-code">${item.product_code}</td>
-                <td>${item.description || '-'}</td>
-                <td style="text-align: center">${item.height_cm || 0} × ${item.depth_cm || 0} × ${item.width_cm || 0}</td>
-                <td style="text-align: center">${itemCBM}</td>
-                <td style="text-align: center">${loadCapacity} Pcs</td>
-              </tr>
-              <tr>
-                <th>Quantity</th>
-                <th>${priceLabel}</th>
-                <th colspan="3">Item Total</th>
-              </tr>
-              <tr>
-                <td style="text-align: center; font-weight: bold">${item.quantity} Pcs</td>
-                <td class="price-highlight">${currencySymbol}${item.fob_price.toFixed(2)}</td>
-                <td colspan="3" class="price-highlight" style="text-align: right; font-size: 16px">${currencySymbol}${item.total.toFixed(2)}</td>
-              </tr>
+              <thead>
+                <tr>
+                  <th style="width: 20%">CODE</th>
+                  <th style="width: 35%">DESCRIPTION</th>
+                  <th style="width: 8%">H</th>
+                  <th style="width: 8%">W</th>
+                  <th style="width: 8%">D</th>
+                  <th style="width: 21%">${priceLabel.toUpperCase()}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="code-cell">${item.product_code}</td>
+                  <td>${item.description || '-'}</td>
+                  <td class="dimension-cell">${item.height_cm || '-'}</td>
+                  <td class="dimension-cell">${item.width_cm || '-'}</td>
+                  <td class="dimension-cell">${item.depth_cm || '-'}</td>
+                  <td class="price-cell">${currencySymbol}${item.fob_price.toFixed(2)}</td>
+                </tr>
+              </tbody>
             </table>
             
             ${isLastItem ? `
               <!-- Summary (only on last page) -->
-              <div class="summary-grid">
-                <div class="summary-item">
-                  <div class="label">Total Items</div>
-                  <div class="value">${totals.totalItems} Pcs</div>
+              <div class="summary-section">
+                <div class="summary-row">
+                  <span class="summary-label">Total Items:</span>
+                  <span class="summary-value">${totals.totalItems} Pcs</span>
                 </div>
-                <div class="summary-item">
-                  <div class="label">Total CBM</div>
-                  <div class="value">${totals.totalCBM} m³</div>
+                <div class="summary-row">
+                  <span class="summary-label">Total CBM:</span>
+                  <span class="summary-value">${totals.totalCBM} m³</span>
                 </div>
-                <div class="summary-item total">
-                  <div class="label">Grand Total</div>
-                  <div class="value">${currencySymbol}${totals.totalValue}</div>
+                <div class="summary-row grand-total">
+                  <span class="summary-label">GRAND TOTAL:</span>
+                  <span class="summary-value">${currencySymbol}${totals.totalValue}</span>
                 </div>
               </div>
               
               ${quotationDetails.notes ? `
-                <div class="notes-box">
-                  <div class="title">📝 Special Notes:</div>
-                  <div class="content">${quotationDetails.notes}</div>
+                <div class="notes-section">
+                  <div class="notes-title">Notes:</div>
+                  <div>${quotationDetails.notes}</div>
                 </div>
               ` : ''}
               
               <div class="footer">
-                <div class="footer-text">This quotation is valid for 30 days from the date of issue.</div>
-                <div class="footer-text">Prices are FOB India. Shipping and import duties charges not included.</div>
+                <div>This quotation is valid for 30 days from the date of issue.</div>
+                <div>Prices are ${priceLabel}. Shipping and import duties not included.</div>
                 <div class="footer-brand">JAIPUR - A fine wood furniture company</div>
               </div>
             ` : ''}
