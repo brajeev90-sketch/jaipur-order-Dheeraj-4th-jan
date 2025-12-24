@@ -14,6 +14,8 @@ class JaipurAPITester:
         self.created_order_id = None
         self.created_leather_id = None
         self.created_finish_id = None
+        self.created_product_id = None
+        self.created_quotation_id = None
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
         """Run a single API test"""
