@@ -110,15 +110,32 @@ export default function EditOrder() {
         productsApi.getAll(),
       ]);
       
-      setOrder(orderRes.data);
+      // Auto-fill missing product_image from catalog for existing items
+      const orderData = orderRes.data;
+      const productsList = productsRes.data;
+      
+      if (orderData.items && orderData.items.length > 0) {
+        orderData.items = orderData.items.map(item => {
+          // If item doesn't have product_image, try to get it from catalog
+          if (!item.product_image && item.product_code) {
+            const catalogProduct = productsList.find(p => p.product_code === item.product_code);
+            if (catalogProduct && catalogProduct.image) {
+              return { ...item, product_image: catalogProduct.image };
+            }
+          }
+          return item;
+        });
+      }
+      
+      setOrder(orderData);
       setFactories(factoriesRes.data);
       setCategories(categoriesRes.data);
       setLeatherLibrary(leatherRes.data);
       setFinishLibrary(finishRes.data);
-      setProducts(productsRes.data);
+      setProducts(productsList);
       
-      if (orderRes.data.entry_date) {
-        setDate(new Date(orderRes.data.entry_date));
+      if (orderData.entry_date) {
+        setDate(new Date(orderData.entry_date));
       }
     } catch (error) {
       console.error('Error loading data:', error);
