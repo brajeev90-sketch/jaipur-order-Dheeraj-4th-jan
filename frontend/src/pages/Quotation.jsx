@@ -791,7 +791,8 @@ export default function Quotation() {
                             max="99999"
                             value={item.quantity}
                             onChange={(e) => updateItemQuantity(item.id, e.target.value)}
-                            onFocus={(e) => e.target.select()}
+                            onClick={(e) => e.target.select()}
+                            onFocus={(e) => setTimeout(() => e.target.select(), 0)}
                             className="w-24 text-center"
                           />
                         </TableCell>
@@ -802,6 +803,8 @@ export default function Quotation() {
                             step="0.01"
                             value={item.fob_price}
                             onChange={(e) => updateItemPrice(item.id, e.target.value)}
+                            onClick={(e) => e.target.select()}
+                            onFocus={(e) => setTimeout(() => e.target.select(), 0)}
                             className="w-24 text-right"
                           />
                         </TableCell>
