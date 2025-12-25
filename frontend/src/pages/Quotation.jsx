@@ -486,12 +486,13 @@ export default function Quotation() {
             <table class="details-table">
               <thead>
                 <tr>
-                  <th style="width: 20%">CODE</th>
-                  <th style="width: 35%">DESCRIPTION</th>
+                  <th style="width: 18%">CODE</th>
+                  <th style="width: 30%">DESCRIPTION</th>
                   <th style="width: 8%">H</th>
                   <th style="width: 8%">W</th>
                   <th style="width: 8%">D</th>
-                  <th style="width: 21%">${priceLabel.toUpperCase()}</th>
+                  <th style="width: 10%">CBM</th>
+                  <th style="width: 18%">${priceLabel.toUpperCase()}</th>
                 </tr>
               </thead>
               <tbody>
@@ -501,6 +502,7 @@ export default function Quotation() {
                   <td class="dimension-cell">${item.height_cm || '-'}</td>
                   <td class="dimension-cell">${item.width_cm || '-'}</td>
                   <td class="dimension-cell">${item.depth_cm || '-'}</td>
+                  <td class="dimension-cell">${item.cbm || '-'}</td>
                   <td class="price-cell">${currencySymbol}${item.fob_price.toFixed(2)}</td>
                 </tr>
               </tbody>
