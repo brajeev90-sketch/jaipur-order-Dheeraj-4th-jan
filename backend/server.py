@@ -66,6 +66,63 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# ============ AUTH MODELS ============
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class LoginResponse(BaseModel):
+    token: str
+    username: str
+    message: str
+
+# ============ AUTH ENDPOINTS ============
+
+@api_router.post("/auth/login", response_model=LoginResponse)
+async def login(request: LoginRequest):
+    """Admin login endpoint"""
+    password_hash = hashlib.sha256(request.password.encode()).hexdigest()
+    
+    if request.username == ADMIN_USERNAME and password_hash == ADMIN_PASSWORD_HASH:
+        # Generate JWT token
+        expiration = datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRATION_HOURS)
+        payload = {
+            "sub": request.username,
+            "exp": expiration,
+            "iat": datetime.now(timezone.utc)
+        }
+        token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+        
+        return LoginResponse(
+            token=token,
+            username=request.username,
+            message="Login successful"
+        )
+    else:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+
+@api_router.get("/auth/verify")
+async def verify_auth(user: dict = Depends(verify_token)):
+    """Verify if token is valid"""
+    return {"valid": True, "username": user.get("sub")}
+
+@api_router.post("/auth/change-password")
+async def change_password(
+    current_password: str,
+    new_password: str,
+    user: dict = Depends(verify_token)
+):
+    """Change admin password"""
+    global ADMIN_PASSWORD_HASH
+    current_hash = hashlib.sha256(current_password.encode()).hexdigest()
+    
+    if current_hash != ADMIN_PASSWORD_HASH:
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
+    
+    ADMIN_PASSWORD_HASH = hashlib.sha256(new_password.encode()).hexdigest()
+    return {"message": "Password changed successfully"}
+
 # ============ MODELS ============
 
 class OrderItem(BaseModel):
