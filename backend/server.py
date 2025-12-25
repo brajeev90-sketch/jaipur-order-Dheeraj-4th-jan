@@ -557,16 +557,47 @@ async def upload_factories_excel(file: UploadFile = File(...)):
 
 @api_router.get("/categories")
 async def get_categories():
-    return [
-        {"id": "chair", "name": "Chair"},
-        {"id": "sofa", "name": "Sofa"},
-        {"id": "bar-chair", "name": "Bar Chair"},
-        {"id": "table", "name": "Table"},
-        {"id": "bed", "name": "Bed"},
-        {"id": "cabinet", "name": "Cabinet"},
-        {"id": "shelf", "name": "Shelf"},
-        {"id": "other", "name": "Other"}
-    ]
+    """Get all categories from database, with default ones if empty"""
+    categories = await db.categories.find({}, {"_id": 0}).to_list(100)
+    if not categories:
+        # Initialize with default categories
+        default_categories = [
+            {"id": "chair", "name": "Chair"},
+            {"id": "sofa", "name": "Sofa"},
+            {"id": "bar-chair", "name": "Bar Chair"},
+            {"id": "table", "name": "Table"},
+            {"id": "bed", "name": "Bed"},
+            {"id": "cabinet", "name": "Cabinet"},
+            {"id": "shelf", "name": "Shelf"},
+            {"id": "other", "name": "Other"}
+        ]
+        for cat in default_categories:
+            await db.categories.insert_one(cat)
+        return default_categories
+    return categories
+
+@api_router.post("/categories")
+async def create_category(category: dict):
+    """Add a new category"""
+    category_id = category.get("id") or str(uuid.uuid4())
+    category_doc = {
+        "id": category_id,
+        "name": category.get("name", ""),
+    }
+    # Check if category already exists
+    existing = await db.categories.find_one({"name": category_doc["name"]})
+    if existing:
+        return existing
+    await db.categories.insert_one(category_doc)
+    return category_doc
+
+@api_router.delete("/categories/{category_id}")
+async def delete_category(category_id: str):
+    """Delete a category"""
+    result = await db.categories.delete_one({"id": category_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return {"message": "Category deleted"}
 
 # --- PDF EXPORT ---
 
