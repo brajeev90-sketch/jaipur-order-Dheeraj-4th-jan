@@ -585,11 +585,12 @@ async def create_category(category: dict):
         "name": category.get("name", ""),
     }
     # Check if category already exists
-    existing = await db.categories.find_one({"name": category_doc["name"]})
+    existing = await db.categories.find_one({"name": category_doc["name"]}, {"_id": 0})
     if existing:
         return existing
     await db.categories.insert_one(category_doc)
-    return category_doc
+    # Return without _id
+    return {"id": category_doc["id"], "name": category_doc["name"]}
 
 @api_router.delete("/categories/{category_id}")
 async def delete_category(category_id: str):
