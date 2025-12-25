@@ -150,9 +150,23 @@ export const Layout = () => {
           ))}
         </nav>
         
-        {/* Footer */}
-        <div className="p-4 border-t border-border text-xs text-muted-foreground">
-          {t('version')}
+        {/* Footer with Logout */}
+        <div className="p-4 border-t border-border space-y-3">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>👤 {user?.username || 'Admin'}</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="w-full gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <LogOut size={16} />
+            Logout
+          </Button>
+          <div className="text-xs text-muted-foreground text-center">
+            {t('version')}
+          </div>
         </div>
       </aside>
       
