@@ -679,8 +679,8 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         y = header_top - 5
         
         dates = [
-            ("ENTRY DATE", order.get('entry_date', 'N/A')),
-            ("FACTORY INFORM", order.get('factory_inform_date', order.get('entry_date', 'N/A'))),
+            ("ENTRY DATE", format_date_ddmmyyyy(order.get('entry_date', 'N/A'))),
+            ("FACTORY INFORM", format_date_ddmmyyyy(order.get('factory_inform_date', order.get('entry_date', 'N/A')))),
             ("FACTORY", order.get('factory', 'N/A')),
             ("SALES REF", order.get('sales_order_ref', 'N/A')),
             ("BUYER PO", order.get('buyer_po_ref', 'N/A')),
