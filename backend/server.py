@@ -507,8 +507,13 @@ async def create_factory(factory: dict):
         "code": factory.get("code", ""),
         "name": factory.get("name", ""),
     }
+    # Check if factory already exists
+    existing = await db.factories.find_one({"name": factory_doc["name"]}, {"_id": 0})
+    if existing:
+        return existing
     await db.factories.insert_one(factory_doc)
-    return factory_doc
+    # Return without _id
+    return {"id": factory_doc["id"], "code": factory_doc["code"], "name": factory_doc["name"]}
 
 @api_router.delete("/factories/{factory_id}")
 async def delete_factory(factory_id: str):
