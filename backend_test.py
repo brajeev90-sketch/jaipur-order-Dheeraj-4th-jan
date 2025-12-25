@@ -1,405 +1,237 @@
-#!/usr/bin/env python3
-
 import requests
 import sys
 import json
 from datetime import datetime
-import uuid
 
-class JaipurAPITester:
+class JaipurFurnitureAPITester:
     def __init__(self, base_url="https://craft-papers.preview.emergentagent.com"):
         self.base_url = base_url
+        self.api_url = f"{base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0
-        self.created_order_id = None
-        self.created_leather_id = None
-        self.created_finish_id = None
-        self.created_product_id = None
-        self.created_quotation_id = None
+        self.test_results = []
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
         """Run a single API test"""
-        url = f"{self.base_url}/{endpoint}"
+        url = f"{self.api_url}/{endpoint}"
         if headers is None:
             headers = {'Content-Type': 'application/json'}
 
         self.tests_run += 1
         print(f"\n🔍 Testing {name}...")
-        print(f"   URL: {url}")
         
         try:
             if method == 'GET':
-                response = requests.get(url, headers=headers, timeout=10)
+                response = requests.get(url, headers=headers)
             elif method == 'POST':
-                response = requests.post(url, json=data, headers=headers, timeout=10)
+                response = requests.post(url, json=data, headers=headers)
             elif method == 'PUT':
-                response = requests.put(url, json=data, headers=headers, timeout=10)
+                response = requests.put(url, json=data, headers=headers)
             elif method == 'DELETE':
-                response = requests.delete(url, headers=headers, timeout=10)
+                response = requests.delete(url, headers=headers)
 
             success = response.status_code == expected_status
             if success:
                 self.tests_passed += 1
                 print(f"✅ Passed - Status: {response.status_code}")
-                try:
-                    return success, response.json() if response.content else {}
-                except:
-                    return success, {}
+                self.test_results.append({"test": name, "status": "PASS", "response_code": response.status_code})
+                return True, response.json() if response.content else {}
             else:
                 print(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
-                print(f"   Response: {response.text[:200]}...")
+                if response.content:
+                    print(f"   Response: {response.text[:200]}")
+                self.test_results.append({"test": name, "status": "FAIL", "expected": expected_status, "actual": response.status_code})
                 return False, {}
 
         except Exception as e:
             print(f"❌ Failed - Error: {str(e)}")
+            self.test_results.append({"test": name, "status": "ERROR", "error": str(e)})
             return False, {}
 
-    def test_root_endpoint(self):
-        """Test root API endpoint"""
-        return self.run_test("Root API", "GET", "api/", 200)
-
-    def test_dashboard_stats(self):
-        """Test dashboard stats endpoint"""
-        return self.run_test("Dashboard Stats", "GET", "api/dashboard/stats", 200)
-
-    def test_factories_endpoint(self):
-        """Test factories endpoint"""
-        return self.run_test("Factories List", "GET", "api/factories", 200)
-
-    def test_categories_endpoint(self):
-        """Test categories endpoint"""
-        return self.run_test("Categories List", "GET", "api/categories", 200)
-
-    def test_template_settings(self):
-        """Test template settings endpoints"""
-        # Get settings
-        success, response = self.run_test("Get Template Settings", "GET", "api/template-settings", 200)
-        if not success:
-            return False
-
-        # Update settings
-        settings_data = {
-            "id": "default",
-            "company_name": "JAIPUR – A fine wood furniture company",
-            "logo_text": "JAIPUR TEST",
-            "primary_color": "#3d2c1e",
-            "accent_color": "#d4622e",
-            "font_family": "Playfair Display, serif",
-            "body_font": "Manrope, sans-serif",
-            "page_margin_mm": 15,
-            "show_borders": True,
-            "header_height_mm": 25,
-            "footer_height_mm": 20
-        }
-        success, _ = self.run_test("Update Template Settings", "PUT", "api/template-settings", 200, settings_data)
-        return success
-
-    def test_leather_library_crud(self):
-        """Test leather library CRUD operations"""
-        # Get all leather items
-        success, _ = self.run_test("Get Leather Library", "GET", "api/leather-library", 200)
-        if not success:
-            return False
-
-        # Create leather item
-        leather_data = {
-            "id": str(uuid.uuid4()),
-            "code": f"TEST-LTH-{datetime.now().strftime('%H%M%S')}",
-            "name": "Test Leather",
-            "description": "Test leather description",
-            "color": "#8B4513",
-            "image": "",
-            "created_at": datetime.now().isoformat()
-        }
-        success, response = self.run_test("Create Leather Item", "POST", "api/leather-library", 200, leather_data)
+    def test_categories_api(self):
+        """Test Categories API - especially POST /api/categories for adding new categories"""
+        print("\n=== TESTING CATEGORIES API ===")
+        
+        # Get existing categories
+        success, categories = self.run_test("Get Categories", "GET", "categories", 200)
         if success:
-            self.created_leather_id = leather_data["id"]
-
-        # Update leather item
-        if self.created_leather_id:
-            leather_data["name"] = "Updated Test Leather"
-            success, _ = self.run_test("Update Leather Item", "PUT", f"api/leather-library/{self.created_leather_id}", 200, leather_data)
-
-        # Delete leather item
-        if self.created_leather_id:
-            success, _ = self.run_test("Delete Leather Item", "DELETE", f"api/leather-library/{self.created_leather_id}", 200)
-
-        return True
-
-    def test_finish_library_crud(self):
-        """Test finish library CRUD operations"""
-        # Get all finish items
-        success, _ = self.run_test("Get Finish Library", "GET", "api/finish-library", 200)
-        if not success:
-            return False
-
-        # Create finish item
-        finish_data = {
-            "id": str(uuid.uuid4()),
-            "code": f"TEST-FIN-{datetime.now().strftime('%H%M%S')}",
-            "name": "Test Finish",
-            "description": "Test finish description",
-            "color": "#d4a574",
-            "image": "",
-            "created_at": datetime.now().isoformat()
+            print(f"   Found {len(categories)} existing categories")
+        
+        # Test creating new category
+        new_category = {
+            "name": f"Test Category {datetime.now().strftime('%H%M%S')}"
         }
-        success, response = self.run_test("Create Finish Item", "POST", "api/finish-library", 200, finish_data)
+        success, created_cat = self.run_test("Create New Category", "POST", "categories", 200, new_category)
         if success:
-            self.created_finish_id = finish_data["id"]
+            print(f"   Created category: {created_cat.get('name', 'Unknown')}")
+            return created_cat.get('id')
+        return None
 
-        # Update finish item
-        if self.created_finish_id:
-            finish_data["name"] = "Updated Test Finish"
-            success, _ = self.run_test("Update Finish Item", "PUT", f"api/finish-library/{self.created_finish_id}", 200, finish_data)
-
-        # Delete finish item
-        if self.created_finish_id:
-            success, _ = self.run_test("Delete Finish Item", "DELETE", f"api/finish-library/{self.created_finish_id}", 200)
-
-        return True
-
-    def test_orders_crud(self):
-        """Test orders CRUD operations"""
-        # Get all orders
-        success, _ = self.run_test("Get All Orders", "GET", "api/orders", 200)
-        if not success:
-            return False
-
-        # Create order
-        order_data = {
-            "sales_order_ref": f"TEST-SO-{datetime.now().strftime('%Y%m%d%H%M%S')}",
-            "buyer_po_ref": "TEST-PO-001",
+    def test_orders_with_factory_inform_date(self):
+        """Test Orders API with Factory Inform Date field"""
+        print("\n=== TESTING ORDERS WITH FACTORY INFORM DATE ===")
+        
+        # Create test order with factory_inform_date
+        test_order = {
+            "sales_order_ref": f"SO-TEST-{datetime.now().strftime('%H%M%S')}",
+            "buyer_po_ref": "PO-TEST-001",
             "buyer_name": "Test Buyer",
-            "entry_date": datetime.now().strftime('%Y-%m-%d'),
+            "entry_date": "2024-01-15",
+            "factory_inform_date": "2024-01-20",  # New field to test
             "status": "Draft",
-            "factory": "Main Factory",
-            "items": [
-                {
-                    "id": str(uuid.uuid4()),
-                    "product_code": "TEST-PRD-001",
-                    "description": "Test Product",
-                    "category": "Chair",
-                    "height_cm": 80,
-                    "depth_cm": 60,
-                    "width_cm": 50,
-                    "cbm": 0.24,
-                    "cbm_auto": True,
-                    "quantity": 2,
-                    "in_house_production": True,
-                    "machine_hall": "Hall A",
-                    "leather_code": "LTH-001",
-                    "finish_code": "FIN-001",
-                    "color_notes": "Antique brass",
-                    "leg_color": "Dark brown",
-                    "wood_finish": "Natural oak",
-                    "notes": "Test notes for the product",
-                    "images": [],
-                    "reference_images": []
-                }
-            ]
+            "factory": "Test Factory",
+            "items": []
         }
-        success, response = self.run_test("Create Order", "POST", "api/orders", 200, order_data)
-        if success and 'id' in response:
-            self.created_order_id = response['id']
-
-        # Get specific order
-        if self.created_order_id:
-            success, _ = self.run_test("Get Specific Order", "GET", f"api/orders/{self.created_order_id}", 200)
-
-        # Update order
-        if self.created_order_id:
-            update_data = {
-                "buyer_name": "Updated Test Buyer",
-                "status": "In Production"
-            }
-            success, _ = self.run_test("Update Order", "PUT", f"api/orders/{self.created_order_id}", 200, update_data)
-
-        return True
-
-    def test_export_endpoints(self):
-        """Test export endpoints"""
-        if not self.created_order_id:
-            print("⚠️  Skipping export tests - no order created")
-            return True
-
-        # Test PDF export
-        success, _ = self.run_test("Export PDF", "GET", f"api/orders/{self.created_order_id}/export/pdf", 200)
         
-        # Test PPT export
-        success, _ = self.run_test("Export PPT", "GET", f"api/orders/{self.created_order_id}/export/ppt", 200)
-        
-        # Test HTML preview
-        success, _ = self.run_test("Preview HTML", "GET", f"api/orders/{self.created_order_id}/preview-html", 200)
-
-        # Test exports list
-        success, _ = self.run_test("Get Exports", "GET", "api/exports", 200)
-        
-        # Test order exports
-        success, _ = self.run_test("Get Order Exports", "GET", f"api/exports/{self.created_order_id}", 200)
-
-        return True
-
-    def test_products_crud(self):
-        """Test products CRUD operations"""
-        # Get all products
-        success, _ = self.run_test("Get All Products", "GET", "api/products", 200)
-        if not success:
-            return False
-
-        # Create product
-        product_data = {
-            "id": str(uuid.uuid4()),
-            "product_code": f"TEST-PRD-{datetime.now().strftime('%H%M%S')}",
-            "description": "Test Product for Quotation",
-            "category": "Chair",
-            "size": "180x90 cm",
-            "height_cm": 80,
-            "depth_cm": 60,
-            "width_cm": 50,
-            "cbm": 0.24,
-            "fob_price_usd": 150.00,
-            "fob_price_gbp": 120.00,
-            "warehouse_price_1": 200.00,
-            "warehouse_price_2": 250.00,
-            "image": "https://example.com/test-product.jpg",
-            "images": []
-        }
-        success, response = self.run_test("Create Product", "POST", "api/products", 200, product_data)
+        success, created_order = self.run_test("Create Order with Factory Inform Date", "POST", "orders", 200, test_order)
         if success:
-            self.created_product_id = product_data["id"]
-
-        # Update product
-        if self.created_product_id:
-            product_data["description"] = "Updated Test Product"
-            success, _ = self.run_test("Update Product", "PUT", f"api/products/{self.created_product_id}", 200, product_data)
-
-        # Get specific product
-        if self.created_product_id:
-            success, _ = self.run_test("Get Specific Product", "GET", f"api/products/{self.created_product_id}", 200)
-
-        return True
-
-    def test_quotations_crud(self):
-        """Test quotations CRUD operations"""
-        # Get all quotations
-        success, _ = self.run_test("Get All Quotations", "GET", "api/quotations", 200)
-        if not success:
-            return False
-
-        # Create quotation
-        quotation_data = {
-            "reference": f"TEST-QT-{datetime.now().strftime('%Y%m%d%H%M%S')}",
-            "customer_name": "Test Customer",
-            "customer_email": "test@customer.com",
-            "date": datetime.now().strftime('%Y-%m-%d'),
-            "currency": "FOB_USD",
-            "notes": "Test quotation notes",
-            "items": [
-                {
-                    "id": str(uuid.uuid4()),
-                    "product_id": self.created_product_id or str(uuid.uuid4()),
-                    "product_code": "TEST-PRD-001",
-                    "description": "Test Product for Quotation",
-                    "height_cm": 80,
-                    "depth_cm": 60,
-                    "width_cm": 50,
-                    "cbm": 0.24,
-                    "quantity": 2,
-                    "fob_price": 150.00,
-                    "total": 300.00,
-                    "image": "https://example.com/test-product.jpg"
-                }
-            ],
-            "total_items": 2,
-            "total_cbm": 0.48,
-            "total_value": 300.00,
-            "status": "draft"
-        }
-        success, response = self.run_test("Create Quotation", "POST", "api/quotations", 200, quotation_data)
-        if success and 'id' in response:
-            self.created_quotation_id = response['id']
-
-        # Get specific quotation
-        if self.created_quotation_id:
-            success, _ = self.run_test("Get Specific Quotation", "GET", f"api/quotations/{self.created_quotation_id}", 200)
-
-        # Update quotation
-        if self.created_quotation_id:
-            update_data = {
-                "customer_name": "Updated Test Customer",
-                "status": "sent"
-            }
-            success, _ = self.run_test("Update Quotation", "PUT", f"api/quotations/{self.created_quotation_id}", 200, update_data)
-
-        # Duplicate quotation
-        if self.created_quotation_id:
-            success, _ = self.run_test("Duplicate Quotation", "POST", f"api/quotations/{self.created_quotation_id}/duplicate", 200)
-
-        return True
-
-    def cleanup(self):
-        """Clean up test data"""
-        if self.created_order_id:
-            self.run_test("Cleanup Order", "DELETE", f"api/orders/{self.created_order_id}", 200)
-        if self.created_quotation_id:
-            self.run_test("Cleanup Quotation", "DELETE", f"api/quotations/{self.created_quotation_id}", 200)
-        if self.created_product_id:
-            self.run_test("Cleanup Product", "DELETE", f"api/products/{self.created_product_id}", 200)
-
-    def run_all_tests(self):
-        """Run all API tests"""
-        print("🚀 Starting JAIPUR Production Sheet API Tests")
-        print(f"   Base URL: {self.base_url}")
-        print("=" * 60)
-
-        try:
-            # Basic endpoints
-            self.test_root_endpoint()
-            self.test_dashboard_stats()
-            self.test_factories_endpoint()
-            self.test_categories_endpoint()
+            order_id = created_order.get('id')
+            print(f"   Created order: {order_id}")
             
-            # Template settings
-            self.test_template_settings()
-            
-            # Library management
-            self.test_leather_library_crud()
-            self.test_finish_library_crud()
-            
-            # Products management
-            self.test_products_crud()
-            
-            # Orders management
-            self.test_orders_crud()
-            
-            # Quotations management
-            self.test_quotations_crud()
-            
-            # Export functionality
-            self.test_export_endpoints()
+            # Verify the order has factory_inform_date
+            success, order_data = self.run_test("Get Order with Factory Inform Date", "GET", f"orders/{order_id}", 200)
+            if success:
+                factory_inform_date = order_data.get('factory_inform_date')
+                if factory_inform_date == "2024-01-20":
+                    print(f"   ✅ Factory Inform Date correctly saved: {factory_inform_date}")
+                    return order_id
+                else:
+                    print(f"   ❌ Factory Inform Date mismatch: expected '2024-01-20', got '{factory_inform_date}'")
+        return None
 
-        except KeyboardInterrupt:
-            print("\n⚠️  Tests interrupted by user")
-        except Exception as e:
-            print(f"\n💥 Unexpected error: {str(e)}")
-        finally:
-            # Cleanup
-            self.cleanup()
-
-        # Print results
-        print("\n" + "=" * 60)
-        print(f"📊 Test Results: {self.tests_passed}/{self.tests_run} passed")
+    def test_orders_with_multiple_items(self):
+        """Test saving orders with 4+ items"""
+        print("\n=== TESTING ORDERS WITH MULTIPLE ITEMS (4+) ===")
         
-        if self.tests_passed == self.tests_run:
-            print("🎉 All tests passed!")
-            return 0
-        else:
-            print(f"❌ {self.tests_run - self.tests_passed} tests failed")
-            return 1
+        # Create order with 5 items
+        test_items = []
+        for i in range(5):
+            item = {
+                "id": f"item-{i+1}",
+                "product_code": f"TEST-{i+1:03d}",
+                "description": f"Test Product {i+1}",
+                "category": "Chair",
+                "height_cm": 80 + i,
+                "depth_cm": 50 + i,
+                "width_cm": 60 + i,
+                "cbm": 0.24 + (i * 0.01),
+                "quantity": i + 1,
+                "notes": f"Test notes for item {i+1}"
+            }
+            test_items.append(item)
+        
+        test_order = {
+            "sales_order_ref": f"SO-MULTI-{datetime.now().strftime('%H%M%S')}",
+            "buyer_po_ref": "PO-MULTI-001",
+            "buyer_name": "Multi Item Buyer",
+            "entry_date": "2024-01-15",
+            "factory_inform_date": "2024-01-20",
+            "status": "Draft",
+            "factory": "Test Factory",
+            "items": test_items
+        }
+        
+        success, created_order = self.run_test("Create Order with 5 Items", "POST", "orders", 200, test_order)
+        if success:
+            order_id = created_order.get('id')
+            items_count = len(created_order.get('items', []))
+            print(f"   Created order with {items_count} items")
+            
+            if items_count == 5:
+                print(f"   ✅ All 5 items saved correctly")
+                return order_id
+            else:
+                print(f"   ❌ Items count mismatch: expected 5, got {items_count}")
+        return None
+
+    def test_pdf_export(self, order_id):
+        """Test PDF export functionality"""
+        print("\n=== TESTING PDF EXPORT ===")
+        
+        if not order_id:
+            print("   ❌ No order ID provided for PDF export test")
+            return False
+            
+        # Test PDF export endpoint
+        pdf_url = f"{self.api_url}/orders/{order_id}/export/pdf"
+        try:
+            response = requests.get(pdf_url)
+            if response.status_code == 200:
+                content_type = response.headers.get('content-type', '')
+                if 'application/pdf' in content_type:
+                    print(f"   ✅ PDF export successful - Content-Type: {content_type}")
+                    print(f"   ✅ PDF size: {len(response.content)} bytes")
+                    self.tests_passed += 1
+                    self.test_results.append({"test": "PDF Export", "status": "PASS", "pdf_size": len(response.content)})
+                    return True
+                else:
+                    print(f"   ❌ Wrong content type: {content_type}")
+            else:
+                print(f"   ❌ PDF export failed - Status: {response.status_code}")
+        except Exception as e:
+            print(f"   ❌ PDF export error: {str(e)}")
+        
+        self.tests_passed += 1  # Count the test
+        self.test_results.append({"test": "PDF Export", "status": "FAIL"})
+        return False
+
+    def test_basic_apis(self):
+        """Test basic API endpoints"""
+        print("\n=== TESTING BASIC APIs ===")
+        
+        # Test root endpoint
+        self.run_test("API Root", "GET", "", 200)
+        
+        # Test dashboard stats
+        self.run_test("Dashboard Stats", "GET", "dashboard/stats", 200)
+        
+        # Test factories
+        self.run_test("Get Factories", "GET", "factories", 200)
+        
+        # Test leather library
+        self.run_test("Get Leather Library", "GET", "leather-library", 200)
+        
+        # Test finish library
+        self.run_test("Get Finish Library", "GET", "finish-library", 200)
 
 def main():
-    tester = JaipurAPITester()
-    return tester.run_all_tests()
+    print("🧪 JAIPUR Fine Wood Furniture - Backend API Testing")
+    print("=" * 60)
+    
+    tester = JaipurFurnitureAPITester()
+    
+    # Test basic APIs first
+    tester.test_basic_apis()
+    
+    # Test Categories API (for Add New Category feature)
+    category_id = tester.test_categories_api()
+    
+    # Test Orders with Factory Inform Date
+    order_id = tester.test_orders_with_factory_inform_date()
+    
+    # Test Orders with multiple items (4+)
+    multi_order_id = tester.test_orders_with_multiple_items()
+    
+    # Test PDF export with larger images
+    if order_id:
+        tester.test_pdf_export(order_id)
+    elif multi_order_id:
+        tester.test_pdf_export(multi_order_id)
+    
+    # Print final results
+    print(f"\n📊 FINAL RESULTS")
+    print("=" * 40)
+    print(f"Tests Run: {tester.tests_run}")
+    print(f"Tests Passed: {tester.tests_passed}")
+    print(f"Success Rate: {(tester.tests_passed/tester.tests_run*100):.1f}%")
+    
+    # Print detailed results
+    print(f"\n📋 DETAILED RESULTS:")
+    for result in tester.test_results:
+        status_icon = "✅" if result["status"] == "PASS" else "❌"
+        print(f"   {status_icon} {result['test']}: {result['status']}")
+    
+    return 0 if tester.tests_passed == tester.tests_run else 1
 
 if __name__ == "__main__":
     sys.exit(main())
