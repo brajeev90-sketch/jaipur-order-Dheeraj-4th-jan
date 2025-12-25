@@ -607,6 +607,22 @@ def strip_html(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text or '')
 
+def format_date_ddmmyyyy(date_str):
+    """Format date string to DD-MM-YYYY format"""
+    if not date_str:
+        return '-'
+    try:
+        # Try parsing ISO format first
+        if 'T' in str(date_str):
+            date_str = str(date_str).split('T')[0]
+        parts = str(date_str).split('-')
+        if len(parts) == 3:
+            year, month, day = parts
+            return f"{day}-{month}-{year}"
+        return date_str
+    except:
+        return date_str
+
 # JAIPUR Logo URL
 JAIPUR_LOGO_URL = "https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg"
 
