@@ -833,34 +833,34 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         
         # === NOTES SECTION (100% width) ===
         notes_y = content_y - img_height - 10
-        notes_height = 50
+        notes_height = 60  # Increased height for better visibility
         c.setStrokeColor(primary_color)
         c.setLineWidth(1)
         c.rect(margin, notes_y - notes_height, content_width, notes_height)
         
         # Notes header
         c.setFillColor(primary_color)
-        c.rect(margin, notes_y - 14, content_width, 14, fill=True)
+        c.rect(margin, notes_y - 16, content_width, 16, fill=True)
         c.setFillColor(HexColor('#ffffff'))
-        c.setFont("Helvetica-Bold", 8)
-        c.drawString(margin + 5, notes_y - 11, "Notes:")
+        c.setFont("Helvetica-Bold", 10)  # Increased font
+        c.drawString(margin + 5, notes_y - 12, "Notes:")
         
-        # Notes content
+        # Notes content - INCREASED FONT SIZE
         c.setFillColor(HexColor('#333333'))
-        c.setFont("Helvetica", 8)
+        c.setFont("Helvetica", 10)  # Increased from 8
         notes_text = strip_html(item.get('notes', ''))
         if notes_text:
             words = notes_text.split()
             line = ""
-            line_y = notes_y - 26
+            line_y = notes_y - 30
             max_width = content_width - 20
             for word in words:
                 test_line = line + " " + word if line else word
-                if c.stringWidth(test_line, "Helvetica", 8) < max_width:
+                if c.stringWidth(test_line, "Helvetica", 10) < max_width:
                     line = test_line
                 else:
                     c.drawString(margin + 8, line_y, line)
-                    line_y -= 11
+                    line_y -= 13
                     line = word
                     if line_y < notes_y - notes_height + 5:
                         break
@@ -873,10 +873,10 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             if item.get('finish_code'): default_notes.append(f"Finish: {item['finish_code']}")
             if item.get('color_notes'): default_notes.append(f"Color: {item['color_notes']}")
             if item.get('wood_finish'): default_notes.append(f"Wood Finish: {item['wood_finish']}")
-            line_y = notes_y - 26
+            line_y = notes_y - 30
             for note in default_notes[:3]:
                 c.drawString(margin + 8, line_y, f"• {note}")
-                line_y -= 11
+                line_y -= 13
         
         # === DETAILS TABLE (Bottom) ===
         table_y = notes_y - notes_height - 8
