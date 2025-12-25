@@ -590,22 +590,21 @@ async def fetch_image_bytes(url: str) -> bytes:
     return None
 
 def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes:
-    """Generate PDF that matches the Preview page layout exactly"""
+    """Generate PDF that matches the Preview page layout exactly - with LARGE product images"""
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
-    margin = settings.get('page_margin_mm', 15) * mm
+    margin = settings.get('page_margin_mm', 12) * mm
     
     primary_color = HexColor(settings.get('primary_color', '#3d2c1e'))
     
     for idx, item in enumerate(order.get("items", [])):
-        # === HEADER SECTION (Two-column layout) ===
+        # === HEADER SECTION (Logo LEFT, Info table RIGHT) ===
         header_top = height - margin
-        header_height = 60
         
-        # Logo on LEFT - proper size and positioning
-        logo_width = 100
-        logo_height = 55
+        # Logo on LEFT - larger size
+        logo_width = 80
+        logo_height = 50
         if logo_bytes:
             try:
                 from reportlab.lib.utils import ImageReader
@@ -613,23 +612,23 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
                 c.drawImage(logo_img, margin, header_top - logo_height, width=logo_width, height=logo_height, preserveAspectRatio=True)
             except:
                 c.setFillColor(primary_color)
-                c.setFont("Helvetica-Bold", 28)
-                c.drawString(margin, header_top - 30, "JAIPUR")
-                c.setFont("Helvetica-Oblique", 8)
+                c.setFont("Helvetica-Bold", 24)
+                c.drawString(margin, header_top - 25, "JAIPUR")
+                c.setFont("Helvetica-Oblique", 7)
                 c.setFillColor(HexColor('#666666'))
-                c.drawString(margin, header_top - 42, "A fine wood furniture company")
+                c.drawString(margin, header_top - 35, "A fine wood furniture company")
         else:
             c.setFillColor(primary_color)
-            c.setFont("Helvetica-Bold", 28)
-            c.drawString(margin, header_top - 30, "JAIPUR")
-            c.setFont("Helvetica-Oblique", 8)
+            c.setFont("Helvetica-Bold", 24)
+            c.drawString(margin, header_top - 25, "JAIPUR")
+            c.setFont("Helvetica-Oblique", 7)
             c.setFillColor(HexColor('#666666'))
-            c.drawString(margin, header_top - 42, "A fine wood furniture company")
+            c.drawString(margin, header_top - 35, "A fine wood furniture company")
         
-        # Info table on RIGHT - aligned with header
-        table_width = 145
+        # Info table on RIGHT
+        table_width = 140
         right_x = width - margin - table_width
-        y = header_top - 8
+        y = header_top - 5
         
         dates = [
             ("ENTRY DATE", order.get('entry_date', 'N/A')),
@@ -639,7 +638,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             ("BUYER PO", order.get('buyer_po_ref', 'N/A')),
         ]
         
-        row_height = 11
+        row_height = 10
         table_height = len(dates) * row_height
         
         # Draw table border
@@ -648,7 +647,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         c.rect(right_x, y - table_height, table_width, table_height)
         
         # Draw table rows
-        label_width = 58
+        label_width = 55
         for i, (label, value) in enumerate(dates):
             row_y = y - (i + 1) * row_height
             
@@ -664,170 +663,189 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             # Label text
             c.setFillColor(primary_color)
             c.setFont("Helvetica-Bold", 6)
-            c.drawString(right_x + 3, row_y + 3, label)
+            c.drawString(right_x + 2, row_y + 3, label)
             
             # Value text
             c.setFillColor(HexColor('#333333'))
             c.setFont("Helvetica", 6)
-            value_str = str(value)[:18] if value else '-'
-            c.drawString(right_x + label_width + 3, row_y + 3, value_str)
+            value_str = str(value)[:20] if value else '-'
+            c.drawString(right_x + label_width + 2, row_y + 3, value_str)
         
         # Separator line under header
-        separator_y = header_top - header_height - 5
+        separator_y = header_top - 55
         c.setStrokeColor(primary_color)
         c.setLineWidth(2)
         c.line(margin, separator_y, width - margin, separator_y)
         
-        # === CONTENT AREA (75% Image + 25% Materials) ===
-        content_y = separator_y - 15
-        img_width = (width - 2*margin) * 0.72
-        material_width = (width - 2*margin) * 0.25
-        material_x = margin + img_width + 10
+        # === LARGE PRODUCT IMAGE SECTION (75% width) + Material Swatches (25%) ===
+        content_y = separator_y - 8
+        content_width = width - 2*margin
+        img_section_width = content_width * 0.73
+        material_section_width = content_width * 0.25
+        material_x = margin + img_section_width + 8
         
-        # Product Image (75% width)
+        # LARGE Product Image Area - increased height significantly
+        img_height = 220  # Much larger image area
         c.setStrokeColor(HexColor('#dddddd'))
-        c.setLineWidth(1)
-        c.rect(margin, content_y - 150, img_width, 150)
+        c.setLineWidth(0.5)
+        c.rect(margin, content_y - img_height, img_section_width, img_height)
         
-        # Try to draw product image
+        # Try to draw product image - LARGE
         product_image = item.get('product_image') or (item.get('images', [None])[0] if item.get('images') else None)
         if product_image:
             try:
                 if product_image.startswith('data:image'):
                     img_data = product_image.split(',')[1]
-                    img_bytes = base64.b64decode(img_data)
+                    img_bytes_data = base64.b64decode(img_data)
                     from reportlab.lib.utils import ImageReader
-                    img = ImageReader(io.BytesIO(img_bytes))
-                    c.drawImage(img, margin + 5, content_y - 145, width=img_width - 10, height=140, preserveAspectRatio=True)
+                    img = ImageReader(io.BytesIO(img_bytes_data))
+                    # Draw image with padding
+                    c.drawImage(img, margin + 5, content_y - img_height + 5, 
+                               width=img_section_width - 10, height=img_height - 10, 
+                               preserveAspectRatio=True)
             except Exception as e:
                 c.setFillColor(HexColor('#888888'))
-                c.setFont("Helvetica", 10)
-                c.drawCentredString(margin + img_width/2, content_y - 75, "Image Error")
+                c.setFont("Helvetica", 12)
+                c.drawCentredString(margin + img_section_width/2, content_y - img_height/2, "Image Error")
         else:
             c.setFillColor(HexColor('#888888'))
-            c.setFont("Helvetica", 10)
-            c.drawCentredString(margin + img_width/2, content_y - 75, "No Image")
+            c.setFont("Helvetica", 12)
+            c.drawCentredString(margin + img_section_width/2, content_y - img_height/2, "No Image Available")
         
-        # Material Swatches (25% width)
+        # Material Swatches (25% width) - taller to match image height
         c.setStrokeColor(HexColor('#dddddd'))
-        c.rect(material_x, content_y - 150, material_width, 150)
+        c.rect(material_x, content_y - img_height, material_section_width, img_height)
         
-        # Leather swatch
-        swatch_y = content_y - 15
+        # Leather swatch - LARGER
+        swatch_y = content_y - 10
+        swatch_height = 70  # Larger swatches
         if item.get('leather_code') or item.get('leather_image'):
-            c.setFillColor(HexColor('#8B4513'))  # Brown gradient placeholder
-            c.rect(material_x + 10, swatch_y - 45, material_width - 20, 40, fill=True)
             if item.get('leather_image'):
                 try:
                     if item['leather_image'].startswith('data:image'):
                         img_data = item['leather_image'].split(',')[1]
-                        img_bytes = base64.b64decode(img_data)
+                        img_bytes_data = base64.b64decode(img_data)
                         from reportlab.lib.utils import ImageReader
-                        img = ImageReader(io.BytesIO(img_bytes))
-                        c.drawImage(img, material_x + 10, swatch_y - 45, width=material_width - 20, height=40, preserveAspectRatio=True)
+                        img = ImageReader(io.BytesIO(img_bytes_data))
+                        c.drawImage(img, material_x + 8, swatch_y - swatch_height, 
+                                   width=material_section_width - 16, height=swatch_height - 5, 
+                                   preserveAspectRatio=True)
                 except:
-                    pass
+                    c.setFillColor(HexColor('#8B4513'))
+                    c.rect(material_x + 8, swatch_y - swatch_height, material_section_width - 16, swatch_height - 5, fill=True)
+            else:
+                c.setFillColor(HexColor('#8B4513'))
+                c.rect(material_x + 8, swatch_y - swatch_height, material_section_width - 16, swatch_height - 5, fill=True)
+            
             c.setFillColor(HexColor('#666666'))
             c.setFont("Helvetica", 6)
-            c.drawCentredString(material_x + material_width/2, swatch_y - 52, "LEATHER")
+            c.drawCentredString(material_x + material_section_width/2, swatch_y - swatch_height - 8, "LEATHER")
             c.setFont("Helvetica-Bold", 7)
             c.setFillColor(HexColor('#333333'))
-            c.drawCentredString(material_x + material_width/2, swatch_y - 62, item.get('leather_code', '-'))
-            swatch_y -= 75
+            c.drawCentredString(material_x + material_section_width/2, swatch_y - swatch_height - 18, item.get('leather_code', '-'))
+            swatch_y -= swatch_height + 30
         
-        # Finish swatch
+        # Finish swatch - LARGER
         if item.get('finish_code') or item.get('finish_image'):
-            c.setFillColor(HexColor('#D4A574'))  # Wood color placeholder
-            c.rect(material_x + 10, swatch_y - 45, material_width - 20, 40, fill=True)
             if item.get('finish_image'):
                 try:
                     if item['finish_image'].startswith('data:image'):
                         img_data = item['finish_image'].split(',')[1]
-                        img_bytes = base64.b64decode(img_data)
+                        img_bytes_data = base64.b64decode(img_data)
                         from reportlab.lib.utils import ImageReader
-                        img = ImageReader(io.BytesIO(img_bytes))
-                        c.drawImage(img, material_x + 10, swatch_y - 45, width=material_width - 20, height=40, preserveAspectRatio=True)
+                        img = ImageReader(io.BytesIO(img_bytes_data))
+                        c.drawImage(img, material_x + 8, swatch_y - swatch_height, 
+                                   width=material_section_width - 16, height=swatch_height - 5, 
+                                   preserveAspectRatio=True)
                 except:
-                    pass
+                    c.setFillColor(HexColor('#D4A574'))
+                    c.rect(material_x + 8, swatch_y - swatch_height, material_section_width - 16, swatch_height - 5, fill=True)
+            else:
+                c.setFillColor(HexColor('#D4A574'))
+                c.rect(material_x + 8, swatch_y - swatch_height, material_section_width - 16, swatch_height - 5, fill=True)
+            
             c.setFillColor(HexColor('#666666'))
             c.setFont("Helvetica", 6)
-            c.drawCentredString(material_x + material_width/2, swatch_y - 52, "FINISH")
+            c.drawCentredString(material_x + material_section_width/2, swatch_y - swatch_height - 8, "FINISH")
             c.setFont("Helvetica-Bold", 7)
             c.setFillColor(HexColor('#333333'))
-            c.drawCentredString(material_x + material_width/2, swatch_y - 62, item.get('finish_code', '-'))
+            c.drawCentredString(material_x + material_section_width/2, swatch_y - swatch_height - 18, item.get('finish_code', '-'))
         
         # No materials placeholder
         if not item.get('leather_code') and not item.get('leather_image') and not item.get('finish_code') and not item.get('finish_image'):
             c.setFillColor(HexColor('#888888'))
             c.setFont("Helvetica", 8)
-            c.drawCentredString(material_x + material_width/2, content_y - 75, "No material")
-            c.drawCentredString(material_x + material_width/2, content_y - 85, "swatches")
+            c.drawCentredString(material_x + material_section_width/2, content_y - img_height/2, "No material")
+            c.drawCentredString(material_x + material_section_width/2, content_y - img_height/2 - 12, "swatches")
         
         # === NOTES SECTION (100% width) ===
-        notes_y = content_y - 170
-        c.setFillColor(primary_color)
-        c.rect(margin, notes_y - 60, width - 2*margin, 60, fill=False, stroke=True)
+        notes_y = content_y - img_height - 10
+        notes_height = 50
+        c.setStrokeColor(primary_color)
+        c.setLineWidth(1)
+        c.rect(margin, notes_y - notes_height, content_width, notes_height)
         
         # Notes header
         c.setFillColor(primary_color)
-        c.rect(margin, notes_y - 15, width - 2*margin, 15, fill=True)
+        c.rect(margin, notes_y - 14, content_width, 14, fill=True)
         c.setFillColor(HexColor('#ffffff'))
         c.setFont("Helvetica-Bold", 8)
-        c.drawString(margin + 5, notes_y - 12, "Notes:")
+        c.drawString(margin + 5, notes_y - 11, "Notes:")
         
         # Notes content
         c.setFillColor(HexColor('#333333'))
         c.setFont("Helvetica", 8)
         notes_text = strip_html(item.get('notes', ''))
         if notes_text:
-            # Simple text wrap
             words = notes_text.split()
             line = ""
-            line_y = notes_y - 28
-            max_width = width - 2*margin - 20
+            line_y = notes_y - 26
+            max_width = content_width - 20
             for word in words:
                 test_line = line + " " + word if line else word
                 if c.stringWidth(test_line, "Helvetica", 8) < max_width:
                     line = test_line
                 else:
-                    c.drawString(margin + 10, line_y, line)
-                    line_y -= 12
+                    c.drawString(margin + 8, line_y, line)
+                    line_y -= 11
                     line = word
-                    if line_y < notes_y - 55:
+                    if line_y < notes_y - notes_height + 5:
                         break
-            if line and line_y >= notes_y - 55:
-                c.drawString(margin + 10, line_y, line)
+            if line and line_y >= notes_y - notes_height + 5:
+                c.drawString(margin + 8, line_y, line)
         else:
-            # Default notes from item fields
             default_notes = []
             if item.get('category'): default_notes.append(f"Category: {item['category']}")
+            if item.get('leather_code'): default_notes.append(f"Leather: {item['leather_code']}")
+            if item.get('finish_code'): default_notes.append(f"Finish: {item['finish_code']}")
             if item.get('color_notes'): default_notes.append(f"Color: {item['color_notes']}")
             if item.get('wood_finish'): default_notes.append(f"Wood Finish: {item['wood_finish']}")
-            if item.get('machine_hall'): default_notes.append(f"Workshop: {item['machine_hall']}")
-            line_y = notes_y - 28
+            line_y = notes_y - 26
             for note in default_notes[:3]:
-                c.drawString(margin + 10, line_y, f"• {note}")
-                line_y -= 12
+                c.drawString(margin + 8, line_y, f"• {note}")
+                line_y -= 11
         
         # === DETAILS TABLE (Bottom) ===
-        table_y = notes_y - 90
+        table_y = notes_y - notes_height - 8
         
-        # Table header
+        # Table header with SIZE sub-headers
+        header_height = 24
         c.setFillColor(primary_color)
-        c.rect(margin, table_y, width - 2*margin, 25, fill=True)
+        c.rect(margin, table_y - header_height, content_width, header_height, fill=True)
         
         c.setFillColor(HexColor('#ffffff'))
-        c.setFont("Helvetica-Bold", 8)
+        c.setFont("Helvetica-Bold", 7)
         
-        # Column positions
-        col_widths = [70, 150, 40, 40, 40, 45, 50]
-        cols = [margin + 5]
+        # Column positions for 7 columns
+        col_widths = [80, 170, 35, 35, 35, 50, 50]
+        cols = [margin + 3]
         for w in col_widths[:-1]:
             cols.append(cols[-1] + w)
         
+        # Draw headers
         headers = ["ITEM CODE", "DESCRIPTION", "H (cm)", "D (cm)", "W (cm)", "CBM", "Qty"]
         for i, header in enumerate(headers):
-            c.drawString(cols[i], table_y + 8, header)
+            c.drawString(cols[i], table_y - header_height + 8, header)
         
         # Table row
         cbm = item.get('cbm', 0)
@@ -837,34 +855,34 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             w = item.get('width_cm', 0) or 0
             cbm = round((h * d * w) / 1000000, 4)
         
-        row_y = table_y - 20
+        row_y = table_y - header_height - 18
         c.setStrokeColor(primary_color)
-        c.rect(margin, row_y, width - 2*margin, 20)
+        c.rect(margin, row_y, content_width, 18)
         
         c.setFillColor(HexColor('#333333'))
         c.setFont("Courier-Bold", 8)
-        c.drawString(cols[0], row_y + 6, str(item.get('product_code', '-')))
+        c.drawString(cols[0], row_y + 5, str(item.get('product_code', '-')))
         
         c.setFont("Helvetica", 8)
         desc = item.get('description', '-')
         if item.get('color_notes'):
             desc = f"{desc} ({item['color_notes']})"
-        if len(desc) > 40:
-            desc = desc[:37] + "..."
-        c.drawString(cols[1], row_y + 6, desc)
-        c.drawString(cols[2], row_y + 6, str(item.get('height_cm', 0)))
-        c.drawString(cols[3], row_y + 6, str(item.get('depth_cm', 0)))
-        c.drawString(cols[4], row_y + 6, str(item.get('width_cm', 0)))
-        c.drawString(cols[5], row_y + 6, str(cbm))
+        if len(desc) > 45:
+            desc = desc[:42] + "..."
+        c.drawString(cols[1], row_y + 5, desc)
+        c.drawString(cols[2], row_y + 5, str(item.get('height_cm', 0)))
+        c.drawString(cols[3], row_y + 5, str(item.get('depth_cm', 0)))
+        c.drawString(cols[4], row_y + 5, str(item.get('width_cm', 0)))
+        c.drawString(cols[5], row_y + 5, str(cbm))
         c.setFont("Helvetica-Bold", 8)
-        c.drawString(cols[6], row_y + 6, f"{item.get('quantity', 1)} Pcs")
+        c.drawString(cols[6], row_y + 5, f"{item.get('quantity', 1)} Pcs")
         
         # Footer
         c.setFillColor(HexColor('#888888'))
         c.setFont("Helvetica", 8)
         footer_text = f"Buyer: {order.get('buyer_name', 'N/A')} • PO: {order.get('buyer_po_ref', 'N/A')}"
-        c.drawString(margin, margin + 10, footer_text)
-        c.drawRightString(width - margin, margin + 10, f"Page {idx + 1} of {len(order.get('items', []))}")
+        c.drawString(margin, margin + 8, footer_text)
+        c.drawRightString(width - margin, margin + 8, f"Page {idx + 1} of {len(order.get('items', []))}")
         
         c.showPage()
     
