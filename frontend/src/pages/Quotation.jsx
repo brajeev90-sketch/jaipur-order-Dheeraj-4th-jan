@@ -650,6 +650,15 @@ export default function Quotation() {
             <Save size={18} />
             Save
           </Button>
+          <Button 
+            variant="outline" 
+            className="gap-2" 
+            disabled={quotationItems.length === 0} 
+            onClick={handleGenerateQuote}
+          >
+            <Eye size={18} />
+            View / Print
+          </Button>
           <Button className="gap-2" disabled={quotationItems.length === 0} onClick={handleGenerateQuote} data-testid="generate-quote-btn">
             <Download size={18} />
             {t('generateQuote')}
