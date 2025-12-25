@@ -208,6 +208,13 @@ export default function EditOrder() {
       setProductSearch(order.items[index].product_code || '');
       setEditingItemIndex(index);
     } else {
+      // Default notes text - auto placed but editable
+      const defaultNotes = `<p><strong>Deeper Button Tufting</strong>-Deeper Button-Shiny as per sample-Consistent Colour</p>
+<p>Tufting Depth needs to be increased for a more defined and Luxurious appearance.</p>
+<p><strong>Leather Finish</strong>-Approved ( Hand-Distressed Finish)</p>
+<p>Final leather selection and hand-distressed finish have been approved.</p>
+<p>Packaging detail to follow.</p>`;
+
       setCurrentItem({
         id: uuidv4(),
         product_code: '',
@@ -228,7 +235,7 @@ export default function EditOrder() {
         color_notes: '',
         leg_color: '',
         wood_finish: '',
-        notes: '',
+        notes: defaultNotes,
         product_image: '',
         images: [],
         reference_images: [],
