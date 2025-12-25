@@ -590,6 +590,7 @@ async def fetch_image_bytes(url: str) -> bytes:
     return None
 
 def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes:
+    """Generate PDF that matches the Preview page layout exactly"""
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
