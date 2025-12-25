@@ -202,7 +202,7 @@ export default function OrderDetail() {
           <div className="grid grid-cols-4 gap-6">
             <div>
               <p className="text-sm text-muted-foreground">Entry Date</p>
-              <p className="font-medium">{order.entry_date || 'N/A'}</p>
+              <p className="font-medium">{formatDateDDMMYYYY(order.entry_date)}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Factory</p>
@@ -215,7 +215,7 @@ export default function OrderDetail() {
             <div>
               <p className="text-sm text-muted-foreground">Created</p>
               <p className="font-medium">
-                {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}
+                {formatDateDDMMYYYY(order.created_at)}
               </p>
             </div>
           </div>
