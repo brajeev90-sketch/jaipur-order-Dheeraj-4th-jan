@@ -289,11 +289,11 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
             <tbody>
               <tr className="border-b border-[#3d2c1e]">
                 <td className="px-2 sm:px-3 py-1 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">ENTRY DATE</td>
-                <td className="px-2 sm:px-3 py-1 min-w-[120px]">{order.entry_date || '-'}</td>
+                <td className="px-2 sm:px-3 py-1 min-w-[120px]">{formatDateDDMMYYYY(order.entry_date)}</td>
               </tr>
               <tr className="border-b border-[#3d2c1e]">
                 <td className="px-2 sm:px-3 py-1 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">FACTORY INFORM</td>
-                <td className="px-2 sm:px-3 py-1">{order.factory_inform_date || order.entry_date || '-'}</td>
+                <td className="px-2 sm:px-3 py-1">{formatDateDDMMYYYY(order.factory_inform_date || order.entry_date)}</td>
               </tr>
               <tr className="border-b border-[#3d2c1e]">
                 <td className="px-2 sm:px-3 py-1 bg-[#f5f0eb] font-semibold border-r border-[#3d2c1e]">FACTORY</td>
