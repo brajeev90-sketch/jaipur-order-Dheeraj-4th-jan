@@ -657,7 +657,8 @@ export default function EditOrder() {
                   max="99999"
                   value={currentItem.quantity}
                   onChange={(e) => handleItemChange('quantity', parseInt(e.target.value) || 1)}
-                  onFocus={(e) => e.target.select()}
+                  onClick={(e) => e.target.select()}
+                  onFocus={(e) => setTimeout(() => e.target.select(), 0)}
                   data-testid="item-quantity"
                 />
               </div>
