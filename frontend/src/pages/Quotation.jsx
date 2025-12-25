@@ -777,6 +777,7 @@ export default function Quotation() {
                             max="99999"
                             value={item.quantity}
                             onChange={(e) => updateItemQuantity(item.id, e.target.value)}
+                            onFocus={(e) => e.target.select()}
                             className="w-24 text-center"
                           />
                         </TableCell>
