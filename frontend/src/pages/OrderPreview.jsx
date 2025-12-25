@@ -189,8 +189,18 @@ JAIPUR - A fine wood furniture company`);
             <p className="page-description font-mono text-sm">{order?.sales_order_ref || 'Order'} • {order?.buyer_name || 'No Buyer'}</p>
           </div>
           
-          {/* Action Buttons - Responsive */}
+          {/* Action Buttons - Responsive: Preview, Edit, Print, Download PDF */}
           <div className="flex flex-wrap gap-2">
+            <Link to={`/orders/${id}/edit`}>
+              <Button 
+                variant="outline"
+                className="gap-2"
+                data-testid="edit-btn"
+              >
+                <Edit size={18} />
+                <span>Edit</span>
+              </Button>
+            </Link>
             <Button 
               variant="outline"
               className="gap-2 flex-1 sm:flex-none"
@@ -219,44 +229,19 @@ JAIPUR - A fine wood furniture company`);
               <span>WhatsApp</span>
             </Button>
             <Button 
-              variant="outline"
+              variant="default"
               className="gap-2 flex-1 sm:flex-none"
               onClick={handleExportPdf}
               data-testid="export-pdf-btn"
             >
               <FileDown size={18} />
-              <span className="hidden sm:inline">Download</span> PDF
+              <span>Download PDF</span>
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Page Navigation */}
-      {totalPages > 0 && (
-        <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6" data-testid="page-navigation">
-          <Button 
-            variant="outline" 
-            size="icon"
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage(p => p - 1)}
-            data-testid="prev-page-btn"
-          >
-            <ChevronLeft size={18} />
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage + 1} of {totalPages}
-          </span>
-          <Button 
-            variant="outline" 
-            size="icon"
-            disabled={currentPage === totalPages - 1}
-            onClick={() => setCurrentPage(p => p + 1)}
-            data-testid="next-page-btn"
-          >
-            <ChevronRight size={18} />
-          </Button>
-        </div>
-      )}
+      {/* ALL items shown (no pagination) */}
 
       {/* Preview Container - ALL items on ONE page (scrollable) */}
       <div className="preview-container rounded-sm overflow-x-auto" data-testid="preview-container">
