@@ -636,8 +636,10 @@ export default function EditOrder() {
                 <Input
                   type="number"
                   min="1"
+                  max="99999"
                   value={currentItem.quantity}
                   onChange={(e) => handleItemChange('quantity', parseInt(e.target.value) || 1)}
+                  onFocus={(e) => e.target.select()}
                   data-testid="item-quantity"
                 />
               </div>
