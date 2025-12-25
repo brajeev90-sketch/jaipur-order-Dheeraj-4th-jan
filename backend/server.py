@@ -691,7 +691,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             ("BUYER PO", order.get('buyer_po_ref', 'N/A')),
         ]
         
-        row_height = 10
+        row_height = 12
         table_height = len(dates) * row_height
         
         # Draw table border
@@ -713,9 +713,9 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             c.rect(right_x, row_y, label_width, row_height, fill=False, stroke=True)
             c.rect(right_x + label_width, row_y, table_width - label_width, row_height, fill=False, stroke=True)
             
-            # Label text
+            # Label text - INCREASED FONT SIZE
             c.setFillColor(primary_color)
-            c.setFont("Helvetica-Bold", 6)
+            c.setFont("Helvetica-Bold", 8)
             c.drawString(right_x + 2, row_y + 3, label)
             
             # Value text
