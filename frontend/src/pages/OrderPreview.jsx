@@ -45,10 +45,29 @@ export default function OrderPreview() {
 
   const loadOrder = async () => {
     try {
-      const [orderRes] = await Promise.all([
+      const [orderRes, productsRes] = await Promise.all([
         ordersApi.getById(id),
+        productsApi.getAll(),
       ]);
-      setOrder(orderRes.data);
+      
+      // Auto-fill missing product_image from catalog for existing items
+      const orderData = orderRes.data;
+      const productsList = productsRes.data;
+      
+      if (orderData.items && orderData.items.length > 0) {
+        orderData.items = orderData.items.map(item => {
+          // If item doesn't have product_image, try to get it from catalog
+          if (!item.product_image && item.product_code) {
+            const catalogProduct = productsList.find(p => p.product_code === item.product_code);
+            if (catalogProduct && catalogProduct.image) {
+              return { ...item, product_image: catalogProduct.image };
+            }
+          }
+          return item;
+        });
+      }
+      
+      setOrder(orderData);
     } catch (error) {
       console.error('Error loading preview:', error);
       toast.error('Failed to load preview');
