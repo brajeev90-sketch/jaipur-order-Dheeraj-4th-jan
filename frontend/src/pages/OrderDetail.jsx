@@ -60,11 +60,6 @@ export default function OrderDetail() {
     toast.success('PDF download started');
   };
 
-  const handleExportPpt = () => {
-    window.open(ordersApi.exportPpt(id), '_blank');
-    toast.success('PPT download started');
-  };
-
   const handleWhatsAppShare = async () => {
     setSharing(true);
     try {
