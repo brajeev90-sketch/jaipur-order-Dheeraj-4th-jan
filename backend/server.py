@@ -678,8 +678,8 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             c.setFillColor(HexColor('#666666'))
             c.drawString(margin, header_top - 35, "A fine wood furniture company")
         
-        # Info table on RIGHT
-        table_width = 140
+        # Info table on RIGHT - WIDER and BETTER ALIGNED
+        table_width = 170  # Increased width
         right_x = width - margin - table_width
         y = header_top - 5
         
@@ -691,16 +691,16 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             ("BUYER PO", order.get('buyer_po_ref', 'N/A')),
         ]
         
-        row_height = 12
+        row_height = 14  # Increased row height
         table_height = len(dates) * row_height
         
         # Draw table border
         c.setStrokeColor(primary_color)
-        c.setLineWidth(1)
+        c.setLineWidth(1.5)
         c.rect(right_x, y - table_height, table_width, table_height)
         
         # Draw table rows
-        label_width = 55
+        label_width = 70  # Increased label width
         for i, (label, value) in enumerate(dates):
             row_y = y - (i + 1) * row_height
             
@@ -710,22 +710,23 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             
             # Cell borders
             c.setStrokeColor(primary_color)
+            c.setLineWidth(0.5)
             c.rect(right_x, row_y, label_width, row_height, fill=False, stroke=True)
             c.rect(right_x + label_width, row_y, table_width - label_width, row_height, fill=False, stroke=True)
             
-            # Label text - INCREASED FONT SIZE
+            # Label text - LARGER FONT
             c.setFillColor(primary_color)
-            c.setFont("Helvetica-Bold", 8)
-            c.drawString(right_x + 2, row_y + 3, label)
+            c.setFont("Helvetica-Bold", 9)
+            c.drawString(right_x + 3, row_y + 4, label)
             
-            # Value text - INCREASED FONT SIZE
+            # Value text - LARGER FONT and BOLD
             c.setFillColor(HexColor('#333333'))
-            c.setFont("Helvetica", 8)
-            value_str = str(value)[:20] if value else '-'
-            c.drawString(right_x + label_width + 2, row_y + 3, value_str)
+            c.setFont("Helvetica-Bold", 9)
+            value_str = str(value)[:18] if value else '-'
+            c.drawString(right_x + label_width + 3, row_y + 4, value_str)
         
-        # Separator line under header
-        separator_y = header_top - 55
+        # Separator line under header - moved down to avoid overlap
+        separator_y = header_top - max(logo_height + 5, table_height + 10)
         c.setStrokeColor(primary_color)
         c.setLineWidth(2)
         c.line(margin, separator_y, width - margin, separator_y)
