@@ -770,9 +770,9 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         c.setStrokeColor(HexColor('#dddddd'))
         c.rect(material_x, content_y - img_height, material_section_width, img_height)
         
-        # Leather swatch - LARGER (increased proportionally - 30% more)
+        # Leather swatch - Reduced proportionally
         swatch_y = content_y - 10
-        swatch_height = 156  # Larger swatches to match image height
+        swatch_height = 100  # Reduced from 156
         if item.get('leather_code') or item.get('leather_image'):
             if item.get('leather_image'):
                 try:
