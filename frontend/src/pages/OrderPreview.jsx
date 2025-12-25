@@ -394,7 +394,7 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
           )}
         </div>
 
-        {/* Material Swatches - 25% width - LARGER to match image height */}
+        {/* Material Swatches - 25% width - Proportionally reduced */}
         <div className="w-1/4 flex flex-col gap-2">
           {/* Leather/Fabric Swatch */}
           {(item.leather_code || item.leather_image) && (
@@ -403,10 +403,10 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
                 <img 
                   src={item.leather_image} 
                   alt={item.leather_code || 'Leather'}
-                  className="w-full h-44 object-cover rounded mb-1"
+                  className="w-full h-28 object-cover rounded mb-1"
                 />
               ) : (
-                <div className="w-full h-44 bg-gradient-to-br from-[#8B4513] to-[#A0522D] rounded mb-1"></div>
+                <div className="w-full h-28 bg-gradient-to-br from-[#8B4513] to-[#A0522D] rounded mb-1"></div>
               )}
               <div className="text-center">
                 <p className="text-[9px] text-[#666] uppercase">Leather</p>
@@ -422,10 +422,10 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
                 <img 
                   src={item.finish_image} 
                   alt={item.finish_code || 'Finish'}
-                  className="w-full h-44 object-cover rounded mb-1"
+                  className="w-full h-28 object-cover rounded mb-1"
                 />
               ) : (
-                <div className="w-full h-44 bg-gradient-to-br from-[#D4A574] to-[#C4956A] rounded mb-1"></div>
+                <div className="w-full h-28 bg-gradient-to-br from-[#D4A574] to-[#C4956A] rounded mb-1"></div>
               )}
               <div className="text-center">
                 <p className="text-[9px] text-[#666] uppercase">Finish</p>
