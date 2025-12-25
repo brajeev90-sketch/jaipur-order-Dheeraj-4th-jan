@@ -881,13 +881,13 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         # === DETAILS TABLE (Bottom) ===
         table_y = notes_y - notes_height - 8
         
-        # Table header with SIZE sub-headers
-        header_height = 24
+        # Table header with SIZE sub-headers - INCREASED HEIGHT AND FONT
+        header_height = 28
         c.setFillColor(primary_color)
         c.rect(margin, table_y - header_height, content_width, header_height, fill=True)
         
         c.setFillColor(HexColor('#ffffff'))
-        c.setFont("Helvetica-Bold", 7)
+        c.setFont("Helvetica-Bold", 10)  # Increased from 7
         
         # Column positions for 7 columns
         col_widths = [80, 170, 35, 35, 35, 50, 50]
@@ -898,7 +898,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         # Draw headers
         headers = ["ITEM CODE", "DESCRIPTION", "H (cm)", "D (cm)", "W (cm)", "CBM", "Qty"]
         for i, header in enumerate(headers):
-            c.drawString(cols[i], table_y - header_height + 8, header)
+            c.drawString(cols[i], table_y - header_height + 10, header)
         
         # Table row
         cbm = item.get('cbm', 0)
@@ -908,34 +908,34 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             w = item.get('width_cm', 0) or 0
             cbm = round((h * d * w) / 1000000, 4)
         
-        row_y = table_y - header_height - 18
+        row_y = table_y - header_height - 22  # Increased row height
         c.setStrokeColor(primary_color)
-        c.rect(margin, row_y, content_width, 18)
+        c.rect(margin, row_y, content_width, 22)
         
         c.setFillColor(HexColor('#333333'))
-        c.setFont("Courier-Bold", 8)
-        c.drawString(cols[0], row_y + 5, str(item.get('product_code', '-')))
+        c.setFont("Courier-Bold", 11)  # Increased from 8
+        c.drawString(cols[0], row_y + 7, str(item.get('product_code', '-')))
         
-        c.setFont("Helvetica", 8)
+        c.setFont("Helvetica", 10)  # Increased from 8
         desc = item.get('description', '-')
         if item.get('color_notes'):
             desc = f"{desc} ({item['color_notes']})"
         if len(desc) > 45:
             desc = desc[:42] + "..."
-        c.drawString(cols[1], row_y + 5, desc)
-        c.drawString(cols[2], row_y + 5, str(item.get('height_cm', 0)))
-        c.drawString(cols[3], row_y + 5, str(item.get('depth_cm', 0)))
-        c.drawString(cols[4], row_y + 5, str(item.get('width_cm', 0)))
-        c.drawString(cols[5], row_y + 5, str(cbm))
-        c.setFont("Helvetica-Bold", 8)
-        c.drawString(cols[6], row_y + 5, f"{item.get('quantity', 1)} Pcs")
+        c.drawString(cols[1], row_y + 7, desc)
+        c.drawString(cols[2], row_y + 7, str(item.get('height_cm', 0)))
+        c.drawString(cols[3], row_y + 7, str(item.get('depth_cm', 0)))
+        c.drawString(cols[4], row_y + 7, str(item.get('width_cm', 0)))
+        c.drawString(cols[5], row_y + 7, str(cbm))
+        c.setFont("Helvetica-Bold", 11)  # Increased from 8
+        c.drawString(cols[6], row_y + 7, f"{item.get('quantity', 1)} Pcs")
         
-        # Footer
-        c.setFillColor(HexColor('#888888'))
-        c.setFont("Helvetica", 8)
+        # Footer - INCREASED FONT
+        c.setFillColor(HexColor('#666666'))
+        c.setFont("Helvetica", 10)  # Increased from 8
         footer_text = f"Buyer: {order.get('buyer_name', 'N/A')} • PO: {order.get('buyer_po_ref', 'N/A')}"
-        c.drawString(margin, margin + 8, footer_text)
-        c.drawRightString(width - margin, margin + 8, f"Page {idx + 1} of {len(order.get('items', []))}")
+        c.drawString(margin, margin + 10, footer_text)
+        c.drawRightString(width - margin, margin + 10, f"Page {idx + 1} of {len(order.get('items', []))}")
         
         c.showPage()
     
