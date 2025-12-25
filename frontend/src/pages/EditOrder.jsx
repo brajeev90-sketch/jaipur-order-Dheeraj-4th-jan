@@ -137,9 +137,10 @@ export default function EditOrder() {
 
   // Handle product selection from suggestions
   const handleProductSelect = (product) => {
-    // Get product images - main image and additional images
-    const productImage = product.image || '';
-    const productImages = product.images || [];
+    // Get product image from catalog
+    const mainProductImage = product.image || '';
+    // Additional images from catalog (if any) - NOT including main image
+    const additionalImages = product.images || [];
     
     setCurrentItem(prev => ({
       ...prev,
@@ -151,10 +152,10 @@ export default function EditOrder() {
       width_cm: product.width_cm || 0,
       cbm: product.cbm || 0,
       dimensions: product.size || '',
-      // Auto-fill product image
-      product_image: productImage,
-      // Keep existing images and add product images
-      images: productImage ? [productImage, ...productImages] : productImages,
+      // Auto-fill main product image from catalog
+      product_image: mainProductImage,
+      // Additional images are separate from main image
+      images: additionalImages,
     }));
     setProductSearch(product.product_code);
     setShowProductSuggestions(false);
