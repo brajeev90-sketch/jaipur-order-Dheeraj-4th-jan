@@ -108,6 +108,8 @@ export const templatesApi = {
 // Categories API
 export const categoriesApi = {
   getAll: () => api.get('/categories'),
+  create: (data) => api.post('/categories', data),
+  delete: (id) => api.delete(`/categories/${id}`),
 };
 
 // Quotations API
