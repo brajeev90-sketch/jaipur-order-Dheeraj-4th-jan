@@ -204,8 +204,14 @@ export default function EditOrder() {
 
   const openItemDialog = (index = null) => {
     if (index !== null) {
-      setCurrentItem({ ...order.items[index] });
-      setProductSearch(order.items[index].product_code || '');
+      // Ensure images and product_image are properly initialized when editing
+      const existingItem = order.items[index];
+      setCurrentItem({ 
+        ...existingItem,
+        images: existingItem.images || [],
+        product_image: existingItem.product_image || ''
+      });
+      setProductSearch(existingItem.product_code || '');
       setEditingItemIndex(index);
     } else {
       // Default notes text - auto placed but editable
