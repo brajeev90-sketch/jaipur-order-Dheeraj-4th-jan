@@ -917,17 +917,17 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         
         # === NOTES SECTION (100% width) ===
         notes_y = content_y - img_height - 10
-        notes_height = 60  # Increased height for better visibility
+        notes_height = 80  # Increased height for 16px font
         c.setStrokeColor(primary_color)
         c.setLineWidth(1)
         c.rect(margin, notes_y - notes_height, content_width, notes_height)
         
         # Notes header
         c.setFillColor(primary_color)
-        c.rect(margin, notes_y - 16, content_width, 16, fill=True)
+        c.rect(margin, notes_y - 18, content_width, 18, fill=True)
         c.setFillColor(HexColor('#ffffff'))
-        c.setFont("Helvetica-Bold", 10)  # Increased font
-        c.drawString(margin + 5, notes_y - 12, "Notes:")
+        c.setFont("Helvetica-Bold", 12)  # Larger header font
+        c.drawString(margin + 5, notes_y - 14, "Notes:")
         
         # Notes content - FONT SIZE 16px
         c.setFillColor(HexColor('#333333'))
