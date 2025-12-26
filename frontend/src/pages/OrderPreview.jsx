@@ -300,11 +300,13 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
     ? ((item.height_cm || 0) * (item.depth_cm || 0) * (item.width_cm || 0) / 1000000).toFixed(2)
     : item.cbm;
 
-  // Get the MAIN product image (product_image field is primary)
-  const mainProductImage = item.product_image || null;
+  // Get the MAIN product image - fallback to first image in images array
+  const mainProductImage = item.product_image || (item.images && item.images.length > 0 ? item.images[0] : null);
   
-  // Additional images are separate from main image
-  const additionalImages = item.images || [];
+  // Additional images - exclude first image if it's being used as main image
+  const additionalImages = item.product_image 
+    ? (item.images || []) 
+    : (item.images || []).slice(1);  // Skip first if used as main
   
   // Company logo URL (same as dashboard)
   const logoUrl = "https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg";
