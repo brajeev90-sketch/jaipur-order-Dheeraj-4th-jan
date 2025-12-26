@@ -1035,6 +1035,226 @@ export default function Quotation() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* View Quote Popup */}
+      <Dialog open={viewQuotePopup} onOpenChange={setViewQuotePopup}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Eye size={20} />
+                View Quotation - {viewQuoteData?.reference || 'N/A'}
+              </span>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => {
+                  if (viewQuoteData) {
+                    // Load the quote data and generate print view
+                    handleLoadQuotation(viewQuoteData);
+                    setShowSavedQuotes(false);
+                    setViewQuotePopup(false);
+                    setTimeout(() => handleGenerateQuote(), 300);
+                  }
+                }}
+              >
+                <Download size={16} />
+                Print / Download
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          {viewQuoteData && (
+            <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+              {/* Quote Header Info */}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div><strong>Reference:</strong> {viewQuoteData.reference || '-'}</div>
+                <div><strong>Date:</strong> {viewQuoteData.date || '-'}</div>
+                <div><strong>Customer:</strong> {viewQuoteData.customer_name || '-'}</div>
+                <div><strong>Email:</strong> {viewQuoteData.customer_email || '-'}</div>
+              </div>
+              
+              {/* Items Table */}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Code</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead className="text-center">H</TableHead>
+                    <TableHead className="text-center">W</TableHead>
+                    <TableHead className="text-center">D</TableHead>
+                    <TableHead className="text-center">CBM</TableHead>
+                    <TableHead className="text-right">Price</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {viewQuoteData.items?.map((item, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell className="font-mono font-semibold">{item.product_code}</TableCell>
+                      <TableCell>{item.description || '-'}</TableCell>
+                      <TableCell className="text-center">{item.height_cm || '-'}</TableCell>
+                      <TableCell className="text-center">{item.width_cm || '-'}</TableCell>
+                      <TableCell className="text-center">{item.depth_cm || '-'}</TableCell>
+                      <TableCell className="text-center">{item.cbm || '-'}</TableCell>
+                      <TableCell className="text-right font-semibold">
+                        {viewQuoteData.currency === 'GBP' ? '£' : '$'}{item.fob_price?.toFixed(2) || '0.00'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              
+              {/* Summary */}
+              <div className="text-right space-y-1 pt-4 border-t">
+                <div><strong>Total Items:</strong> {viewQuoteData.items?.length || 0} Pcs</div>
+                <div><strong>Total CBM:</strong> {viewQuoteData.total_cbm?.toFixed(2) || '0.00'} m³</div>
+                <div className="text-lg font-bold text-primary">
+                  <strong>Grand Total:</strong> {viewQuoteData.currency === 'GBP' ? '£' : '$'}{viewQuoteData.total_value?.toFixed(2) || '0.00'}
+                </div>
+              </div>
+              
+              {viewQuoteData.notes && (
+                <div className="pt-4 border-t">
+                  <strong>Notes:</strong>
+                  <p className="text-sm text-muted-foreground mt-1">{viewQuoteData.notes}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Quote Popup */}
+      <Dialog open={editQuotePopup} onOpenChange={setEditQuotePopup}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit size={20} />
+              Edit Quotation - {editQuoteData?.reference || 'N/A'}
+            </DialogTitle>
+          </DialogHeader>
+          {editQuoteData && (
+            <div className="space-y-4">
+              {/* Edit Form */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Reference</Label>
+                  <Input 
+                    value={editQuoteData.reference || ''} 
+                    onChange={(e) => setEditQuoteData({...editQuoteData, reference: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Date</Label>
+                  <Input 
+                    type="date"
+                    value={editQuoteData.date || ''} 
+                    onChange={(e) => setEditQuoteData({...editQuoteData, date: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Customer Name</Label>
+                  <Input 
+                    value={editQuoteData.customer_name || ''} 
+                    onChange={(e) => setEditQuoteData({...editQuoteData, customer_name: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Customer Email</Label>
+                  <Input 
+                    value={editQuoteData.customer_email || ''} 
+                    onChange={(e) => setEditQuoteData({...editQuoteData, customer_email: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              {/* Items */}
+              <div className="space-y-2">
+                <Label>Items ({editQuoteData.items?.length || 0})</Label>
+                <div className="border rounded-lg max-h-[300px] overflow-y-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Code</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                        <TableHead className="w-[50px]"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {editQuoteData.items?.map((item, idx) => (
+                        <TableRow key={idx}>
+                          <TableCell className="font-mono">{item.product_code}</TableCell>
+                          <TableCell>{item.description || '-'}</TableCell>
+                          <TableCell className="text-right">
+                            <Input 
+                              type="number"
+                              className="w-24 text-right"
+                              value={item.fob_price || 0}
+                              onChange={(e) => {
+                                const newItems = [...editQuoteData.items];
+                                newItems[idx] = {...newItems[idx], fob_price: parseFloat(e.target.value) || 0};
+                                const newTotal = newItems.reduce((sum, i) => sum + (i.fob_price || 0), 0);
+                                setEditQuoteData({...editQuoteData, items: newItems, total_value: newTotal});
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => {
+                                const newItems = editQuoteData.items.filter((_, i) => i !== idx);
+                                const newTotal = newItems.reduce((sum, i) => sum + (i.fob_price || 0), 0);
+                                const newCbm = newItems.reduce((sum, i) => sum + (parseFloat(i.cbm) || 0), 0);
+                                setEditQuoteData({...editQuoteData, items: newItems, total_value: newTotal, total_cbm: newCbm});
+                              }}
+                            >
+                              <Trash2 size={14} className="text-red-500" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Notes</Label>
+                <Textarea 
+                  value={editQuoteData.notes || ''} 
+                  onChange={(e) => setEditQuoteData({...editQuoteData, notes: e.target.value})}
+                  rows={3}
+                />
+              </div>
+              
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-4 border-t">
+                <Button variant="outline" onClick={() => setEditQuotePopup(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={async () => {
+                    try {
+                      await quotationsApi.update(editQuoteData.id, editQuoteData);
+                      toast.success('Quotation updated successfully');
+                      loadSavedQuotations();
+                      setEditQuotePopup(false);
+                    } catch (error) {
+                      console.error('Error updating quotation:', error);
+                      toast.error('Failed to update quotation');
+                    }
+                  }}
+                >
+                  <Save size={16} className="mr-2" />
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
