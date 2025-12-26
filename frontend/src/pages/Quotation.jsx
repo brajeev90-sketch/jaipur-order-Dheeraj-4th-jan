@@ -394,37 +394,63 @@ export default function Quotation() {
           .product-details {
             margin-top: 5px;
           }
-          .product-code {
-            font-family: monospace;
-            font-size: 12px;
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 1px;
-          }
-          .product-desc {
-            font-size: 10px;
-            color: #555;
-            margin-bottom: 5px;
-            line-height: 1.2;
-          }
           .details-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 10px;
           }
-          .details-table th {
+          .details-table .header-row th {
             background: #3d2c1e;
+            color: white;
+            padding: 6px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            border: 1px solid #2d1e12;
+          }
+          .details-table .sub-header-row th {
+            background: #5a4636;
             color: white;
             padding: 4px 6px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 9px;
+            border: 1px solid #3d2c1e;
           }
+          .details-table .sub-header-row th:empty {
+            background: #3d2c1e;
+          }
+          .details-table .item-code-col { width: 18%; }
+          .details-table .desc-col { width: 30%; }
+          .details-table .size-col { width: 20%; }
+          .details-table .size-sub { width: 6.66%; }
+          .details-table .cbm-col { width: 12%; }
+          .details-table .price-col { width: 15%; }
           .details-table td {
-            padding: 4px 6px;
+            padding: 6px 8px;
             border: 1px solid #ddd;
             text-align: center;
+            background: white;
           }
-          .price-cell {
+          .details-table .item-code-cell {
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: left;
+          }
+          .details-table .desc-cell {
+            text-align: left;
+            font-size: 10px;
+            color: #333;
+          }
+          .details-table .size-cell {
+            font-size: 10px;
+          }
+          .details-table .cbm-cell {
+            font-size: 10px;
+          }
+          .details-table .price-cell {
             font-weight: bold;
             color: #000;
             font-size: 11px;
