@@ -301,11 +301,11 @@ export default function Quotation() {
           * { margin: 0; padding: 0; box-sizing: border-box; }
           @page { 
             size: A4 landscape; 
-            margin: 10mm 15mm; 
+            margin: 12mm 18mm; 
           }
           body { 
             font-family: Arial, sans-serif; 
-            padding: 15px 25px; 
+            padding: 12px 30px; 
             background: white;
             color: #333;
             font-size: 11px;
@@ -313,7 +313,7 @@ export default function Quotation() {
           .page { 
             page-break-after: always; 
             width: 100%;
-            height: calc(210mm - 24mm);
+            min-height: calc(210mm - 30mm);
           }
           .page:last-child { page-break-after: auto; }
           
@@ -322,8 +322,8 @@ export default function Quotation() {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 2px solid #3d2c1e;
           }
           .logo {
@@ -335,28 +335,28 @@ export default function Quotation() {
           }
           .quote-title {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             color: #3d2c1e;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
           }
           .customer-info {
             font-size: 10px;
             color: #333;
             line-height: 1.4;
+            margin-top: 2px;
           }
           
           /* Two column layout */
           .products-row {
             display: flex;
-            gap: 20px;
-            height: calc(100% - 100px);
+            gap: 24px;
+            margin-bottom: 12px;
           }
           .product-column {
             flex: 1;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 8px 10px;
+            border: 1px solid #d0d0d0;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
           }
@@ -367,21 +367,21 @@ export default function Quotation() {
           
           /* Product Image */
           .product-image-section {
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px;
-            min-height: 180px;
+            padding: 8px 5px;
+            min-height: 220px;
+            max-height: 240px;
           }
           .product-image {
-            max-width: 100%;
-            max-height: 200px;
+            max-width: 95%;
+            max-height: 230px;
             object-fit: contain;
           }
           .no-image {
             width: 100%;
-            height: 160px;
+            height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -393,19 +393,19 @@ export default function Quotation() {
           
           /* Product Details */
           .product-details {
-            margin-top: 5px;
+            margin-top: 8px;
           }
           .product-code {
             font-family: monospace;
             font-size: 13px;
             font-weight: bold;
-            color: #3d2c1e;
+            color: #000;
             margin-bottom: 2px;
           }
           .product-desc {
             font-size: 10px;
-            color: #666;
-            margin-bottom: 6px;
+            color: #555;
+            margin-bottom: 8px;
             line-height: 1.3;
           }
           .details-table {
@@ -416,26 +416,25 @@ export default function Quotation() {
           .details-table th {
             background: #3d2c1e;
             color: white;
-            padding: 4px 6px;
+            padding: 5px 8px;
             text-align: center;
             font-weight: 600;
           }
           .details-table td {
-            padding: 4px 6px;
+            padding: 5px 8px;
             border: 1px solid #ddd;
             text-align: center;
           }
           .price-cell {
             font-weight: bold;
-            color: #3d2c1e;
+            color: #000;
             font-size: 12px;
           }
           
           /* Footer */
           .footer-section {
-            margin-top: 8px;
-            padding-top: 6px;
-            border-top: 1px solid #ddd;
+            margin-top: 10px;
+            padding-top: 8px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -443,13 +442,13 @@ export default function Quotation() {
           .summary-box {
             text-align: right;
             background: #f5f0eb;
-            padding: 6px 10px;
+            padding: 8px 12px;
             border-radius: 4px;
           }
           .summary-row {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 12px;
             font-size: 10px;
             padding: 2px 0;
           }
@@ -458,26 +457,27 @@ export default function Quotation() {
             font-weight: bold;
             color: #3d2c1e;
             border-top: 1px solid #3d2c1e;
-            margin-top: 3px;
-            padding-top: 3px;
+            margin-top: 4px;
+            padding-top: 4px;
           }
           .footer-text {
             font-size: 10px;
             color: #333;
             max-width: 60%;
-            line-height: 1.4;
+            line-height: 1.5;
           }
           .footer-options {
             font-weight: bold;
             font-size: 9px;
             color: #3d2c1e;
-            margin-top: 4px;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
           }
           .page-number {
             text-align: center;
             font-size: 9px;
             color: #888;
-            margin-top: 4px;
+            margin-top: 8px;
           }
         </style>
       </head>
