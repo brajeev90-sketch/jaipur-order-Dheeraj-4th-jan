@@ -957,11 +957,11 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             if item.get('finish_code'): default_notes.append(f"Finish: {item['finish_code']}")
             if item.get('color_notes'): default_notes.append(f"Color: {item['color_notes']}")
             if item.get('wood_finish'): default_notes.append(f"Wood Finish: {item['wood_finish']}")
-            c.setFont("Helvetica", 16)  # 16px font for default notes too
-            line_y = notes_y - 36
+            c.setFont("Helvetica", 22)  # Large font for default notes too
+            line_y = notes_y - 50
             for note in default_notes[:3]:
                 c.drawString(margin + 8, line_y, f"• {note}")
-                line_y -= 20
+                line_y -= 28
         
         # === DETAILS TABLE (Bottom) ===
         table_y = notes_y - notes_height - 8
