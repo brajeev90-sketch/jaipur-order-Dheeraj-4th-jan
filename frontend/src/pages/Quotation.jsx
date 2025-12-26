@@ -377,23 +377,23 @@ export default function Quotation() {
             font-size: 14px;
           }
           
-          /* Details Table - No Image column */
+          /* Details Table - No Image column, compact */
           table {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
+            margin: 5px 0;
             font-size: 12px;
           }
           th {
             background: #3d2c1e;
             color: white;
-            padding: 12px 10px;
+            padding: 10px 8px;
             text-align: center;
             font-weight: 600;
             font-size: 11px;
           }
           td {
-            padding: 12px 10px;
+            padding: 10px 8px;
             border: 1px solid #ddd;
             text-align: center;
           }
