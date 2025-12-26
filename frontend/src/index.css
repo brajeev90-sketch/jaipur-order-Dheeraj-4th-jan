@@ -370,5 +370,25 @@ a[href*="emergent.sh"] {
 /* Print-specific page setup */
 @page {
     size: A4;
-    margin: 10mm;
+    margin: 8mm;
+}
+
+/* Additional print fixes for content scaling */
+@media print {
+    /* Scale preview content to fit A4 */
+    .preview-paper {
+        transform: scale(0.85);
+        transform-origin: top center;
+    }
+    
+    /* Reduce image sizes for print */
+    .preview-paper img {
+        max-height: 200px !important;
+    }
+    
+    /* Compact the notes section */
+    .preview-paper .prose {
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+    }
 }
