@@ -35,7 +35,8 @@ import {
   Eye,
   History,
   Save,
-  X
+  X,
+  Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
