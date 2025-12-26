@@ -232,28 +232,37 @@ a[href*="emergent.sh"] {
 
 /* Print styles - hide navigation and show only content */
 @media print {
-    /* Hide sidebar, header buttons, and navigation */
+    /* Hide everything except the print content */
     nav, 
     .sidebar,
     aside,
+    header,
     [data-testid="back-btn"],
     [data-testid="edit-btn"],
     [data-testid="print-btn"],
     [data-testid="email-btn"],
     [data-testid="share-btn"],
     [data-testid="download-btn"],
-    .page-header > div:last-child,
+    .page-header,
     button,
-    a[href*="/edit"] {
+    a {
         display: none !important;
     }
     
-    /* Remove margins and padding for print */
-    body {
+    /* Reset everything */
+    html, body {
         margin: 0 !important;
         padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        background: white !important;
+    }
+    
+    /* Hide the layout wrapper */
+    .flex.min-h-screen {
+        display: block !important;
     }
     
     /* Full width for print content */
@@ -262,29 +271,88 @@ a[href*="emergent.sh"] {
         padding: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
+        margin-left: 0 !important;
     }
     
-    /* Each preview page on separate print page */
-    .preview-page-container {
-        page-break-after: always;
-        page-break-inside: avoid;
+    /* Hide the print content wrapper spacing */
+    .print-content {
         margin: 0 !important;
-        padding: 10mm !important;
+        padding: 0 !important;
+    }
+    
+    .print-content > * {
+        margin: 0 !important;
+    }
+    
+    /* Each preview page on separate print page - CRITICAL */
+    .preview-page-container {
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        break-after: page !important;
+        break-inside: avoid !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border: none !important;
     }
     
     .preview-page-container:last-child {
-        page-break-after: auto;
+        page-break-after: auto !important;
+        break-after: auto !important;
+    }
+    
+    /* Make preview paper fit the page */
+    .preview-paper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    /* Scale content to fit */
+    .preview-paper > div {
+        transform-origin: top left;
+        width: 100% !important;
     }
     
     /* Ensure images print correctly */
     img {
         max-width: 100% !important;
-        page-break-inside: avoid;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+    
+    /* Table fixes */
+    table {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
     }
     
     /* Preserve background colors */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    /* Hide scrollbars */
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+    
+    /* Force white background */
+    .bg-muted, .bg-background {
+        background: white !important;
     }
 }
