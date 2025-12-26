@@ -281,6 +281,15 @@ export default function Quotation() {
       const year = date.getFullYear();
       return `${day}-${month}-${year}`;
     };
+
+    // Group items into pairs for 2-per-page layout
+    const itemPairs = [];
+    for (let i = 0; i < quotationItems.length; i += 2) {
+      itemPairs.push({
+        left: quotationItems[i],
+        right: quotationItems[i + 1] || null
+      });
+    }
     
     return `
       <!DOCTYPE html>
@@ -291,22 +300,20 @@ export default function Quotation() {
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           @page { 
-            size: A4; 
-            margin: 10mm; 
+            size: A4 landscape; 
+            margin: 8mm; 
           }
           body { 
             font-family: Arial, sans-serif; 
-            padding: 15px; 
-            max-width: 210mm; 
-            margin: 0 auto; 
+            padding: 10px; 
             background: white;
             color: #333;
-            font-size: 12px;
+            font-size: 11px;
           }
           .page { 
             page-break-after: always; 
-            min-height: calc(297mm - 30mm);
-            position: relative;
+            width: 100%;
+            height: calc(210mm - 20mm);
           }
           .page:last-child { page-break-after: auto; }
           
@@ -315,246 +322,256 @@ export default function Quotation() {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 2px solid #3d2c1e;
           }
-          .logo-container {
-            text-align: left;
-          }
           .logo {
-            height: 70px;
+            height: 50px;
             object-fit: contain;
-          }
-          .company-tagline {
-            font-size: 11px;
-            font-style: italic;
-            color: #666;
-            margin-top: 3px;
           }
           .quote-info {
             text-align: right;
           }
           .quote-title {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 700;
             color: #3d2c1e;
             letter-spacing: 2px;
-            margin-bottom: 10px;
           }
           .customer-info {
-            font-size: 11px;
+            font-size: 10px;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.4;
           }
           
-          /* BIG Product Image Section - Increased height */
+          /* Two column layout */
+          .products-row {
+            display: flex;
+            gap: 15px;
+            height: calc(100% - 120px);
+          }
+          .product-column {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+          }
+          .product-column.empty {
+            background: #f9f9f9;
+            border: 1px dashed #ddd;
+          }
+          
+          /* Product Image */
           .product-image-section {
-            text-align: center;
-            margin: 10px 0;
-            padding: 5px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
           }
           .product-image {
             max-width: 100%;
-            max-height: 450px;
-            min-height: 350px;
-            width: auto;
-            height: auto;
+            max-height: 220px;
             object-fit: contain;
-            border: 1px solid #ddd;
             border-radius: 4px;
           }
           .no-image {
             width: 100%;
-            height: 400px;
+            height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #f5f5f5;
             border: 1px dashed #ccc;
             color: #888;
-            font-size: 14px;
+            font-size: 12px;
+            border-radius: 4px;
           }
           
-          /* Details Table - No Image column, compact */
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 5px 0;
-            font-size: 12px;
+          /* Product Details */
+          .product-details {
+            margin-top: 8px;
           }
-          th {
-            background: #3d2c1e;
-            color: white;
-            padding: 10px 8px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 11px;
-          }
-          td {
-            padding: 10px 8px;
-            border: 1px solid #ddd;
-            text-align: center;
-          }
-          .code-cell {
+          .product-code {
             font-family: monospace;
+            font-size: 14px;
             font-weight: bold;
             color: #3d2c1e;
-            font-size: 13px;
+            margin-bottom: 3px;
           }
-          .desc-cell {
-            text-align: left;
+          .product-desc {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 8px;
+          }
+          .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+          }
+          .details-table th {
+            background: #3d2c1e;
+            color: white;
+            padding: 5px 4px;
+            text-align: center;
+            font-weight: 600;
+          }
+          .details-table td {
+            padding: 5px 4px;
+            border: 1px solid #ddd;
+            text-align: center;
           }
           .price-cell {
             font-weight: bold;
             color: #3d2c1e;
+            font-size: 12px;
           }
           
-          /* Summary Section - Right aligned, compact */
-          .summary-section {
+          /* Footer */
+          .footer-section {
             margin-top: 10px;
-            padding: 12px;
-            background: #f5f0eb;
-            border-radius: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+          }
+          .summary-box {
             text-align: right;
+            background: #f5f0eb;
+            padding: 8px 12px;
+            border-radius: 6px;
           }
           .summary-row {
             display: flex;
             justify-content: flex-end;
-            gap: 15px;
-            padding: 4px 0;
-            font-size: 13px;
-          }
-          .summary-label {
-            color: #666;
-          }
-          .summary-value {
-            font-weight: 600;
-            min-width: 80px;
-            text-align: right;
+            gap: 10px;
+            font-size: 11px;
+            padding: 2px 0;
           }
           .grand-total {
-            border-top: 2px solid #3d2c1e;
-            margin-top: 10px;
-            padding-top: 10px;
-            font-size: 18px;
-          }
-          .grand-total .summary-value {
+            font-size: 14px;
+            font-weight: bold;
             color: #3d2c1e;
-          }
-          
-          /* Footer - Font size increased by 80%, compact */
-          .footer {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #ddd;
-            text-align: center;
+            border-top: 1px solid #3d2c1e;
+            margin-top: 4px;
+            padding-top: 4px;
           }
           .footer-text {
-            font-size: 16px;
+            font-size: 11px;
             color: #333;
-            line-height: 1.6;
+            max-width: 60%;
           }
           .footer-options {
-            margin-top: 8px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 10px;
             color: #3d2c1e;
+            margin-top: 5px;
           }
-          
           .page-number {
             text-align: center;
-            margin-top: 10px;
-            font-size: 10px;
+            font-size: 9px;
             color: #888;
+            margin-top: 5px;
           }
         </style>
       </head>
       <body>
-        ${quotationItems.map((item, index) => {
-          const isLastItem = index === quotationItems.length - 1;
+        ${itemPairs.map((pair, pageIndex) => {
+          const isLastPage = pageIndex === itemPairs.length - 1;
+          
+          const renderProduct = (item) => {
+            if (!item) return '<div class="product-column empty"><div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;">No Product</div></div>';
+            
+            return `
+              <div class="product-column">
+                <div class="product-image-section">
+                  ${item.image 
+                    ? `<img src="${item.image}" alt="${item.product_code}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><div class="no-image" style="display:none;">Image Not Available</div>`
+                    : `<div class="no-image">No Product Image</div>`
+                  }
+                </div>
+                <div class="product-details">
+                  <div class="product-code">${item.product_code}</div>
+                  <div class="product-desc">${item.description || '-'}</div>
+                  <table class="details-table">
+                    <thead>
+                      <tr>
+                        <th>H</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>CBM</th>
+                        <th>${priceLabel}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>${item.height_cm || '-'}</td>
+                        <td>${item.width_cm || '-'}</td>
+                        <td>${item.depth_cm || '-'}</td>
+                        <td>${item.cbm || '-'}</td>
+                        <td class="price-cell">${currencySymbol}${item.fob_price?.toFixed(2) || '0.00'}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            `;
+          };
+          
           return `
           <div class="page">
-            <!-- Header with logo and quotation info -->
+            <!-- Header -->
             <div class="header">
-              <div class="logo-container">
-                <img src="https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg" alt="JAIPUR" class="logo" />
-              </div>
+              <img src="https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg" alt="JAIPUR" class="logo" />
               <div class="quote-info">
                 <div class="quote-title">QUOTATION</div>
                 <div class="customer-info">
-                  <div><strong>Ref:</strong> ${quotationDetails.reference || '-'}</div>
-                  <div><strong>Date:</strong> ${formatDateDDMMYYYY(quotationDetails.date)}</div>
-                  <div><strong>Customer:</strong> ${quotationDetails.customer_name || '-'}</div>
+                  <strong>Ref:</strong> ${quotationDetails.reference || '-'} &nbsp;|&nbsp;
+                  <strong>Date:</strong> ${formatDateDDMMYYYY(quotationDetails.date)} &nbsp;|&nbsp;
+                  <strong>Customer:</strong> ${quotationDetails.customer_name || '-'}
                 </div>
               </div>
             </div>
             
-            <!-- BIG Product Image -->
-            <div class="product-image-section">
-              ${item.image 
-                ? `<img src="${item.image}" alt="${item.product_code}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><div class="no-image" style="display:none;">Image Not Available</div>`
-                : `<div class="no-image">No Product Image Available</div>`
-              }
+            <!-- Two Products Side by Side -->
+            <div class="products-row">
+              ${renderProduct(pair.left)}
+              ${renderProduct(pair.right)}
             </div>
             
-            <!-- Details Table below image - NO Image column -->
-            <table>
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>Description</th>
-                  <th>H</th>
-                  <th>W</th>
-                  <th>D</th>
-                  <th>CBM</th>
-                  <th>${priceLabel}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="code-cell">${item.product_code}</td>
-                  <td class="desc-cell">${item.description || '-'}</td>
-                  <td>${item.height_cm || '-'}</td>
-                  <td>${item.width_cm || '-'}</td>
-                  <td>${item.depth_cm || '-'}</td>
-                  <td>${item.cbm || '-'}</td>
-                  <td class="price-cell">${currencySymbol}${item.fob_price.toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-            
-            ${isLastItem ? `
-              <!-- Summary on last page -->
-              <div class="summary-section">
-                <div class="summary-row">
-                  <span class="summary-label">Total Items:</span>
-                  <span class="summary-value">${totals.totalItems} Pcs</span>
-                </div>
-                <div class="summary-row">
-                  <span class="summary-label">Total CBM:</span>
-                  <span class="summary-value">${totals.totalCBM} m³</span>
-                </div>
-                <div class="summary-row grand-total">
-                  <span class="summary-label">GRAND TOTAL:</span>
-                  <span class="summary-value">${currencySymbol}${totals.totalValue}</span>
-                </div>
-              </div>
-              
-              <!-- Footer with larger font -->
-              <div class="footer">
-                <div class="footer-text">
-                  This quotation is valid for 30 days from the date of issue.<br>
-                  Prices are ${priceLabel}. Shipping and import duties not included.
-                </div>
+            <!-- Footer -->
+            <div class="footer-section">
+              <div class="footer-text">
+                This quotation is valid for 30 days from the date of issue.<br>
+                Prices are ${priceLabel}. Shipping and import duties not included.
                 <div class="footer-options">
-                  UK WAREHOUSE • FACTORY DIRECT CONTAINERS • SHARED CONTAINERS • TAILORED DESIGNS
+                  UK WAREHOUSE • FACTORY DIRECT • SHARED CONTAINERS • TAILORED DESIGNS
                 </div>
               </div>
-            ` : ''}
+              ${isLastPage ? `
+                <div class="summary-box">
+                  <div class="summary-row">
+                    <span>Total Items:</span>
+                    <strong>${totals.totalItems} Pcs</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Total CBM:</span>
+                    <strong>${totals.totalCBM} m³</strong>
+                  </div>
+                  <div class="summary-row grand-total">
+                    <span>GRAND TOTAL:</span>
+                    <strong>${currencySymbol}${totals.totalValue}</strong>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
             
-            <div class="page-number">Page ${index + 1} of ${quotationItems.length}</div>
+            <div class="page-number">Page ${pageIndex + 1} of ${itemPairs.length}</div>
           </div>
         `}).join('')}
       </body>
