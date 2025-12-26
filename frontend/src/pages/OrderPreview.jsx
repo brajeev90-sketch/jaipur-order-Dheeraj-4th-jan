@@ -190,11 +190,11 @@ export default function OrderPreview() {
             <div style="padding: 12px; font-size: 16px; min-height: 60px; line-height: 1.6;">
               ${item.notes ? `<div>${item.notes}</div>` : `
                 <div style="color: #888;">
-                  ${item.category ? `<p style="margin: 4px 0;">• Category: ${item.category}</p>` : ''}
-                  ${item.leather_code ? `<p style="margin: 4px 0;">• Leather: ${item.leather_code}</p>` : ''}
-                  ${item.finish_code ? `<p style="margin: 4px 0;">• Finish: ${item.finish_code}</p>` : ''}
-                  ${item.color_notes ? `<p style="margin: 4px 0;">• Color Notes: ${item.color_notes}</p>` : ''}
-                  ${item.wood_finish ? `<p style="margin: 4px 0;">• Wood Finish: ${item.wood_finish}</p>` : ''}
+                  ${item.category ? `<p style="margin: 2px 0;">• Category: ${item.category}</p>` : ''}
+                  ${item.leather_code ? `<p style="margin: 2px 0;">• Leather: ${item.leather_code}</p>` : ''}
+                  ${item.finish_code ? `<p style="margin: 2px 0;">• Finish: ${item.finish_code}</p>` : ''}
+                  ${item.color_notes ? `<p style="margin: 2px 0;">• Color Notes: ${item.color_notes}</p>` : ''}
+                  ${item.wood_finish ? `<p style="margin: 2px 0;">• Wood Finish: ${item.wood_finish}</p>` : ''}
                   ${!item.category && !item.leather_code && !item.finish_code && !item.color_notes && !item.wood_finish ? '<p style="font-style: italic;">No notes added</p>' : ''}
                 </div>
               `}
@@ -462,11 +462,11 @@ export default function OrderPreview() {
             <div style="padding: 12px; font-size: 16px; min-height: 60px; line-height: 1.6;">
               ${item.notes ? `<div>${item.notes}</div>` : `
                 <div style="color: #888;">
-                  ${item.category ? `<p style="margin: 4px 0;">• Category: ${item.category}</p>` : ''}
-                  ${item.leather_code ? `<p style="margin: 4px 0;">• Leather: ${item.leather_code}</p>` : ''}
-                  ${item.finish_code ? `<p style="margin: 4px 0;">• Finish: ${item.finish_code}</p>` : ''}
-                  ${item.color_notes ? `<p style="margin: 4px 0;">• Color Notes: ${item.color_notes}</p>` : ''}
-                  ${item.wood_finish ? `<p style="margin: 4px 0;">• Wood Finish: ${item.wood_finish}</p>` : ''}
+                  ${item.category ? `<p style="margin: 2px 0;">• Category: ${item.category}</p>` : ''}
+                  ${item.leather_code ? `<p style="margin: 2px 0;">• Leather: ${item.leather_code}</p>` : ''}
+                  ${item.finish_code ? `<p style="margin: 2px 0;">• Finish: ${item.finish_code}</p>` : ''}
+                  ${item.color_notes ? `<p style="margin: 2px 0;">• Color Notes: ${item.color_notes}</p>` : ''}
+                  ${item.wood_finish ? `<p style="margin: 2px 0;">• Wood Finish: ${item.wood_finish}</p>` : ''}
                   ${!item.category && !item.leather_code && !item.finish_code && !item.color_notes && !item.wood_finish ? '<p style="font-style: italic;">No notes added</p>' : ''}
                 </div>
               `}
