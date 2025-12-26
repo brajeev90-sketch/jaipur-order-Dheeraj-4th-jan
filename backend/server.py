@@ -942,8 +942,10 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             c.drawCentredString(material_x + material_section_width/2, content_y - img_height/2, "No material")
             c.drawCentredString(material_x + material_section_width/2, content_y - img_height/2 - 12, "swatches")
         
-        # === NOTES SECTION (100% width) ===
-        notes_y = content_y - img_height - 10
+        # === NOTES SECTION (100% width) - positioned below extra images ===
+        # Calculate notes position based on whether extra images exist
+        extra_images_height = extra_img_size + 15 if additional_images else 0
+        notes_y = content_y - img_height - extra_images_height - 10
         notes_height = 120  # Increased height for larger font
         c.setStrokeColor(primary_color)
         c.setLineWidth(1)
