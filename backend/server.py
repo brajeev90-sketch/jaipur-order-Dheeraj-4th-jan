@@ -929,22 +929,22 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         c.setFont("Helvetica-Bold", 14)  # Larger header font
         c.drawString(margin + 5, notes_y - 17, "Notes:")
         
-        # Notes content - FONT SIZE 16px
+        # Notes content - FONT SIZE 29px (80% increase from 16px)
         c.setFillColor(HexColor('#333333'))
-        c.setFont("Helvetica", 16)  # Updated to 16px as requested
+        c.setFont("Helvetica", 22)  # Large font for notes
         notes_text = strip_html(item.get('notes', ''))
         if notes_text:
             words = notes_text.split()
             line = ""
-            line_y = notes_y - 32
+            line_y = notes_y - 45
             max_width = content_width - 20
             for word in words:
                 test_line = line + " " + word if line else word
-                if c.stringWidth(test_line, "Helvetica", 16) < max_width:
+                if c.stringWidth(test_line, "Helvetica", 22) < max_width:
                     line = test_line
                 else:
                     c.drawString(margin + 8, line_y, line)
-                    line_y -= 20
+                    line_y -= 28
                     line = word
                     if line_y < notes_y - notes_height + 5:
                         break
