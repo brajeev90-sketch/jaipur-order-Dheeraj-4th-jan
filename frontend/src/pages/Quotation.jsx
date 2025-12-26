@@ -495,24 +495,33 @@ export default function Quotation() {
                   }
                 </div>
                 <div class="product-details">
-                  <div class="product-code">${item.product_code}</div>
-                  <div class="product-desc">${item.description || '-'}</div>
                   <table class="details-table">
                     <thead>
-                      <tr>
-                        <th>H</th>
-                        <th>W</th>
-                        <th>D</th>
-                        <th>CBM</th>
-                        <th>${priceLabel}</th>
+                      <tr class="header-row">
+                        <th class="item-code-col">ITEM CODE</th>
+                        <th class="desc-col">DESCRIPTION</th>
+                        <th class="size-col" colspan="3">SIZE (cm)</th>
+                        <th class="cbm-col">CBM</th>
+                        <th class="price-col">${priceLabel}</th>
+                      </tr>
+                      <tr class="sub-header-row">
+                        <th></th>
+                        <th></th>
+                        <th class="size-sub">H</th>
+                        <th class="size-sub">D</th>
+                        <th class="size-sub">W</th>
+                        <th></th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>${item.height_cm || '-'}</td>
-                        <td>${item.width_cm || '-'}</td>
-                        <td>${item.depth_cm || '-'}</td>
-                        <td>${item.cbm || '-'}</td>
+                        <td class="item-code-cell">${item.product_code}</td>
+                        <td class="desc-cell">${item.description || '-'}</td>
+                        <td class="size-cell">${item.height_cm || '-'}</td>
+                        <td class="size-cell">${item.depth_cm || '-'}</td>
+                        <td class="size-cell">${item.width_cm || '-'}</td>
+                        <td class="cbm-cell">${item.cbm || '-'}</td>
                         <td class="price-cell">${currencySymbol}${item.fob_price?.toFixed(2) || '0.00'}</td>
                       </tr>
                     </tbody>
