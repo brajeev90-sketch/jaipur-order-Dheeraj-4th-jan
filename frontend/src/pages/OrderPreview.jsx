@@ -443,19 +443,19 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
         </div>
       </div>
 
-      {/* Notes Section - 100% width */}
+      {/* Notes Section - 100% width - Font size increased */}
       <div className="w-full border border-[#3d2c1e] rounded mb-2">
-        <div className="bg-[#3d2c1e] text-white px-2 py-1 font-semibold text-[10px]">
+        <div className="bg-[#3d2c1e] text-white px-3 py-2 font-semibold text-sm">
           Notes:
         </div>
-        <div className="p-2 text-[10px] min-h-[40px]">
+        <div className="p-3 text-base min-h-[60px]">
           {item.notes ? (
             <div 
-              className="prose prose-sm max-w-none"
+              className="prose prose-base max-w-none"
               dangerouslySetInnerHTML={{ __html: item.notes }} 
             />
           ) : (
-            <div className="text-[#888] space-y-0.5">
+            <div className="text-[#888] space-y-1">
               {item.category && <p>• Category: {item.category}</p>}
               {item.leather_code && <p>• Leather: {item.leather_code}</p>}
               {item.finish_code && <p>• Finish: {item.finish_code}</p>}
