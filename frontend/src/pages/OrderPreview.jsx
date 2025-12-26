@@ -146,19 +146,9 @@ export default function OrderPreview() {
   };
 
   const handlePrint = () => {
-    // Open PDF in new window for printing (clean print layout)
-    const pdfUrl = ordersApi.exportPdf(id);
-    const printWindow = window.open(pdfUrl, '_blank');
-    
-    // Try to trigger print dialog after PDF loads
-    if (printWindow) {
-      printWindow.onload = () => {
-        setTimeout(() => {
-          printWindow.print();
-        }, 1000);
-      };
-    }
-    toast.success('Opening PDF for print...');
+    // Print the current preview page directly - this matches exactly what user sees
+    window.print();
+    toast.success('Opening print dialog...');
   };
 
   const handleEmail = () => {
