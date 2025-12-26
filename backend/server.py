@@ -1360,6 +1360,14 @@ async def get_product(product_id: str):
 
 @api_router.post("/products", response_model=Product)
 async def create_product(product_data: ProductCreate):
+    # Check for duplicate product code
+    existing = await db.products.find_one(
+        {"product_code": {"$regex": f"^{product_data.product_code}$", "$options": "i"}},
+        {"_id": 0}
+    )
+    if existing:
+        raise HTTPException(status_code=400, detail=f"Product code '{product_data.product_code}' already exists")
+    
     product = Product(**product_data.model_dump())
     doc = product.model_dump()
     await db.products.insert_one(doc)
