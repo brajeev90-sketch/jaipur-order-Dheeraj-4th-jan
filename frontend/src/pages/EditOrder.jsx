@@ -292,12 +292,18 @@ export default function EditOrder() {
       return;
     }
 
+    // Auto-set product_image from first additional image if not already set
+    let itemToSave = { ...currentItem };
+    if (!itemToSave.product_image && itemToSave.images && itemToSave.images.length > 0) {
+      itemToSave.product_image = itemToSave.images[0];
+    }
+
     setOrder(prev => {
       const newItems = [...prev.items];
       if (editingItemIndex !== null) {
-        newItems[editingItemIndex] = currentItem;
+        newItems[editingItemIndex] = itemToSave;
       } else {
-        newItems.push(currentItem);
+        newItems.push(itemToSave);
       }
       return { ...prev, items: newItems };
     });
