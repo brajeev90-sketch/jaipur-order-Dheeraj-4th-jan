@@ -232,11 +232,12 @@ a[href*="emergent.sh"] {
 
 /* Print styles - hide navigation and show only content */
 @media print {
-    /* Hide everything except the print content */
+    /* HIDE EVERYTHING that's not the preview content */
     nav, 
     .sidebar,
     aside,
     header,
+    footer,
     [data-testid="back-btn"],
     [data-testid="edit-btn"],
     [data-testid="print-btn"],
@@ -245,8 +246,22 @@ a[href*="emergent.sh"] {
     [data-testid="download-btn"],
     .page-header,
     button,
-    a {
+    a:not(.preview-paper a),
+    /* Hide the entire sidebar navigation */
+    .fixed.inset-y-0,
+    .lg\\:flex.lg\\:w-64,
+    [class*="sidebar"],
+    [class*="navigation"],
+    /* Hide mobile menu */
+    .lg\\:hidden,
+    /* Hide any overlays */
+    [class*="overlay"],
+    [class*="backdrop"] {
         display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
     }
     
     /* Reset everything */
@@ -258,23 +273,21 @@ a[href*="emergent.sh"] {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         background: white !important;
+        overflow: visible !important;
     }
     
-    /* Hide the layout wrapper */
-    .flex.min-h-screen {
+    /* Remove ALL layout constraints */
+    #root, #root > div, .flex.min-h-screen, main {
         display: block !important;
-    }
-    
-    /* Full width for print content */
-    main, .main-content, [data-testid="preview-page"] {
-        margin: 0 !important;
-        padding: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
         margin-left: 0 !important;
+        padding-left: 0 !important;
     }
     
-    /* Hide the print content wrapper spacing */
+    /* Hide the content wrapper spacing */
     .print-content {
         margin: 0 !important;
         padding: 0 !important;
@@ -284,23 +297,24 @@ a[href*="emergent.sh"] {
         margin: 0 !important;
     }
     
-    /* Each preview page on separate print page - CRITICAL */
+    /* ONLY show the preview pages */
     .preview-page-container {
+        display: block !important;
+        visibility: visible !important;
         page-break-after: always !important;
         page-break-inside: avoid !important;
         break-after: page !important;
         break-inside: avoid !important;
         margin: 0 !important;
-        padding: 8mm !important;
+        padding: 5mm !important;
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
         height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
         overflow: visible !important;
         box-shadow: none !important;
         border: none !important;
+        background: white !important;
     }
     
     .preview-page-container:last-child {
@@ -308,8 +322,10 @@ a[href*="emergent.sh"] {
         break-after: auto !important;
     }
     
-    /* Make preview paper fit the page */
+    /* Preview paper styling for print */
     .preview-paper {
+        display: block !important;
+        visibility: visible !important;
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
@@ -318,12 +334,7 @@ a[href*="emergent.sh"] {
         border: none !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-    }
-    
-    /* Scale content to fit */
-    .preview-paper > div {
-        transform-origin: top left;
-        width: 100% !important;
+        transform: none !important;
     }
     
     /* Ensure images print correctly */
@@ -338,6 +349,19 @@ a[href*="emergent.sh"] {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
+    
+    /* Preserve background colors */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    /* Hide scrollbars */
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+}
     
     /* Preserve background colors */
     * {
