@@ -1082,7 +1082,11 @@ export default function EditOrder() {
             <div className="flex justify-end gap-3 pt-4 border-t">
               <Button 
                 variant="outline" 
-                onClick={() => setItemDialogOpen(false)}
+                onClick={() => {
+                  setItemDialogOpen(false);
+                  setShowProductSuggestions(false);
+                  setProductSearch('');
+                }}
                 data-testid="cancel-item-btn"
               >
                 Cancel
