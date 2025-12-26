@@ -51,6 +51,10 @@ export default function Quotation() {
   const [savedQuotations, setSavedQuotations] = useState([]);
   const [showSavedQuotes, setShowSavedQuotes] = useState(false);
   const [editingQuotationId, setEditingQuotationId] = useState(null);
+  const [viewQuotePopup, setViewQuotePopup] = useState(false);
+  const [viewQuoteData, setViewQuoteData] = useState(null);
+  const [editQuotePopup, setEditQuotePopup] = useState(false);
+  const [editQuoteData, setEditQuoteData] = useState(null);
   const [quotationDetails, setQuotationDetails] = useState({
     customer_name: '',
     customer_email: '',
