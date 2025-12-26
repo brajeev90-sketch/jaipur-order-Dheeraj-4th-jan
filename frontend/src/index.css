@@ -370,19 +370,6 @@ a[href*="emergent.sh"] {
     ::-webkit-scrollbar {
         display: none !important;
     }
-}
-    
-    /* Preserve background colors */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
-    }
-    
-    /* Hide scrollbars */
-    ::-webkit-scrollbar {
-        display: none !important;
-    }
     
     /* Force white background */
     .bg-muted, .bg-background {
