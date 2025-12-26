@@ -159,11 +159,14 @@ export default function EditOrder() {
     // Additional images from catalog (if any) - NOT including main image
     const additionalImages = product.images || [];
     
+    // Get category name from categories list (product stores category as ID)
+    const categoryName = categories.find(c => c.id === product.category)?.name || product.category || '';
+    
     setCurrentItem(prev => ({
       ...prev,
       product_code: product.product_code,
       description: product.description || '',
-      category: product.category || '',
+      category: categoryName,
       height_cm: product.height_cm || 0,
       depth_cm: product.depth_cm || 0,
       width_cm: product.width_cm || 0,
