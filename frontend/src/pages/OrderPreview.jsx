@@ -166,11 +166,11 @@ export default function OrderPreview() {
             </div>
           </div>
           
-          <!-- Notes Section - Styled like preview -->
+          <!-- Notes Section - Styled like preview with HTML support -->
           <div style="border: 1px solid #3d2c1e; border-radius: 4px; margin-bottom: 8px; width: 100%;">
             <div style="background: #3d2c1e; color: white; padding: 8px 12px; font-weight: 600; font-size: 14px;">Notes:</div>
-            <div style="padding: 12px; font-size: 16px; min-height: 60px; line-height: 1.5;">
-              ${item.notes ? `<div style="font-weight: 500;">${item.notes}</div>` : `
+            <div style="padding: 12px; font-size: 16px; min-height: 60px; line-height: 1.6;">
+              ${item.notes ? `<div>${item.notes}</div>` : `
                 <div style="color: #888;">
                   ${item.category ? `<p style="margin: 4px 0;">• Category: ${item.category}</p>` : ''}
                   ${item.leather_code ? `<p style="margin: 4px 0;">• Leather: ${item.leather_code}</p>` : ''}
@@ -415,11 +415,11 @@ export default function OrderPreview() {
             </div>
           </div>
           
-          <!-- Notes Section - Styled like preview -->
+          <!-- Notes Section - Styled like preview with HTML support -->
           <div style="border: 1px solid #3d2c1e; border-radius: 4px; margin-bottom: 8px; width: 100%;">
             <div style="background: #3d2c1e; color: white; padding: 8px 12px; font-weight: 600; font-size: 14px;">Notes:</div>
-            <div style="padding: 12px; font-size: 16px; min-height: 60px; line-height: 1.5;">
-              ${item.notes ? `<div style="font-weight: 500;">${item.notes}</div>` : `
+            <div style="padding: 12px; font-size: 16px; min-height: 60px; line-height: 1.6;">
+              ${item.notes ? `<div>${item.notes}</div>` : `
                 <div style="color: #888;">
                   ${item.category ? `<p style="margin: 4px 0;">• Category: ${item.category}</p>` : ''}
                   ${item.leather_code ? `<p style="margin: 4px 0;">• Leather: ${item.leather_code}</p>` : ''}
