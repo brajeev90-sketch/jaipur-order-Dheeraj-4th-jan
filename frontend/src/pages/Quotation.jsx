@@ -469,7 +469,6 @@ export default function Quotation() {
             <div class="header">
               <div class="logo-container">
                 <img src="https://customer-assets.emergentagent.com/job_furnipdf-maker/artifacts/mdh71t2g_WhatsApp%20Image%202025-12-22%20at%202.24.36%20PM.jpeg" alt="JAIPUR" class="logo" />
-                <div class="company-tagline">A fine wood furniture company</div>
               </div>
               <div class="quote-info">
                 <div class="quote-title">QUOTATION</div>
@@ -534,7 +533,6 @@ export default function Quotation() {
               
               <!-- Footer with larger font -->
               <div class="footer">
-                <div class="footer-title">Delivery Options:</div>
                 <div class="footer-text">
                   This quotation is valid for 30 days from the date of issue.<br>
                   Prices are ${priceLabel}. Shipping and import duties not included.
