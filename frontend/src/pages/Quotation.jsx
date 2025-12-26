@@ -399,7 +399,7 @@ export default function Quotation() {
             color: #3d2c1e;
           }
           
-          /* Summary Section */
+          /* Summary Section - Left aligned */
           .summary-section {
             margin-top: 15px;
             padding: 15px;
@@ -408,12 +408,14 @@ export default function Quotation() {
           }
           .summary-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
+            gap: 15px;
             padding: 6px 0;
             font-size: 13px;
           }
           .summary-label {
             color: #666;
+            min-width: 100px;
           }
           .summary-value {
             font-weight: 600;
