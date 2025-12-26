@@ -374,19 +374,19 @@ function PreviewPage({ order, item, pageNum, totalPages }) {
             </div>
           )}
           
-          {/* Additional product images if any - Size increased by 90% */}
+          {/* Additional product images if any - Size increased by 80% more (now 216px) */}
           {additionalImages.length > 0 && (
-            <div className="flex gap-2 mt-2 overflow-x-auto">
+            <div className="flex gap-3 mt-3 overflow-x-auto">
               {additionalImages.slice(0, 4).map((img, idx) => (
                 <img 
                   key={idx}
                   src={img} 
                   alt={`Additional ${idx + 1}`}
-                  className="w-[120px] h-[120px] object-cover border border-[#ddd] rounded flex-shrink-0"
+                  className="w-[216px] h-[216px] object-cover border border-[#ddd] rounded flex-shrink-0"
                 />
               ))}
               {additionalImages.length > 4 && (
-                <div className="w-[120px] h-[120px] border border-[#ddd] rounded flex items-center justify-center text-xs text-[#666] flex-shrink-0">
+                <div className="w-[216px] h-[216px] border border-[#ddd] rounded flex items-center justify-center text-sm text-[#666] flex-shrink-0">
                   +{additionalImages.length - 4} more
                 </div>
               )}
