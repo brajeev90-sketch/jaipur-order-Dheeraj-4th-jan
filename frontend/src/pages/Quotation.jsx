@@ -355,8 +355,8 @@ export default function Quotation() {
           }
           .product-column {
             flex: 1;
-            border: 1px solid #d0d0d0;
-            padding: 12px 15px;
+            border: 1px solid #c0c0c0;
+            padding: 10px 12px;
             display: flex;
             flex-direction: column;
           }
