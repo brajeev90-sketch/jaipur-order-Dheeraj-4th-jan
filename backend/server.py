@@ -849,6 +849,33 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             c.setFont("Helvetica", 12)
             c.drawCentredString(margin + img_section_width/2, content_y - img_height/2, "No Image Available")
         
+        # === ADDITIONAL/EXTRA IMAGES (below main image) - Size increased by 80% ===
+        additional_images = item.get('images', [])
+        # Skip first image if it was used as product_image
+        if not item.get('product_image') and additional_images:
+            additional_images = additional_images[1:]  # Skip first as it's main image
+        
+        extra_img_size = 108  # 60px * 1.8 = 108px (80% increase)
+        extra_img_y = content_y - img_height - 10
+        if additional_images:
+            extra_img_x = margin + 5
+            for idx, extra_img in enumerate(additional_images[:4]):  # Max 4 images
+                if extra_img and extra_img.startswith('data:image'):
+                    try:
+                        img_data = extra_img.split(',')[1]
+                        img_bytes_data = base64.b64decode(img_data)
+                        from reportlab.lib.utils import ImageReader
+                        img = ImageReader(io.BytesIO(img_bytes_data))
+                        c.drawImage(img, extra_img_x, extra_img_y - extra_img_size, 
+                                   width=extra_img_size, height=extra_img_size, 
+                                   preserveAspectRatio=True)
+                        # Draw border around extra image
+                        c.setStrokeColor(HexColor('#dddddd'))
+                        c.rect(extra_img_x, extra_img_y - extra_img_size, extra_img_size, extra_img_size)
+                        extra_img_x += extra_img_size + 8
+                    except:
+                        pass
+        
         # Material Swatches (25% width) - taller to match image height
         c.setStrokeColor(HexColor('#dddddd'))
         c.rect(material_x, content_y - img_height, material_section_width, img_height)
