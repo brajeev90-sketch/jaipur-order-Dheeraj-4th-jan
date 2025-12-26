@@ -762,7 +762,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             c.drawString(margin, header_top - 35, "A fine wood furniture company")
         
         # Info table on RIGHT - WIDER and BETTER ALIGNED
-        table_width = 170  # Increased width
+        table_width = 220  # Wider table for longer labels
         right_x = width - margin - table_width
         y = header_top - 5
         
@@ -774,7 +774,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             ("BUYER PO", order.get('buyer_po_ref', 'N/A')),
         ]
         
-        row_height = 14  # Increased row height
+        row_height = 14  # Row height
         table_height = len(dates) * row_height
         
         # Draw table border
@@ -783,7 +783,7 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         c.rect(right_x, y - table_height, table_width, table_height)
         
         # Draw table rows
-        label_width = 70  # Increased label width
+        label_width = 110  # Wider label column for longer text
         for i, (label, value) in enumerate(dates):
             row_y = y - (i + 1) * row_height
             
@@ -797,15 +797,15 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             c.rect(right_x, row_y, label_width, row_height, fill=False, stroke=True)
             c.rect(right_x + label_width, row_y, table_width - label_width, row_height, fill=False, stroke=True)
             
-            # Label text - LARGER FONT
+            # Label text - smaller font to fit
             c.setFillColor(primary_color)
-            c.setFont("Helvetica-Bold", 9)
+            c.setFont("Helvetica-Bold", 8)
             c.drawString(right_x + 3, row_y + 4, label)
             
-            # Value text - LARGER FONT and BOLD
+            # Value text
             c.setFillColor(HexColor('#333333'))
-            c.setFont("Helvetica-Bold", 9)
-            value_str = str(value)[:18] if value else '-'
+            c.setFont("Helvetica-Bold", 8)
+            value_str = str(value)[:20] if value else '-'
             c.drawString(right_x + label_width + 3, row_y + 4, value_str)
         
         # Separator line under header - moved down to avoid overlap
