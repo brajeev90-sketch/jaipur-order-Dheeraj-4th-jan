@@ -1002,15 +1002,21 @@ export default function Quotation() {
                             size="icon" 
                             title="View / Print" 
                             onClick={() => {
-                              handleLoadQuotation(quote);
-                              setShowSavedQuotes(false);
-                              // After a small delay, trigger generate quote to show preview
-                              setTimeout(() => handleGenerateQuote(), 500);
+                              setViewQuoteData(quote);
+                              setViewQuotePopup(true);
                             }}
                           >
                             <Eye size={16} />
                           </Button>
-                          <Button variant="ghost" size="icon" title="Load & Edit" onClick={() => handleLoadQuotation(quote)}>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            title="Edit" 
+                            onClick={() => {
+                              setEditQuoteData(quote);
+                              setEditQuotePopup(true);
+                            }}
+                          >
                             <Edit size={16} />
                           </Button>
                           <Button variant="ghost" size="icon" title="Duplicate" onClick={() => handleDuplicateQuotation(quote)}>
