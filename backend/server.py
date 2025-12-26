@@ -995,16 +995,16 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         # === DETAILS TABLE (Bottom) - Font size same as Notes (22px) ===
         table_y = notes_y - notes_height - 8
         
-        # Table header with SIZE sub-headers - LARGE FONT TO MATCH NOTES
-        header_height = 36
+        # Table header with SIZE sub-headers - SAME SIZE AS NOTES
+        header_height = 44
         c.setFillColor(primary_color)
         c.rect(margin, table_y - header_height, content_width, header_height, fill=True)
         
         c.setFillColor(HexColor('#ffffff'))
-        c.setFont("Helvetica-Bold", 16)  # Increased to match notes
+        c.setFont("Helvetica-Bold", 20)  # Same as notes size
         
         # Column positions for 7 columns - wider to accommodate larger font
-        col_widths = [90, 160, 40, 40, 40, 55, 60]
+        col_widths = [100, 150, 45, 45, 45, 60, 70]
         cols = [margin + 3]
         for w in col_widths[:-1]:
             cols.append(cols[-1] + w)
@@ -1012,9 +1012,9 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
         # Draw headers
         headers = ["ITEM CODE", "DESCRIPTION", "H", "D", "W", "CBM", "Qty"]
         for i, header in enumerate(headers):
-            c.drawString(cols[i], table_y - header_height + 12, header)
+            c.drawString(cols[i], table_y - header_height + 15, header)
         
-        # Table row - larger to fit bigger font
+        # Table row - larger to fit bigger font (same as notes)
         cbm = item.get('cbm', 0)
         if item.get('cbm_auto', True):
             h = item.get('height_cm', 0) or 0
@@ -1022,27 +1022,27 @@ def generate_pdf(order: dict, settings: dict, logo_bytes: bytes = None) -> bytes
             w = item.get('width_cm', 0) or 0
             cbm = round((h * d * w) / 1000000, 4)
         
-        row_y = table_y - header_height - 32  # Taller row for larger font
+        row_y = table_y - header_height - 40  # Taller row for notes-size font
         c.setStrokeColor(primary_color)
-        c.rect(margin, row_y, content_width, 32)
+        c.rect(margin, row_y, content_width, 40)
         
         c.setFillColor(HexColor('#333333'))
-        c.setFont("Courier-Bold", 18)  # Large font like notes
-        c.drawString(cols[0], row_y + 10, str(item.get('product_code', '-')))
+        c.setFont("Courier-Bold", 22)  # Same as notes
+        c.drawString(cols[0], row_y + 12, str(item.get('product_code', '-')))
         
-        c.setFont("Helvetica", 16)  # Same size as notes
+        c.setFont("Helvetica", 20)  # Same size as notes
         desc = item.get('description', '-')
         if item.get('color_notes'):
             desc = f"{desc} ({item['color_notes']})"
-        if len(desc) > 35:
-            desc = desc[:32] + "..."
-        c.drawString(cols[1], row_y + 10, desc)
-        c.drawString(cols[2], row_y + 10, str(item.get('height_cm', 0)))
-        c.drawString(cols[3], row_y + 10, str(item.get('depth_cm', 0)))
-        c.drawString(cols[4], row_y + 10, str(item.get('width_cm', 0)))
-        c.drawString(cols[5], row_y + 10, str(cbm))
-        c.setFont("Helvetica-Bold", 18)  # Large bold for quantity
-        c.drawString(cols[6], row_y + 10, f"{item.get('quantity', 1)} Pcs")
+        if len(desc) > 28:
+            desc = desc[:25] + "..."
+        c.drawString(cols[1], row_y + 12, desc)
+        c.drawString(cols[2], row_y + 12, str(item.get('height_cm', 0)))
+        c.drawString(cols[3], row_y + 12, str(item.get('depth_cm', 0)))
+        c.drawString(cols[4], row_y + 12, str(item.get('width_cm', 0)))
+        c.drawString(cols[5], row_y + 12, str(cbm))
+        c.setFont("Helvetica-Bold", 22)  # Large bold for quantity
+        c.drawString(cols[6], row_y + 12, f"{item.get('quantity', 1)} Pcs")
         
         # Footer - INCREASED FONT
         c.setFillColor(HexColor('#666666'))
