@@ -301,11 +301,11 @@ export default function Quotation() {
           * { margin: 0; padding: 0; box-sizing: border-box; }
           @page { 
             size: A4 landscape; 
-            margin: 12mm 18mm; 
+            margin: 10mm 15mm; 
           }
           body { 
             font-family: Arial, sans-serif; 
-            padding: 12px 30px; 
+            padding: 10px 20px; 
             background: white;
             color: #333;
             font-size: 11px;
@@ -313,7 +313,6 @@ export default function Quotation() {
           .page { 
             page-break-after: always; 
             width: 100%;
-            min-height: calc(210mm - 30mm);
           }
           .page:last-child { page-break-after: auto; }
           
@@ -322,12 +321,12 @@ export default function Quotation() {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 2px solid #3d2c1e;
           }
           .logo {
-            height: 45px;
+            height: 40px;
             object-fit: contain;
           }
           .quote-info {
@@ -335,7 +334,7 @@ export default function Quotation() {
           }
           .quote-title {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #3d2c1e;
             letter-spacing: 3px;
@@ -350,13 +349,12 @@ export default function Quotation() {
           /* Two column layout */
           .products-row {
             display: flex;
-            gap: 20px;
-            margin-bottom: 10px;
+            gap: 15px;
           }
           .product-column {
             flex: 1;
             border: 1px solid #c0c0c0;
-            padding: 8px 10px;
+            padding: 6px 8px;
             display: flex;
             flex-direction: column;
           }
@@ -365,22 +363,24 @@ export default function Quotation() {
             border: 1px dashed #ccc;
           }
           
-          /* Product Image */
+          /* Product Image - TIGHT LAYOUT */
           .product-image-section {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px 0;
-            min-height: 280px;
+            padding: 0;
+            height: 320px;
           }
           .product-image {
             max-width: 100%;
-            max-height: 280px;
+            max-height: 320px;
+            width: auto;
+            height: auto;
             object-fit: contain;
           }
           .no-image {
             width: 100%;
-            height: 200px;
+            height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
