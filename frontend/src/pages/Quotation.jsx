@@ -350,13 +350,13 @@ export default function Quotation() {
           /* Two column layout */
           .products-row {
             display: flex;
-            gap: 24px;
-            margin-bottom: 12px;
+            gap: 20px;
+            margin-bottom: 10px;
           }
           .product-column {
             flex: 1;
             border: 1px solid #c0c0c0;
-            padding: 10px 12px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
           }
@@ -370,18 +370,17 @@ export default function Quotation() {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px 5px;
-            min-height: 220px;
-            max-height: 240px;
+            padding: 5px 0;
+            min-height: 280px;
           }
           .product-image {
-            max-width: 95%;
-            max-height: 230px;
+            max-width: 100%;
+            max-height: 280px;
             object-fit: contain;
           }
           .no-image {
             width: 100%;
-            height: 180px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
