@@ -219,13 +219,13 @@ export default function OrderPreview() {
             </thead>
             <tbody>
               <tr style="border-top: 1px solid #3d2c1e;">
-                <td style="padding: 10px; font-family: monospace; font-weight: bold; border-right: 1px solid #ddd;">${item.product_code || '-'}</td>
-                <td style="padding: 10px; border-right: 1px solid #ddd;">${item.description || '-'}${item.color_notes ? ` <span style="color: #666;">(${item.color_notes})</span>` : ''}</td>
-                <td style="padding: 10px; text-align: center; border-right: 1px solid #ddd;">${item.height_cm || 0}</td>
-                <td style="padding: 10px; text-align: center; border-right: 1px solid #ddd;">${item.depth_cm || 0}</td>
-                <td style="padding: 10px; text-align: center; border-right: 1px solid #ddd;">${item.width_cm || 0}</td>
-                <td style="padding: 10px; text-align: center; font-family: monospace; border-right: 1px solid #ddd;">${cbm}</td>
-                <td style="padding: 10px; text-align: center; font-weight: bold;">${item.quantity || 1} Pcs</td>
+                <td style="padding: 6px; font-family: monospace; font-weight: bold; border-right: 1px solid #ddd;">${item.product_code || '-'}</td>
+                <td style="padding: 6px; border-right: 1px solid #ddd;">${item.description || '-'}${item.color_notes ? ` <span style="color: #666;">(${item.color_notes})</span>` : ''}</td>
+                <td style="padding: 6px; text-align: center; border-right: 1px solid #ddd;">${item.height_cm || 0}</td>
+                <td style="padding: 6px; text-align: center; border-right: 1px solid #ddd;">${item.depth_cm || 0}</td>
+                <td style="padding: 6px; text-align: center; border-right: 1px solid #ddd;">${item.width_cm || 0}</td>
+                <td style="padding: 6px; text-align: center; font-family: monospace; border-right: 1px solid #ddd;">${cbm}</td>
+                <td style="padding: 6px; text-align: center; font-weight: bold;">${item.quantity || 1} Pcs</td>
               </tr>
             </tbody>
           </table>
@@ -491,13 +491,13 @@ export default function OrderPreview() {
             </thead>
             <tbody>
               <tr style="border-top: 1px solid #3d2c1e;">
-                <td style="padding: 10px; font-family: monospace; font-weight: bold; border-right: 1px solid #ddd;">${item.product_code || '-'}</td>
-                <td style="padding: 10px; border-right: 1px solid #ddd;">${item.description || '-'}${item.color_notes ? ` <span style="color: #666;">(${item.color_notes})</span>` : ''}</td>
-                <td style="padding: 10px; text-align: center; border-right: 1px solid #ddd;">${item.height_cm || 0}</td>
-                <td style="padding: 10px; text-align: center; border-right: 1px solid #ddd;">${item.depth_cm || 0}</td>
-                <td style="padding: 10px; text-align: center; border-right: 1px solid #ddd;">${item.width_cm || 0}</td>
-                <td style="padding: 10px; text-align: center; font-family: monospace; border-right: 1px solid #ddd;">${cbm}</td>
-                <td style="padding: 10px; text-align: center; font-weight: bold;">${item.quantity || 1} Pcs</td>
+                <td style="padding: 6px; font-family: monospace; font-weight: bold; border-right: 1px solid #ddd;">${item.product_code || '-'}</td>
+                <td style="padding: 6px; border-right: 1px solid #ddd;">${item.description || '-'}${item.color_notes ? ` <span style="color: #666;">(${item.color_notes})</span>` : ''}</td>
+                <td style="padding: 6px; text-align: center; border-right: 1px solid #ddd;">${item.height_cm || 0}</td>
+                <td style="padding: 6px; text-align: center; border-right: 1px solid #ddd;">${item.depth_cm || 0}</td>
+                <td style="padding: 6px; text-align: center; border-right: 1px solid #ddd;">${item.width_cm || 0}</td>
+                <td style="padding: 6px; text-align: center; font-family: monospace; border-right: 1px solid #ddd;">${cbm}</td>
+                <td style="padding: 6px; text-align: center; font-weight: bold;">${item.quantity || 1} Pcs</td>
               </tr>
             </tbody>
           </table>
