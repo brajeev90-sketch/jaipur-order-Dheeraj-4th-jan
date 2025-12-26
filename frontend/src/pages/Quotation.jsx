@@ -411,10 +411,10 @@ export default function Quotation() {
             color: #3d2c1e;
           }
           
-          /* Summary Section - Right aligned */
+          /* Summary Section - Right aligned, compact */
           .summary-section {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 10px;
+            padding: 12px;
             background: #f5f0eb;
             border-radius: 8px;
             text-align: right;
@@ -423,7 +423,7 @@ export default function Quotation() {
             display: flex;
             justify-content: flex-end;
             gap: 15px;
-            padding: 6px 0;
+            padding: 4px 0;
             font-size: 13px;
           }
           .summary-label {
