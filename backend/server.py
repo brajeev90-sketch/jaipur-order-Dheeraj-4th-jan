@@ -292,6 +292,7 @@ class QuotationItem(BaseModel):
     quantity: int = 1
     fob_price: float = 0
     total: float = 0
+    image: str = ""  # Product image for quotation
 
 class Quotation(BaseModel):
     model_config = ConfigDict(extra="ignore")
