@@ -276,6 +276,76 @@ export default function Quotation() {
     }
   };
 
+  // Export quotation to Excel
+  const handleExportExcel = () => {
+    if (quotationItems.length === 0) {
+      toast.error('Please add products to export');
+      return;
+    }
+
+    const currencyInfo = getCurrencyInfo(quotationDetails.currency);
+    const totals = calculateTotals();
+
+    // Prepare data for Excel
+    const excelData = quotationItems.map((item, idx) => ({
+      'Sr No': idx + 1,
+      'Product Code': item.product_code || '',
+      'Description': item.description || '',
+      'H': item.height_cm || 0,
+      'D': item.depth_cm || 0,
+      'W': item.width_cm || 0,
+      'CBM': parseFloat(item.cbm) || 0,
+      [`Price ${currencyInfo.label}`]: item.fob_price || 0,
+      'QTY': item.quantity || 1,
+      'Total CBM': (parseFloat(item.cbm) || 0) * (item.quantity || 1),
+      'Total Price': (item.fob_price || 0) * (item.quantity || 1)
+    }));
+
+    // Add totals row
+    excelData.push({
+      'Sr No': '',
+      'Product Code': '',
+      'Description': 'TOTALS',
+      'H': '',
+      'D': '',
+      'W': '',
+      'CBM': '',
+      [`Price ${currencyInfo.label}`]: '',
+      'QTY': totals.totalItems,
+      'Total CBM': parseFloat(totals.totalCBM),
+      'Total Price': parseFloat(totals.totalValue)
+    });
+
+    // Create worksheet
+    const ws = XLSX.utils.json_to_sheet(excelData);
+
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 6 },   // Sr No
+      { wch: 20 },  // Product Code
+      { wch: 40 },  // Description
+      { wch: 6 },   // H
+      { wch: 6 },   // D
+      { wch: 6 },   // W
+      { wch: 8 },   // CBM
+      { wch: 15 },  // Price
+      { wch: 6 },   // QTY
+      { wch: 12 },  // Total CBM
+      { wch: 12 }   // Total Price
+    ];
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Quotation');
+
+    // Generate filename
+    const filename = `Quotation_${quotationDetails.reference || 'Export'}_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+    // Download file
+    XLSX.writeFile(wb, filename);
+    toast.success('Excel file downloaded!');
+  };
+
   // Generate quotation HTML content (reusable for both view and download)
   const generateQuotationHTML = () => {
     const totals = calculateTotals();
